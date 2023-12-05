@@ -1,0 +1,138 @@
+body, h1, h2, h3, p, ul {
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #282828;
+}
+
+header {
+    background-color: rgb(0, 195, 172);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    color: white;
+    height: 60px;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #ffffff;
+}
+
+/* .presentation-section {
+
+}
+
+.services-section {
+
+}
+
+.engagement-section {
+
+} */
+
+/* logo */
+
+.logo-image {
+    max-width: 100%;
+    max-height: 60px; 
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center; 
+}
+
+/* img_home */
+
+.home_image_one {
+    max-width: 100%;
+    max-height: 400px; 
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center; 
+}
+
+.home_image_two {
+    max-width: 100%;
+    max-height: 400px; 
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center; 
+}
+
+.home_image_three {
+    max-width: 100%;
+    max-height: 400px; 
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center; 
+}
+
+nav {
+    display: flex;
+}
+
+nav a {
+    padding: 10px;
+    margin-right: 8px;
+    
+}
+
+nav a:hover:not(.active) {
+    background-color: rgb(0, 157, 155);
+}
+
+.icons a {
+    color: white;
+    text-decoration: none;
+    margin-left: 8px;
+}
+
+.icons i {
+    font-size: 18px;
+}
+
+footer {
+    background-color: rgb(0, 195, 172);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+/* product_form */
+
+.texte-blanc-form {
+    color: white;
+}

@@ -1,0 +1,22 @@
+{# templates/main/menu_bar.twig #}
+<head>
+    <script src="https://kit.fontawesome.com/021d66ba26.js" crossorigin="anonymous"></script>
+</head>
+<a href="{{ path('home') }}">
+    <h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1>
+</a>
+
+<nav>
+    <a href="{{ path('home') }}">Accueil</a>
+    <a href="{{ path('product_form') }}">Shop</a>
+    <a href="{{ path('list_message') }}">Message</a>
+    <a href="{{ path('category_form') }}">Categorie</a>
+    <a href="#contact">Projet</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<div class="icons">
+    <a href="#accueil"><i class="fas fa-search"></i></a>
+    <a href="#accueil"><i class="fas fa-shopping-cart"></i></a>
+    <a href="#"><i class="fas fa-user"></i> Se connecter</a>
+</div>

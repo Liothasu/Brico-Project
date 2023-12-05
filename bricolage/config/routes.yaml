@@ -1,0 +1,49 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+home:
+    path: /
+    controller: App\Controller\MainController::home
+
+# Route Product
+
+# product:
+#     path: /product
+#     controller: 'App\Controller\ProductController::showProductForm'
+
+product_form:
+    path: /shop
+    controller: App\Controller\ProductController::product_form
+
+# Route Message
+
+list_message:
+    path: /message
+    controller: 'App\Controller\MessageController::listMessages'
+
+show_message:
+    path: /message/{id}
+    controller: 'App\Controller\MessageController::showMessage'
+    requirements:
+        id: '\d+'
+
+# Route Blog
+
+list_blog:
+    path: /blog
+    controller: 'App\Controller\BlogController::listBlog'
+
+show_blog:
+    path: /blog/{id}
+    controller: 'App\Controller\BlogController::showBlog'
+    requirements:
+        id: '\d+'
+
+# Route Category
+
+category_form:
+    path: /category
+    controller: 'App\Controller\CategoryController::category_form'

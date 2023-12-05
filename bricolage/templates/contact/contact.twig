@@ -1,0 +1,30 @@
+{# templates/contact/index.html.twig #}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
+<body>
+    <header>
+        {% include 'main/menu_bar.twig' %}
+    </header>
+    <main>
+       {% block content %}
+            <h1>Contactez-nous</h1>
+
+        {% endblock %}
+
+    </main>
+
+    <footer>
+        {% include 'main/footer.twig' %}
+    </footer>
+</body>
+</html>
+
+
+
