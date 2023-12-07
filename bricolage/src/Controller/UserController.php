@@ -23,11 +23,8 @@ class UserController extends AbstractController
     public function someAction(): Response
     {
 
-     // Accéder à l'utilisateur actuel
         $user = $this->getUser();
-
-        // Vous pouvez maintenant accéder aux propriétés de l'utilisateur
-        $username = $user->getUserIdentifier(); // Utilisez getUserIdentifier à la place de getUsername
+        $username = $user->getUserIdentifier(); 
         // $email = $user->getEmail();
         $roles = $user->getRoles();
 

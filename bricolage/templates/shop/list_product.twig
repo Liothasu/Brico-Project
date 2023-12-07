@@ -1,30 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produits</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <header>
-        {% include 'main/menu_bar.twig' %}
-    </header>
-    <main>
-        <ul>
-            {% for product in products %}
-                <li>
-                    {# <img src="{{ product.image }}" alt="{{ product.name }}"> #}
-                    <h2>{{ product.nameProduct }}</h2>
-                    <p>{{ product.designation }}</p>
-                    <p>Prix : ${{ product.unitPrice }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    </main>
+{% extends 'base.html.twig' %}
 
-    <footer>
-        {% include 'main/footer.twig' %}
-    </footer>
-</body>
-</html>
+{% block title %}Porduit{% endblock %}
+
+{% block main %}
+    <h2>Liste des produits</h2>
+{% endblock %}

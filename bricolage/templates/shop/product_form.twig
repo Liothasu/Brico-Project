@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produits</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <header>
-        {% include 'main/menu_bar.twig' %}
-    </header>
-    <main>
+{% extends 'base.html.twig' %}
+
+{% block title %}Produit{% endblock %}
+
+{% block main %}
         <section>
             {% block section %}
                 {{ form_start(form, {'attr': {'class': 'texte-blanc-form'}}) }}
@@ -37,14 +29,8 @@
                     {{ form_label(form.supplier) }}
                     {{ form_widget(form.supplier) }}
                     {{ form_rest(form) }}
-                    <button type="submit">Enregistrer</button>
+                    <button type="submit">Save</button>
                 {{ form_end(form) }}
             {% endblock %}
         </section>
-    </main>
-
-    <footer>
-        {% include 'main/footer.twig' %}
-    </footer>
-</body>
-</html>
+{% endblock %}

@@ -1,7 +1,8 @@
-body, h1, h2, h3, p, ul {
+body , h2, h3, p, ul {
     margin: 0;
     padding: 0;
     color: white;
+    margin-bottom: 30px;
 }
 
 body {
@@ -28,6 +29,7 @@ header a {
 
 main {
     padding: 20px;
+    margin: 30px;
 }
 
 section {
@@ -38,17 +40,10 @@ h2 {
     color: #ffffff;
 }
 
-/* .presentation-section {
-
+h1 {
+    margin: 0;
+    padding: 0;
 }
-
-.services-section {
-
-}
-
-.engagement-section {
-
-} */
 
 /* logo */
 
@@ -69,7 +64,8 @@ h2 {
     width: auto;
     height: auto;
     display: flex;
-    align-items: center; 
+    align-items: center;
+    margin-bottom: 30px;
 }
 
 .home_image_two {
@@ -79,6 +75,7 @@ h2 {
     height: auto;
     display: flex;
     align-items: center; 
+    margin-bottom: 30px;
 }
 
 .home_image_three {
@@ -88,6 +85,7 @@ h2 {
     height: auto;
     display: flex;
     align-items: center; 
+    margin-bottom: 30px;
 }
 
 nav {
@@ -134,5 +132,11 @@ footer p {
 /* product_form */
 
 .texte-blanc-form {
+    color: white;
+}
+
+/* contact */
+
+form {
     color: white;
 }

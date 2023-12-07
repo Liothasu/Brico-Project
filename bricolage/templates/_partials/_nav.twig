@@ -1,7 +1,6 @@
-{# templates/main/menu_bar.twig #}
-<head>
+{# <head>
     <script src="https://kit.fontawesome.com/021d66ba26.js" crossorigin="anonymous"></script>
-</head>
+</head> #}
 <a href="{{ path('home') }}">
     <h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1>
 </a>
@@ -11,8 +10,8 @@
     <a href="{{ path('product_form') }}">Shop</a>
     <a href="{{ path('list_message') }}">Message</a>
     <a href="{{ path('category_form') }}">Categorie</a>
-    <a href="#contact">Projet</a>
-    <a href="#contact">Contact</a>
+    <a href="{{ path('project') }}">Project</a>
+    <a href="{{ path('contact') }}">Contact</a>
 </nav>
 
 <div class="icons">

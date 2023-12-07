@@ -19,24 +19,24 @@ class MessageController extends AbstractController
         ]);
     }
     
-    #[Route('/message/{id}', name: 'show_message')]
-    public function showMessage(MessageRepository $messageRepository, int $id): Response
-    {
-        $message = $messageRepository->findMessageById($id);
-        $message = $messageRepository->findMessageById($id);
+    // #[Route('/message/{id}', name: 'show_message')]
+    // public function showMessage(MessageRepository $messageRepository, int $id): Response
+    // {
+    //     $message = $messageRepository->findMessageById($id);
+    //     $message = $messageRepository->findMessageById($id);
 
-        if (!$message) {
-            throw $this->createNotFoundException('Message not found');
-        }
+    //     if (!$message) {
+    //         throw $this->createNotFoundException('Message not found');
+    //     }
 
-        $recipients = $message->getUser();
-        $sender = $messageRepository->findSenderByMessageId($id);
+    //     $recipients = $message->getUser();
+    //     $sender = $messageRepository->findSenderByMessageId($id);
 
-        return $this->render('message/show.twig', [
-            'message' => $message,
-            'recipients' => $recipients,
-            'sender' => $sender,
-        ]);
+    //     return $this->render('message/show.twig', [
+    //         'message' => $message,
+    //         'recipients' => $recipients,
+    //         'sender' => $sender,
+    //     ]);
         
-    }   
+    // }   
 }

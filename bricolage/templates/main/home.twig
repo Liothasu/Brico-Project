@@ -1,77 +1,60 @@
-{# templates/main/home.html.twig #}
+{% extends 'base.html.twig' %}
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="shortcut icon" href="favicon.ico" type="images/favicon.ico" />
-</head>
-<body>
-    <header>
-        {% include 'main/menu_bar.twig' %}
-    </header>
-    <main>
-        <section>
-            <h2>Présentation de Brico-Projet - Votre Partenaire Bricolage</h2>
-            <img class="home_image_one" src="{{ asset('images/img_home_one.jpg') }}" alt="brico">
-            <h2>Notre Mission</h2>
+{% block title %}Accueil{% endblock %}
+
+{% block main %}
+    <section>
+        <h2>Présentation de Brico-Projet - Votre Partenaire Bricolage</h2>
+        <img class="home_image_one" src="{{ asset('images/img_home_one.jpg') }}" alt="brico">
+        <h2>Notre Mission</h2>
+        <p>
+            À Brico-Projet, notre mission est de fournir une expérience exceptionnelle à chaque client. 
+            Nous comprenons que le bricolage est une expression de créativité, de passion et de savoir-faire. 
+            C'est pourquoi nous avons créé un espace qui va au-delà des simples étagères remplies d'outils et de matériaux.
+        </p>
+    </section>
+
+    <section>
+        <h2>Nos Services</h2>
+        <img class="home_image_two" src="{{ asset('images/img_home_two.jpg') }}" alt="brico2">
+
+        <article>
+            <h3>Réalisation de Projets Personnalisés</h3>
             <p>
-                À Brico-Projet, notre mission est de fournir une expérience exceptionnelle à chaque client. 
-                Nous comprenons que le bricolage est une expression de créativité, de passion et de savoir-faire. 
-                C'est pourquoi nous avons créé un espace qui va au-delà des simples étagères remplies d'outils et de matériaux.
+                Nous croyons en la concrétisation de vos rêves. Notre équipe dévouée de professionnels qualifiés est prête à travailler avec vous pour transformer vos idées en projets concrets. 
+                Que ce soit la construction d'une étagère sur mesure, 
+                la rénovation d'une pièce ou la création d'une pièce d'art unique, nous sommes là pour vous aider à chaque étape du processus.
             </p>
-        </section>
+        </article>
 
-        <section>
-            <h2>Nos Services</h2>
-            <img class="home_image_two" src="{{ asset('images/img_home_two.jpg') }}" alt="brico2">
-
-            <article>
-                <h3>Réalisation de Projets Personnalisés</h3>
-                <p>
-                    Nous croyons en la concrétisation de vos rêves. Notre équipe dévouée de professionnels qualifiés est prête à travailler avec vous pour transformer vos idées en projets concrets. 
-                    Que ce soit la construction d'une étagère sur mesure, 
-                    la rénovation d'une pièce ou la création d'une pièce d'art unique, nous sommes là pour vous aider à chaque étape du processus.
-                </p>
-            </article>
-
-            <article>
-                <h3>Partage de Blogs et d'Idées</h3>
-                <p>
-                    Explorez notre plateforme en ligne où vous pouvez découvrir une multitude de blogs inspirants, d'idées créatives et de tutoriels pratiques. 
-                    Nous croyons au partage des connaissances et à l'inspiration mutuelle. Rejoignez notre communauté et échangez des idées avec d'autres passionnés de bricolage.
-                </p>
-            </article>
-
-            <article>
-                <h3>Ateliers et Événements</h3>
-                <p>
-                    Enrichissez vos compétences avec nos ateliers pratiques animés par des experts du domaine. 
-                    De la menuiserie à la peinture décorative, nos événements sont conçus pour tous les niveaux d'expérience. 
-                    Apprenez, créez et connectez-vous avec d'autres amateurs de bricolage.
-                </p>
-            </article>
-        </section>
-
-        <section>
-            <h2>Engagez-vous avec Brico-Projet</h2>
-            <img class="home_image_three" src="{{ asset('images/img_home_three.jpg') }}" alt="brico3">
-
+        <article>
+            <h3>Partage de Blogs et d'Idées</h3>
             <p>
-                Chez Brico-Projet, nous croyons que chaque projet est une aventure en soi. 
-                Que vous soyez un débutant enthousiaste ou un bricoleur chevronné, notre magasin est conçu pour répondre à vos besoins. 
-                Engagez-vous avec nous et découvrez une nouvelle dimension du bricolage.
+                Explorez notre plateforme en ligne où vous pouvez découvrir une multitude de blogs inspirants, d'idées créatives et de tutoriels pratiques. 
+                Nous croyons au partage des connaissances et à l'inspiration mutuelle. Rejoignez notre communauté et échangez des idées avec d'autres passionnés de bricolage.
             </p>
-            
-            <p>Visitez-nous aujourd'hui et faites partie d'une communauté qui partage votre passion pour le bricolage. Chez Brico-Projet, votre créativité n'a pas de limites !</p>
-        </section>
-    </main>
+        </article>
 
-    <footer>
-        {% include 'main/footer.twig' %}
-    </footer>
-</body>
-</html>
+        <article>
+            <h3>Ateliers et Événements</h3>
+            <p>
+                Enrichissez vos compétences avec nos ateliers pratiques animés par des experts du domaine. 
+                De la menuiserie à la peinture décorative, nos événements sont conçus pour tous les niveaux d'expérience. 
+                Apprenez, créez et connectez-vous avec d'autres amateurs de bricolage.
+            </p>
+        </article>
+    </section>
+
+    <section>
+        <h2>Engagez-vous avec Brico-Projet</h2>
+        <img class="home_image_three" src="{{ asset('images/img_home_three.jpg') }}" alt="brico3">
+
+        <p>
+            Chez Brico-Projet, nous croyons que chaque projet est une aventure en soi. 
+            Que vous soyez un débutant enthousiaste ou un bricoleur chevronné, notre magasin est conçu pour répondre à vos besoins. 
+            Engagez-vous avec nous et découvrez une nouvelle dimension du bricolage.
+        </p>
+        
+        <p>Visitez-nous aujourd'hui et faites partie d'une communauté qui partage votre passion pour le bricolage. Chez Brico-Projet, votre créativité n'a pas de limites !</p>
+    </section>
+{% endblock %}

@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorie</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <header>
-        {% include 'main/menu_bar.twig' %}
-    </header>
-    <main>
-        <section>
-            {% block section %}
-                {{ form_start(form, {'attr': {'class': 'texte-blanc-form'}}) }}
-                    {{ form_label(form.name) }}
-                    {{ form_widget(form.name) }}
-                    {{ form_rest(form) }}
-                    <button type="submit">Enregistrer</button>
-                {{ form_end(form) }}
-            {% endblock %}
-        </section>
-    </main>
+{% extends 'base.html.twig' %}
 
-    <footer>
-        {% include 'main/footer.twig' %}
-    </footer>
-</body>
-</html>
+{% block title %}Categorie{% endblock %}
+
+{% block main %}
+    {% block section %}
+        {{ form_start(form, {'attr': {'class': 'texte-blanc-form'}}) }}
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name) }}
+            {{ form_rest(form) }}
+            <button type="submit">Enregistrer</button>
+        {{ form_end(form) }}
+    {% endblock %}
+{% endblock %}

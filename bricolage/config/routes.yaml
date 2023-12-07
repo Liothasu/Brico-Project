@@ -8,6 +8,10 @@ home:
     path: /
     controller: App\Controller\MainController::home
 
+contact:
+    path: /contact
+    controller: App\Controller\MainController::contact
+
 # Route Product
 
 # product:
@@ -24,11 +28,11 @@ list_message:
     path: /message
     controller: 'App\Controller\MessageController::listMessages'
 
-show_message:
-    path: /message/{id}
-    controller: 'App\Controller\MessageController::showMessage'
-    requirements:
-        id: '\d+'
+# show_message:
+#     path: /message/{id}
+#     controller: 'App\Controller\MessageController::showMessage'
+#     requirements:
+#         id: '\d+'
 
 # Route Blog
 
@@ -36,14 +40,20 @@ list_blog:
     path: /blog
     controller: 'App\Controller\BlogController::listBlog'
 
-show_blog:
-    path: /blog/{id}
-    controller: 'App\Controller\BlogController::showBlog'
-    requirements:
-        id: '\d+'
+# show_blog:
+#     path: /blog/{id}
+#     controller: 'App\Controller\BlogController::showBlog'
+#     requirements:
+#         id: '\d+'
 
 # Route Category
 
 category_form:
     path: /category
     controller: 'App\Controller\CategoryController::category_form'
+
+# Route project
+
+project:
+    path: project
+    controller: 'App\Controller\ProjectController::project'

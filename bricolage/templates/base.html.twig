@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Accueil{% endblock %}
+		</title>
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        {% block stylesheets %} 
+            <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         {% endblock %}
-
         {% block javascripts %}
+            <script src="https://kit.fontawesome.com/021d66ba26.js" crossorigin="anonymous"></script>
         {% endblock %}
-    </head>
+	</head>
     <body>
-        {% block body %}{% endblock %}
+        <header>
+            {% include '_partials/_nav.twig' %}
+        </header>
+        <main>
+			{% block main %}{% endblock %}
+        </main>
+		    {% include '_partials/_footer.twig' %}
     </body>
 </html>
