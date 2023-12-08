@@ -17,16 +17,16 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateOrder = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $statut = null;
+    #[ORM\Column]
+    private array $statutOrders = [];
 
     const ORDER_PENDING = 'PENDING';
     const ORDER_IN_PROCESS = 'IN PROCESS';
     const ORDER_PAID = 'PAID';
     const ORDER_CANCELED = 'CANCELED';
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateOrder = null;
 
     #[ORM\Column(length: 255)]
     private ?string $paymentMod = null;
@@ -54,6 +54,25 @@ class Order
         return $this->id;
     }
 
+    public function getStatutOrders(): array
+    {
+        $statutOrders = $this->statutOrders;
+
+        $statutOrders[] = 'ORDER_PENDING';
+        $statutOrders[] = 'ORDER_IN_PROCESS';
+        $statutOrders[] = 'ORDER_PAID';
+        $statutOrders[] = 'ORDER_CANCELED';
+
+        return array_unique($statutOrders);
+    }
+
+    public function setStatutOrders(array $statutOrders): static 
+    {
+        $this->statutOrders = $statutOrders;
+        
+        return $this;
+    }
+
     public function getDateOrder(): ?\DateTimeInterface
     {
         return $this->dateOrder;
@@ -64,28 +83,6 @@ class Order
         $this->dateOrder = $dateOrder;
 
         return $this;
-    }
-
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(string $statut): static
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
-
-    public function getStatutOrder()
-    {
-        if ($this->getStatut() === self::ORDER_PENDING) {
-        } elseif ($this->getStatut() === self::ORDER_IN_PROCESS) {
-        } elseif ($this->getStatut() === self::ORDER_PAID) {
-        } elseif($this->getStatut() === self::ORDER_CANCELED) {
-        } else {
-        }
     }
 
     public function getPaymentMod(): ?string

@@ -16,7 +16,7 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

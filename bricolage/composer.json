@@ -21,6 +21,7 @@
         "symfony/framework-bundle": "7.0.*",
         "symfony/monolog-bundle": "*",
         "symfony/runtime": "7.0.*",
+        "symfony/security-bundle": "7.0.*",
         "symfony/security-core": "7.0.*",
         "symfony/security-http": "7.0.*",
         "symfony/twig-bundle": "7.0.*",

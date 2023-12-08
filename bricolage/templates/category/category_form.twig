@@ -4,11 +4,16 @@
 
 {% block main %}
     {% block section %}
+    <ul>
+        {% for category in cat  %}
+        <li>{{ category.name }}</li>
+        {% endfor %}
+    </ul>
         {{ form_start(form, {'attr': {'class': 'texte-blanc-form'}}) }}
             {{ form_label(form.name) }}
             {{ form_widget(form.name) }}
-            {{ form_rest(form) }}
-            <button type="submit">Enregistrer</button>
+            <br>
+            <button class="btn btn-success" type="submit">Enregistrer</button>
         {{ form_end(form) }}
     {% endblock %}
 {% endblock %}
