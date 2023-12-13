@@ -17,5 +17,21 @@
 <div class="icons">
     <a href="#accueil"><i class="fas fa-search"></i></a>
     <a href="#accueil"><i class="fas fa-shopping-cart"></i></a>
-    <a href="#"><i class="fas fa-user"></i> Se connecter</a>
+
+    {% if app.user %}
+        <a href="{{ path('app_logout') }}"><i class="fas fa-user"></i> {{ app.user.username }}</a>
+        <a style="hover-red" href="{{ path('app_logout') }}" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+    {% else %}
+        <a href="{{ path('app_login') }}"><i class="fas fa-user"></i> Log in</a>
+        <a href="{{ path('app_register') }}">Sign in</a>
+    {% endif %}
+   
+    {# {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <a href="{{ path('app_logout') }}"><i class="fas fa-user"></i> {{ app.user.username }}</a>
+        <a style="hover-red" href="{{ path('app_logout') }}" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+    {% else %}
+        <a href="{{ path('app_login') }}"><i class="fas fa-user"></i> Log in</a>
+    {% endif %} #}
 </div>
+
+

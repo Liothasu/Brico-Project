@@ -102,6 +102,17 @@ nav a:hover:not(.active) {
     background-color: rgb(0, 157, 155);
 }
 
+div a:hover:not(.active) {
+    background-color: rgb(0, 157, 155);
+}
+
+/* log out */
+
+.hover-red:hover:not(.active) {
+    background-color: red;
+}
+  
+
 .icons a {
     color: white;
     text-decoration: none;
