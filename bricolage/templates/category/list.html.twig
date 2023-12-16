@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des produits
+{% endblock %}
+
+{% block main %}
+	{% block section %}
+		<div>
+			<h3>Liste des produits de la catégorie {{ category.name }}</h3>
+		</div>
+		<div>
+			{% for product in category.products %}
+				<div class="card mb-3" style="max-width: 540px;">
+					<div class="row g-0">
+						<div class="col-md-4">
+							<img src="https://www.letablisienne.com/wp-content/uploads/2020/10/20201025_161645-scaled-576x768.jpg" class="card-img-top" alt="...">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">{{ product.nameProduct }}</h5>
+								<p class="card-text" style="color: black">{{ product.designation }}</p>
+							</div>
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item">{{ product.color }}</li>
+								<li class="list-group-item">{{ product.quantity }}</li>
+								<li class="list-group-item">{{ product.unitPrice }}</li>
+								<li class="list-group-item">{{ product.reference }}</li>
+							</ul>
+							<div class="card-body">
+								<a href="#" class="btn btn-primary">Ajouter au panier</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endblock %}
+{% endblock %}

@@ -19,11 +19,11 @@ class Promo
     #[ORM\Column]
     private ?float $percent = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateBegin = null;
+    #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private $dateBegin = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateEnd = null;
+    #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private $dateEnd = null;
 
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'promos')]
     private Collection $products;
@@ -50,24 +50,24 @@ class Promo
         return $this;
     }
 
-    public function getDateBegin(): ?\DateTimeInterface
+    public function getDateBegin(): ?\DateTimeImmutable
     {
         return $this->dateBegin;
     }
 
-    public function setDateBegin(\DateTimeInterface $dateBegin): static
+    public function setDateBegin(\DateTimeImmutable $dateBegin): static
     {
         $this->dateBegin = $dateBegin;
 
         return $this;
     }
 
-    public function getDateEnd(): ?\DateTimeInterface
+    public function getDateEnd(): ?\DateTimeImmutable
     {
         return $this->dateEnd;
     }
 
-    public function setDateEnd(\DateTimeInterface $dateEnd): static
+    public function setDateEnd(\DateTimeImmutable $dateEnd): static
     {
         $this->dateEnd = $dateEnd;
 

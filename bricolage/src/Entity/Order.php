@@ -25,8 +25,8 @@ class Order
     const ORDER_PAID = 'PAID';
     const ORDER_CANCELED = 'CANCELED';
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateOrder = null;
+    #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private $dateOrder = null;
 
     #[ORM\Column(length: 255)]
     private ?string $paymentMod = null;
@@ -73,12 +73,12 @@ class Order
         return $this;
     }
 
-    public function getDateOrder(): ?\DateTimeInterface
+    public function getDateOrder(): ?\DateTimeImmutable
     {
         return $this->dateOrder;
     }
 
-    public function setDateOrder(\DateTimeInterface $dateOrder): static
+    public function setDateOrder(\DateTimeImmutable $dateOrder): static
     {
         $this->dateOrder = $dateOrder;
 

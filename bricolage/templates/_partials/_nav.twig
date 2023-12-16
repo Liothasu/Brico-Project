@@ -2,36 +2,77 @@
     <script src="https://kit.fontawesome.com/021d66ba26.js" crossorigin="anonymous"></script>
 </head> #}
 <a href="{{ path('home') }}">
-    <h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1>
+	<h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1>
 </a>
 
 <nav>
-    <a href="{{ path('home') }}">Accueil</a>
-    <a href="{{ path('product_form') }}">Shop</a>
-    <a href="{{ path('list_message') }}">Message</a>
-    <a href="{{ path('category_form') }}">Categorie</a>
-    <a href="{{ path('project') }}">Project</a>
-    <a href="{{ path('contact') }}">Contact</a>
+	<a href="{{ path('home') }}">Accueil</a>
+	<a href="{{ path('product_form') }}">Shop</a>
+	<a href="{{ path('list_message') }}">Message</a>
+	<a href="{{ path('category_form') }}">Category</a>
+    {# <span id="category-toggle">Category</span>
+	<div class="dropdown" id="drop-down">
+    <label>
+        <select id="category-dropdown" class="dropdown-list">
+            {% for category in categories %}
+                <option value="{{ path('category_list', {slug: category.slug}) }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+</div>
+
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-list {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+    }
+</style>
+
+<script>
+    document.getElementById('category-toggle').addEventListener('click', function() {
+        var dropdown = document.getElementById('category-dropdown');
+        dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
+    });
+</script> #}
+	<a href="{{ path('project') }}">Project</a>
+	<a href="{{ path('contact') }}">Contact</a>
 </nav>
 
 <div class="icons">
-    <a href="#accueil"><i class="fas fa-search"></i></a>
-    <a href="#accueil"><i class="fas fa-shopping-cart"></i></a>
+	<a href="#accueil">
+		<i class="fas fa-search"></i>
+	</a>
+	<a href="#accueil">
+		<i class="fas fa-shopping-cart"></i>
+	</a>
 
-    {% if app.user %}
-        <a href="{{ path('app_logout') }}"><i class="fas fa-user"></i> {{ app.user.username }}</a>
-        <a style="hover-red" href="{{ path('app_logout') }}" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
-    {% else %}
-        <a href="{{ path('app_login') }}"><i class="fas fa-user"></i> Log in</a>
-        <a href="{{ path('app_register') }}">Sign in</a>
-    {% endif %}
-   
-    {# {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-        <a href="{{ path('app_logout') }}"><i class="fas fa-user"></i> {{ app.user.username }}</a>
-        <a style="hover-red" href="{{ path('app_logout') }}" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
-    {% else %}
-        <a href="{{ path('app_login') }}"><i class="fas fa-user"></i> Log in</a>
-    {% endif %} #}
+	{# {% if app.user %}
+		<a href="{{ path('app_logout') }}">
+			<i class="fas fa-user"></i>
+			{{ app.user.username }}</a>
+		<a style="hover-red" href="{{ path('app_logout') }}" class="btn btn-danger">
+			<i class="fa-solid fa-right-from-bracket"></i>
+		</a>
+	{% else %}
+		<a href="{{ path('app_login') }}">
+			<i class="fas fa-user"></i>
+			Log in</a>
+		<a href="{{ path('app_register') }}">Sign in</a>
+	{% endif %} #}
+
+	{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+		<a href="{{ path('app_logout') }}"><i class="fas fa-user"></i> {{ app.user.username }}</a>
+		<a style="hover-red" href="{{ path('app_logout') }}" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
+	{% else %}
+		<a href="{{ path('app_login') }}"><i class="fas fa-user"></i> Log in</a>
+	{% endif %}
 </div>
-
-

@@ -19,8 +19,8 @@ class Message
     #[ORM\Column(length: 50)]
     private ?string $content = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $timeMsg = null;
+    #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private $timeMsg = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'messages')]
     private Collection $user;
@@ -47,12 +47,12 @@ class Message
         return $this;
     }
 
-    public function getTimeMsg(): ?\DateTimeInterface
+    public function getTimeMsg(): ?\DateTimeImmutable
     {
         return $this->timeMsg;
-    }
+    }   
 
-    public function setTimeMsg(?\DateTimeInterface $timeMsg): static
+    public function setTimeMsg(?\DateTimeImmutable $timeMsg): self
     {
         $this->timeMsg = $timeMsg;
 

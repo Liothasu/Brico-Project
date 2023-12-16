@@ -3,34 +3,24 @@
 {% block title %}Produit{% endblock %}
 
 {% block main %}
-        <section>
-            {% block section %}
-                {{ form_start(form, {'attr': {'class': 'texte-blanc-form'}}) }}
-                    {{ form_label(form.reference) }}
-                    {{ form_widget(form.reference) }}
-                    {{ form_label(form.nameProduct) }}
-                    {{ form_widget(form.nameProduct) }}
-                    {{ form_label(form.color) }}
-                    {{ form_widget(form.color) }}
-                    {{ form_label(form.designation) }}
-                    {{ form_widget(form.designation) }}
-                    {{ form_label(form.quantity) }}
-                    {{ form_widget(form.quantity) }}
-                    {{ form_label(form.unitPrice) }}
-                    {{ form_widget(form.unitPrice) }}
-                    {{ form_label(form.priceVAT) }}
-                    {{ form_widget(form.priceVAT) }}
-                    {{ form_label(form.vat) }}
-                    {{ form_widget(form.vat) }}
-                    {{ form_label(form.promos) }}
-                    {{ form_widget(form.promos) }}
-                    {{ form_label(form.category) }}
-                    {{ form_widget(form.category) }}
-                    {{ form_label(form.supplier) }}
-                    {{ form_widget(form.supplier) }}
-                    {{ form_rest(form) }}
-                    <button type="submit">Save</button>
-                {{ form_end(form) }}
-            {% endblock %}
-        </section>
+    {% block section %}
+        {{ form_start(form, {'attr': {'class': 'texte-blanc-form'}}) }}
+            <fieldset class"mb-3">
+            <legend>Create a product</legend>
+                {{ form_row(form.reference) }}
+                {{ form_row(form.nameProduct) }}
+                {{ form_row(form.color) }}
+                {{ form_row(form.designation) }}
+                {{ form_row(form.quantity) }}
+                {{ form_row(form.unitPrice) }}
+                {{ form_row(form.priceVAT) }}
+                {{ form_row(form.vat) }}
+                {{ form_row(form.promos) }}
+                {{ form_row(form.category) }}
+                {{ form_row(form.supplier) }}
+                {{ form_rest(form) }}
+            </fieldset>
+            <button type="submit" class="btn btn-success my-3">Save</button>
+        {{ form_end(form) }}
+    {% endblock %}
 {% endblock %}

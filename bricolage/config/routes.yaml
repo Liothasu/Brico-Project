@@ -12,16 +12,6 @@ contact:
     path: /contact
     controller: App\Controller\MainController::contact
 
-# Route Product
-
-# product:
-#     path: /product
-#     controller: 'App\Controller\ProductController::showProductForm'
-
-product_form:
-    path: /shop
-    controller: App\Controller\ProductController::product_form
-
 # Route Message
 
 list_message:
@@ -46,22 +36,8 @@ list_blog:
 #     requirements:
 #         id: '\d+'
 
-# Route Category
-
-category_form:
-    path: /category
-    controller: 'App\Controller\CategoryController::category_form'
-
 # Route project
 
 project:
     path: project
     controller: 'App\Controller\ProjectController::project'
-
-# app_login:
-#     path: /login
-#     controller: 'App\Controller\SecurityController::app_login'
-
-# app_logout:
-#     path: /logout
-#     controller: 'App\Controller\SecurityController::app_logout'

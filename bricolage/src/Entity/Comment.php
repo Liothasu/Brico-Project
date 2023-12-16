@@ -17,8 +17,8 @@ class Comment
     #[ORM\Column(length: 50)]
     private ?string $content = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $timeCom = null;
+    #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private $timeCom = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Blog $blog = null;
@@ -43,12 +43,12 @@ class Comment
         return $this;
     }
 
-    public function getTimeCom(): ?\DateTimeInterface
+    public function getTimeCom(): ?\DateTimeImmutable
     {
         return $this->timeCom;
     }
 
-    public function setTimeCom(\DateTimeInterface $timeCom): static
+    public function setTimeCom(\DateTimeImmutable $timeCom): self
     {
         $this->timeCom = $timeCom;
 
