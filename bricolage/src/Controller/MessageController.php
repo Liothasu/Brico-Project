@@ -14,7 +14,7 @@ class MessageController extends AbstractController
     {
         $messages = $messageRepository->findAll();
 
-        return $this->render('message/list_message.twig', [
+        return $this->render('pages/message/list_message.html.twig', [
             'messages' => $messages,
         ]);
     }

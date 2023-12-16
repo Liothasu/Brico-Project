@@ -29,7 +29,7 @@ class CategoryController extends AbstractController
            $entityManager->flush();
         }
  
-        return $this->render('category/form.twig', [
+        return $this->render('pages/category/form.html.twig', [
             'form' => $form->createView(),
             'cat' => $cat,
         ]);
@@ -39,7 +39,7 @@ class CategoryController extends AbstractController
     public function list(Category $category): Response 
     {
         $product = $category->getProducts();
-        return $this->render('category/list.html.twig', compact('category', 'product'));
+        return $this->render('pages/category/list.html.twig', compact('category', 'product'));
     }
 
     

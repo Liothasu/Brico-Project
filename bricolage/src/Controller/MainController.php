@@ -12,9 +12,15 @@ class MainController extends AbstractController
     #[Route('/', name: 'home')]
     public function home(CategoryRepository $categoryRepository): Response
     {
-        return $this->render('main/home.twig', [
+        return $this->render('main/home.html.twig', [
             'categories' => $categoryRepository->findBy([],
             ['categoryOrder' => 'asc'])
         ]);
+    }
+
+    #[Route('/contact', name: 'contact')]
+    public function showContactForm(): Response
+    {
+        return $this->render('pages/contact/contact.html.twig');
     }
 } 
