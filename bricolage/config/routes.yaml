@@ -8,10 +8,6 @@ home:
     path: /
     controller: App\Controller\MainController::home
 
-# contact:
-#     path: pages/contact
-#     controller: App\Controller\MainController::contact
-
 # Route Message
 
 list_message:

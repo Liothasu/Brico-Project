@@ -13,15 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 #[Route('/shop', name: 'product_')]
 class ProductController extends AbstractController
 {
-    #[Route('/', name: 'form')]
-    public function form(): Response
-    {
-        $form = $this->createForm(ProductType::class);
-        return $this->render('pages/shop/product_form.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
     #[Route('/{slug}', name: 'list')]
     public function list(Product $product): Response
     {

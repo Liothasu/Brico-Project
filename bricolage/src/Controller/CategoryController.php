@@ -16,21 +16,10 @@ class CategoryController extends AbstractController
     #[Route('/', name: 'form')]
     public function form(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $category = new Category();
-        $form=$this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
-
         $categoryRepository = $entityManager->getRepository(Category::class);
         $cat = $categoryRepository->findAll();
 
-        if ($form->isSubmitted() && $form->isValid()) 
-        {
-           $entityManager->persist($category);
-           $entityManager->flush();
-        }
- 
         return $this->render('pages/category/form.html.twig', [
-            'form' => $form->createView(),
             'cat' => $cat,
         ]);
     }
