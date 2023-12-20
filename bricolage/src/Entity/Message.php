@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\MessageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
@@ -16,18 +15,39 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
     #[ORM\Column(length: 50)]
     private ?string $content = null;
 
-    #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private $timeMsg = null;
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTimeImmutable $timeMsg;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'messages')]
-    private Collection $user;
+    /**
+    * @ORM\Column(type="boolean")
+    */
+    private $is_read = 0;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "sent")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $sender;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "received")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $recipient;
+
+    #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: "replies", cascade: ["persist"])]
+    #[ORM\JoinColumn(name: "original_message_id", nullable: true)]
+    private $originalMessage;
+
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'originalMessage')]
+    private Collection $replies;
 
     public function __construct()
     {
-        $this->user = new ArrayCollection();
+        $this->timeMsg = new \DateTimeImmutable();
+        $this->replies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -35,12 +55,24 @@ class Message
         return $this->id;
     }
 
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
     public function getContent(): ?string
     {
         return $this->content;
     }
 
-    public function setContent(?string $content): static
+    public function setContent(?string $content): self
     {
         $this->content = $content;
 
@@ -59,26 +91,80 @@ class Message
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getIsRead(): ?bool
     {
-        return $this->user;
+        return $this->is_read;
     }
 
-    public function addUser(User $user): static
+    public function setIsRead(bool $is_read): self
     {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
+        $this->is_read = $is_read;
+
+        return $this;
+    }
+
+
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getRecipient(): ?User
+    {
+        return $this->recipient;
+    }
+
+    public function setRecipient(?User $recipient): self
+    {
+        $this->recipient = $recipient;
+
+        return $this;
+    }
+
+    public function getOriginalMessage(): ?self
+    {
+        return $this->originalMessage;
+    }
+
+    public function setOriginalMessage(?self $originalMessage): self
+    {
+        $this->originalMessage = $originalMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getReplies(): Collection
+    {
+        return $this->replies;
+    }
+
+    public function addReply(Message $reply): self
+    {
+        if (!$this->replies->contains($reply)) {
+            $this->replies[] = $reply;
+            $reply->setOriginalMessage($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeReply(Message $reply): self
     {
-        $this->user->removeElement($user);
+        if ($this->replies->removeElement($reply)) {
+            if ($reply->getOriginalMessage() === $this) {
+                $reply->setOriginalMessage(null);
+            }
+        }
 
         return $this;
     }

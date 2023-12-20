@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message{% endblock %}
+
+{% block main %}
+    <section class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Subject : {{ message.title }}</h2>
+                <p>Message from
+                    {{ message.sender.username }}</p>
+                <div style="color: white">{{ message.content }}</div>
+				<br>
+                <p>Sent on
+                    {{ message.timeMsg|date }}</p>
+                <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    View my messages
+                </a>
+				<a href="{{ path("reply", {id: message.id}) }}" class="btn btn-success">Reply</a>
+                <a href="{{ path("message") }}" class="btn btn-primary">Back to Inbox</a>
+            </div>
+        </div>
+    </section>
+    <div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+			<div class="offcanvas-header">
+				<h2 class="offcanvas-title" id="offcanvasExampleLabel">My folders</h2>
+				<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<div class="list-group">
+					<a href="{{ path("message") }}" class="list-group-item list-group-item-action">Inbox</a>
+				</div>
+				<div class="list-group">
+					<a href="{{ path("sent") }}" class="list-group-item list-group-item-action active">Sent Items</a>
+				</div>
+				<div class="list-group">
+					<a href="{{ path("send") }}" class="list-group-item list-group-item-action">Send a message</a>
+				</div>
+			</div>
+		</div>
+{% endblock %}

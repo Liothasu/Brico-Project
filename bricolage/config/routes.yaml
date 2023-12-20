@@ -7,33 +7,3 @@ controllers:
 home:
     path: /
     controller: App\Controller\MainController::home
-
-# Route Message
-
-list_message:
-    path: /message
-    controller: 'App\Controller\MessageController::listMessages'
-
-# show_message:
-#     path: /message/{id}
-#     controller: 'App\Controller\MessageController::showMessage'
-#     requirements:
-#         id: '\d+'
-
-# Route Blog
-
-list_blog:
-    path: /blog
-    controller: 'App\Controller\BlogController::listBlog'
-
-# show_blog:
-#     path: /blog/{id}
-#     controller: 'App\Controller\BlogController::showBlog'
-#     requirements:
-#         id: '\d+'
-
-# Route project
-
-project:
-    path: project
-    controller: 'App\Controller\ProjectController::project'

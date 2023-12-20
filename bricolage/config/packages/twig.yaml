@@ -1,6 +1,8 @@
 twig:
     paths:
         '%kernel.project_dir%/templates/main': main
+    globals:
+        cats: '@App\Twig\CatsExtension'
 
 when@test:
     twig:
