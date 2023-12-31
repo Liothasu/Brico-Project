@@ -3,6 +3,8 @@ twig:
         '%kernel.project_dir%/templates/main': main
     globals:
         cats: '@App\Twig\CatsExtension'
+        menu_service: '@App\Service\MenuService'
+        config_service: '@App\Service\ConfigService'
 
 when@test:
     twig:

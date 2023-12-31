@@ -2,44 +2,81 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
 use App\Entity\Trait\SlugTrait;
 use App\Repository\BlogRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: BlogRepository::class)]
-class Blog
+#[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Patch(
+            normalizationContext: ['groups' => ['blog:patch']],
+            denormalizationContext: ['groups' => ['blog:patch']],
+            security: "is_granted('ROLE_ADMIN') or object.getAuthor() == user"
+        )
+    ]
+)]
+class Blog 
 {
-    use SlugTrait;
+    use SlugTrait, TimestampableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $title = null;
+    private ?string $title;
 
-    #[ORM\Column(length: 50)]
-    private ?string $content = null;
+    #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['blog:patch'])]
+    private ?string $content;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $featuredText;
+
+    #[ORM\ManyToOne(targetEntity: Media::class)]
+    private ?Media $featuredMedia;
 
     #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Dispute::class)]
-    private Collection $disputes;
+    private ?Collection $disputes;
 
     #[ORM\ManyToOne(inversedBy: 'blogs')]
-    private ?User $user = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
 
-    #[ORM\ManyToOne(inversedBy: 'blogs')]
-    private ?Type $type = null;
+    #[ORM\ManyToMany(targetEntity: Type::class, inversedBy: 'blogs')]
+    private Collection $types;
 
-    #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Comment::class, cascade: ["remove"])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
+
+    // #[ORM\Column(type: 'datetime')]
+    // #[Gedmo\Timestampable(on:"create")]
+    // #[Groups('comment')]
+    // private \DateTimeInterface $createdAt;
+
+    // #[ORM\Column(type: 'datetime', nullable: true)]
+    // #[Gedmo\Timestampable(on:"update")]
+    // #[Groups('comment')]
+    // private \DateTimeInterface $updatedAt;
 
     public function __construct()
     {
+        $this->types = new ArrayCollection();
         $this->disputes = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -72,21 +109,19 @@ class Blog
     }
 
     /**
-     * @return Collection<int, Dispute>
+     * @return Collection|null
      */
-    public function getDisputes(): Collection
+    public function getDisputes(): ?Collection
     {
         return $this->disputes;
     }
 
-    public function addDispute(Dispute $dispute): static
+    /**
+     * @param Collection|null $disputes
+     */
+    public function setDisputes(?Collection $disputes): void
     {
-        if (!$this->disputes->contains($dispute)) {
-            $this->disputes->add($dispute);
-            $dispute->setBlog($this);
-        }
-
-        return $this;
+        $this->disputes = $disputes;
     }
 
     public function removeDispute(Dispute $dispute): static
@@ -101,32 +136,73 @@ class Blog
         return $this;
     }
 
-    public function getUser(): ?User
+    // public function getCreatedAt(): ?\DateTimeInterface 
+    // {
+    //     return $this->createdAt;
+    // }
+
+    // public function setCreatedAt(\DateTimeInterface  $createdAt): self
+    // {
+    //     $this->createdAt = $createdAt;
+
+    //     return $this;
+    // }
+
+    // public function getUpdatedAt(): ?\DateTimeInterface
+    // {
+    //     return $this->updatedAt;
+    // }
+
+    // public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    // {
+    //     $this->updatedAt = $updatedAt;
+
+    //     return $this;
+    // }
+
+    public function __toString(): string
     {
-        return $this->user;
+        return $this->title;
     }
 
-    public function setUser(?User $user): static
+    public function getFeaturedText(): ?string
     {
-        $this->user = $user;
-
-        return $this;
+        return $this->featuredText;
     }
 
-    public function getType(): ?Type
+    public function setFeaturedText(?string $featuredText): self
     {
-        return $this->type;
-    }
-
-    public function setType(?Type $type): static
-    {
-        $this->type = $type;
+        $this->featuredText = $featuredText;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Comment>
+     * @return Collection|Type[]
+     */
+    public function getTypes(): Collection
+    {
+        return $this->types;
+    }
+
+    public function addType(Type $type): self
+    {
+        if (!$this->types->contains($type)) {
+            $this->types[] = $type;
+        }
+
+        return $this;
+    }
+
+    public function removeType(Type $type): self
+    {
+        $this->types->removeElement($type);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
      */
     public function getComments(): Collection
     {
@@ -151,6 +227,30 @@ class Blog
                 $comment->setBlog(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFeaturedMedia(): ?Media
+    {
+        return $this->featuredMedia;
+    }
+
+    public function setFeaturedMedia(?Media $featuredMedia): self
+    {
+        $this->featuredMedia = $featuredMedia;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

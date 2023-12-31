@@ -2,66 +2,94 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Category;
-use App\Entity\Message;
-use App\Entity\Product;
+use App\Entity\Blog;
+use App\Entity\Type;
+use App\Entity\Comment;
+use App\Entity\Media;
+use App\Entity\Menu;
+use App\Entity\Config;
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
-/**
- * Require ROLE_ADMIN for *every* controller method in this class.
-*
-* @IsGranted("ROLE_ADMIN")
-*/
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DashboardController extends AbstractDashboardController
 {
+    public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator
+    ) {}
+
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        /**
-        * Require ROLE_ADMIN for only this controller method.
-        *
-        * @IsGranted("ROLE_ADMIN")
-        */
-        // return parent::index();
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirectToRoute('login');
+        }
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        return $this->redirect($adminUrlGenerator->setController(ProductCrudController::class)->generateUrl());
+        $controller = $this->isGranted('ROLE_USER') ? MenuCrudController::class : BlogCrudController::class;
 
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirect('...');
-        // }
+        $url = $this->adminUrlGenerator
+            ->setController($controller)
+            ->generateUrl();
 
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
+        return $this->redirect($url);
     }
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('HarwareStore - Admin');
+            ->setTitle('Hardware-Store')
+            ->renderContentMaximized();
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('User', 'fa-solid fa-person', User::class);
-        yield MenuItem::linkToCrud('Product', 'fa-solid fa-bag-shopping', Product::class);
-        yield MenuItem::linkToCrud('Category', 'fa-solid fa-list', Category::class);
-        yield MenuItem::linkToCrud('Message', 'fa-solid fa-message', Message::class);
+        yield MenuItem::linkToRoute('Go to the website', 'fas fa-undo', 'home');
 
+        if ($this->isGranted('ROLE_USER')) {
+            yield MenuItem::subMenu('Menus', 'fas fa-list')->setSubItems([
+                MenuItem::linkToCrud('Pages', 'fas fa-file', Menu::class)
+                    ->setQueryParameter('submenuIndex', 0),
+                MenuItem::linkToCrud('Blogs', 'fas fa-newspaper', Menu::class)
+                    ->setQueryParameter('submenuIndex', 1),
+                MenuItem::linkToCrud('Custom Links', 'fas fa-link', Menu::class)
+                    ->setQueryParameter('submenuIndex', 2),
+                MenuItem::linkToCrud('Types', 'fab fa-delicious', Menu::class)
+                    ->setQueryParameter('submenuIndex', 3),
+            ]);
+        }
+
+        if ($this->isGranted('ROLE_USER')) {
+            yield MenuItem::subMenu('Blogs', 'fas fa-newspaper')->setSubItems([
+                MenuItem::linkToCrud('All Blogs', 'fas fa-newspaper', Blog::class),
+                MenuItem::linkToCrud('Add', 'fas fa-plus', Blog::class)->setAction(Crud::PAGE_NEW),
+                MenuItem::linkToCrud('Types', 'fas fa-list', Type::class)
+            ]);
+
+            yield MenuItem::subMenu('Media', 'fas fa-photo-video')->setSubItems([
+                MenuItem::linkToCrud('Media Library', 'fas fa-photo-video', Media::class),
+                MenuItem::linkToCrud('Add', 'fas fa-plus', Media::class)->setAction(Crud::PAGE_NEW),
+            ]);
+        }
+
+        if ($this->isGranted('ROLE_USER')) {
+           
+            yield MenuItem::linkToCrud('Comments', 'fas fa-comment', Comment::class);
+
+            yield MenuItem::subMenu('Accounts', 'fas fa-user')->setSubItems([
+                MenuItem::linkToCrud('All Accounts', 'fas fa-user-friends', User::class),
+                MenuItem::linkToCrud('Add', 'fas fa-plus', User::class)->setAction(Crud::PAGE_NEW)
+            ]);
+
+            yield MenuItem::subMenu('Settings', 'fas fa-cog')->setSubItems([
+                MenuItem::linkToCrud('General', 'fas fa-cog', Config::class),
+            ]);
+        }
     }
 }

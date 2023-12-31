@@ -1,0 +1,176 @@
+@import 'custom';
+@import "bootstrap/scss/bootstrap";
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import "~@fortawesome/fontawesome-free/css/v4-shims.css";
+
+body, h2, h3, p, ul {
+  margin: 0;
+  padding: 0;
+  color: white;
+  margin-bottom: 30px;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #282828;
+}
+
+header {
+  background-color: rgb(0, 195, 172);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  color: white;
+  height: 60px;
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+main {
+  padding: 20px;
+  margin: 30px;
+}
+
+section {
+  margin-bottom: 30px;
+}
+
+h2 {
+  color: #ffffff;
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+// Logo
+.logo-image {
+  max-width: 100%;
+  max-height: 60px;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  color: rgb(255, 255, 255);
+}
+
+// Home images
+.home_image_one,
+.home_image_two,
+.home_image_three {
+  max-width: 100%;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+// Navigation
+nav {
+  display: flex;
+  align-items: center;
+
+  a {
+    padding: 10px;
+    margin-right: 8px;
+
+    &:hover:not(.active) {
+      background-color: rgb(0, 157, 155);
+    }
+
+    &.dropdown {
+      padding: 10px;
+      margin-right: 8px;
+
+      // Remove button-like styling
+      background-color: transparent;
+      border: none;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+// Dropdown content
+.dropdown-content {
+  margin-top: 0;
+}
+
+// Adjust the overall height of the navigation bar
+nav {
+  height: 60px;
+}
+
+
+.btn.btn-danger:hover {
+  background-color: inherit;
+  background-color: rgb(193, 3, 0);
+}
+
+// Icons
+.icons {
+  a {
+    color: white;
+    text-decoration: none;
+    margin-left: 8px;
+  }
+
+  i {
+    font-size: 18px;
+  }
+}
+
+// Footer
+footer {
+  background-color: rgb(0, 195, 172);
+  color: white;
+  padding: 20px;
+  text-align: center;
+
+  a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+
+  p {
+    margin: 5px 0;
+  }
+}
+
+// Product form
+.texte-blanc-form {
+  color: white;
+}
+
+// Contact form
+form {
+  color: white;
+}
+
+.btn-close {
+  background-color: rgb(206, 0, 0);
+}
+
+.black-text {
+  color: black;
+}
+
+//Comment
+.comment-content {
+  p {
+    color: black;
+    margin-left: 5px;
+  }
+}

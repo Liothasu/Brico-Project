@@ -22,19 +22,7 @@ class Supplier
     private ?string $nameFactory = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $phoneNumber = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $numStreet = null;
-
-    #[ORM\Column(length: 50)]
     private ?string $city = null;
-
-    #[ORM\Column]
-    private ?int $postalCode = null;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Product::class)]
     private Collection $products;
@@ -61,42 +49,6 @@ class Supplier
         return $this;
     }
 
-    public function getPhoneNumber(): ?string
-    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(string $phoneNumber): static
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getNumStreet(): ?string
-    {
-        return $this->numStreet;
-    }
-
-    public function setNumStreet(string $numStreet): static
-    {
-        $this->numStreet = $numStreet;
-
-        return $this;
-    }
-
     public function getCity(): ?string
     {
         return $this->city;
@@ -109,21 +61,6 @@ class Supplier
         return $this;
     }
 
-    public function getPostalCode(): ?int
-    {
-        return $this->postalCode;
-    }
-
-    public function setPostalCode(int $postalCode): static
-    {
-        $this->postalCode = $postalCode;
-
-        return $this;
-    }
-
-    public function getFullAddress() {
-        return $this->numStreet . " " . $this->city . " " . $this->postalCode;
-    }
 
     /**
      * @return Collection<int, Product>

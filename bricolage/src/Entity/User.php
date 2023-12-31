@@ -36,8 +36,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var string The hashed password
-     */
+    * @var string The hashed password
+    */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -52,6 +52,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?int $zipCode = null;
+    
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: "sender", orphanRemoval: true)]
     private $sent;
@@ -59,23 +62,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: "recipient", orphanRemoval: true)]
     private $received;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
+    private $comments;
 
-    public function __construct()
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Dispute::class)]
+    private ?Collection $disputes;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Blog::class, orphanRemoval: true)]
+    private Collection $blogs;
+
+    public function __construct(?string $username = null)
     {
+        $this->username = $username;
         $this->sent = new ArrayCollection();
         $this->received = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->disputes = new ArrayCollection();
+        $this->blogs = new ArrayCollection();
     }
-
+    
+    /**
+     * @see UserInterface
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @see UserInterface
-     */
+    * @see UserInterface
+    */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -105,10 +121,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
+    * A visual identifier that represents this user.
+    *
+    * @see UserInterface
+    */
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
@@ -151,8 +167,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @see PasswordAuthenticatedUserInterface
-     */
+    * @see PasswordAuthenticatedUserInterface
+    */
     public function getPassword(): string
     {
         return $this->password;
@@ -214,17 +230,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @see UserInterface
-     */
+    * @see UserInterface
+    */
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
 
-     /**
-     * @return Collection|Message[]
+    /**
+     * Check if the user is verified.
+     *
+     * @return bool
      */
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    /**
+     * Set the user as verified.
+     *
+     * @param bool $isVerified
+     */
+    public function setIsVerified(bool $isVerified): void
+    {
+        $this->isVerified = $isVerified;
+    }
+
+    /**
+    * @return Collection|Message[]
+    */
     public function getSent(): Collection
     {
         return $this->sent;
@@ -253,8 +289,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Message[]
-     */
+    * @return Collection|Message[]
+    */
     public function getReceived(): Collection
     {
         return $this->received;
@@ -282,15 +318,85 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
+    /**
+    * @return Collection|Comment[]
+    */
+    public function getComments(): Collection
     {
-        return $this->isVerified;
+        return $this->comments;
     }
 
-    public function setIsVerified(bool $isVerified): static
+    public function addComment(Comment $comment): self
     {
-        $this->isVerified = $isVerified;
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
 
         return $this;
     }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+    * @return Collection|null
+    */
+    public function getDisputes(): ?Collection
+    {
+        return $this->disputes;
+    }
+
+    /**
+    * @param Collection|null $disputes
+    */
+    public function setDisputes(?Collection $disputes): void
+    {
+        $this->disputes = $disputes;
+    }
+
+    public function __toString(): string
+    {
+        return $this->username;
+    }
+
+    /**
+    * @return Collection<int, Blog>
+    */
+    public function getBlog(): Collection
+    {
+        return $this->blogs;
+    }
+
+    public function addBlog(Blog $blog): self
+    {
+        if (!$this->blogs->contains($blog)) {
+            $this->blogs->add($blog);
+            $blog->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlog(Blog $blog): self
+    {
+        if ($this->blogs->removeElement($blog)) {
+            // set the owning side to null (unless already changed)
+            if ($blog->getAuthor() === $this) {
+                $blog->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

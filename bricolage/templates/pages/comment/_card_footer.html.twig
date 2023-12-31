@@ -1,0 +1,11 @@
+{% if action == 'show' %}
+    <button class="btn btn-sm btn-primary" id="show-reply-dialog-button" data-id="{{ id }}">Reply</button>
+    {% if isCommentAuthor %}
+        <button class="btn btn-sm btn-danger ms-2 float-end" id="delete-comment-button" data-id="{{ id }}">Delete</button>
+        <button class="btn btn-sm btn-info float-end" id="edit-comment-button" data-action="showEditArea" data-id="{{ id }}">Edit</button>
+    {% endif %}
+
+{% elseif action == 'edit' %}
+    <button class="btn btn-sm btn-danger ms-2 float-end" id="cancel-edit-comment-button" data-action="hideEditArea" data-id="{{ id }}">Cancel</button>
+    <button class="btn btn-sm btn-info float-end" id="save-edit-comment-button" data-action="hideEditArea" data-id="{{ id }}">Save</button>
+{% endif %}

@@ -1,20 +1,30 @@
+{% set menus = menu_service.findAll %}
+{% set configs = config_service.findAll %}
+
+{% set ea_edit_current_entity = null %}
+
+{% if entity is defined %}
+	{% set label_edit_current_entity = entity_label(entity) %}
+	{% set ea_edit_current_entity = ea_edit(entity) %}
+{% endif %}
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<title>
-			{% block title %}Accueil
+			{% block title %}
+				{{ configs['blog_title'] }}
 			{% endblock %}
 		</title>
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css" integrity="sha384-BY+fdrpOd3gfeRvTSMT+VUZmA728cfF9Z2G42xpaRkUGu2i3DyzpTURDo5A6CaLK" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 		{% block stylesheets %}
-			<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
 		{% block javascripts %}
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-			<script src="https://kit.fontawesome.com/021d66ba26.js" crossorigin="anonymous"></script>
+			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
 	<body>
@@ -22,26 +32,28 @@
 			<a
 				href="{{ path('home') }}">
 				{# <h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1> #}
-				<h1 class="logo-image" alt="Logo">
-					<i class="fa-solid fa-screwdriver-wrench"></i>
-				</h1>
+				<i class="fa-solid fa-screwdriver-wrench fa-2xl"></i>
 			</a>
 
 			<nav>
+				{% if is_granted('ROLE_ADMIN') %}
+					<a href="{{ path('admin') }}">Admin</a>
+				{% endif %}
 				<a href="{{ path('home') }}">Accueil</a>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Category
-					</button>
-					<ul class="dropdown-menu">
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						{% for category in cats.getCategory %}
 							<li>
-								<a href="{{ path('category_list', {'slug': category.slug}) }}">{{ category.name }}</a>
+								<a class="dropdown-item" href="{{ path('category_list', {'slug': category.slug}) }}">{{ category.name }}</a>
 							</li>
 						{% endfor %}
 					</ul>
 				</div>
-				<a href="#">Blog</a>
+
+				<a href="{{ path('blog_list') }}">Blog</a>
 				<a href="{{ path('project') }}">Project</a>
 				<a href="{{ path("message") }}">Message</a>
 				<a href="{{ path('contact') }}">Contact</a>
@@ -59,28 +71,25 @@
 					<a href="{{ path('home') }}">
 						<i class="fas fa-user"></i>
 						{{ app.user.username }}</a>
-					<a href="{{ path('app_logout') }}" class="btn btn-danger">
+					<a href="{{ path('logout') }}" class="btn btn-danger">
 						<i class="fa-solid fa-right-from-bracket"></i>
 					</a>
 				{% else %}
-					<a href="{{ path('app_login') }}">
+					<a href="{{ path('login') }}">
 						<i class="fas fa-user"></i>
 						Log in</a>
-					<a href="{{ path('app_register') }}">Sign in</a>
+					<a href="{{ path('register') }}">Sign in</a>
 				{% endif %}
 			</div>
-		</header>
-		<main>
-			{% block main %}
-				{% for message in app.flashes("message") %}
-					<div class="alert alert-success alert-dismissible fade show" role="alert">
-						{{message}}
-						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					</div>
-				{% endfor %}
-			{% endblock %}
-			{# {% include '_partials/_flash.html.twig' %} #}
-		</main>
-		{% include '_partials/_footer.html.twig' %}
+		</body>
 	</body>
-</html>
+</html></header><main>
+{% block main %}
+	{% for message in app.flashes("message") %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			{{message}}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endfor %}
+{% endblock %}
+{% include '_partials/_flash.html.twig' %}</main>{% include '_partials/_footer.html.twig' %}</body></html>

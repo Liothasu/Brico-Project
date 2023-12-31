@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class VerifEmailController extends AbstractController
 {
-    #[Route('/verif-email', name: 'app_verif_email')]
+    #[Route('/verif/email', name: 'app_verif_email')]
     public function verif(): Response
     {
         $this->denyAccessUnlessGranted("IS_AUTHENTICATED_FULLY");
@@ -24,9 +24,7 @@ class VerifEmailController extends AbstractController
 
         return match ($user->isVerified()) {
             true => $this->render("main/home.html.twig"),
-            false => $this->render("pages/verif-email/please-verify-email.html.twig"),
-            
+            false => $this->render("pages/registration/verify_email.html.twig"),
         };
-        
     }
 }

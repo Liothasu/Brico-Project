@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% set type = entity %}
+
+{% block title %}{{ type.name }}{% endblock %}
+
+{% block main %}
+    <section class="container">
+        <div class="row g-5">
+            <div class="col">
+                <h3 class="pb-4 mb-4 fst-italic border-bottom">{{ type.name }}</h3>
+                <div id="blogs-list">
+                    {% include 'pages/blog/list.html.twig' with { blogs: blogs, leftCol: 4, rightCol: 8 } %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

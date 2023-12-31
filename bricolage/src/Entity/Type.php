@@ -6,6 +6,7 @@ use App\Entity\Trait\SlugTrait;
 use App\Repository\TypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TypeRepository::class)]
@@ -16,12 +17,16 @@ class Type
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    #[Groups('blog')]
+    private ?int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $tag = null;
+    private ?string $name;
 
-    #[ORM\OneToMany(mappedBy: 'type', targetEntity: Blog::class)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $color;
+
+    #[ORM\ManyToMany(targetEntity: Blog::class, mappedBy: 'types')]
     private Collection $blogs;
 
     public function __construct()
@@ -34,45 +39,58 @@ class Type
         return $this->id;
     }
 
-    public function getTag(): ?string
+    public function getName(): ?string
     {
-        return $this->tag;
+        return $this->name;
     }
 
-    public function setTag(string $tag): static
+    public function setName(string $name): static
     {
-        $this->tag = $tag;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Blog>
-     */
+    * @return Collection|Blog[]
+    */
     public function getBlogs(): Collection
     {
         return $this->blogs;
     }
 
-    public function addBlog(Blog $blog): static
+    public function addBlog(Blog $blog): self
     {
         if (!$this->blogs->contains($blog)) {
-            $this->blogs->add($blog);
-            $blog->setType($this);
+            $this->blogs[] = $blog;
+            $blog->addType($this);
         }
 
         return $this;
     }
 
-    public function removeBlog(Blog $blog): static
+    public function removeBlog(Blog $blog): self
     {
-        if ($this->blogs->removeElement($blog)) {
-            // set the owning side to null (unless already changed)
-            if ($blog->getType() === $this) {
-                $blog->setType(null);
-            }
-        }
+        $this->blogs->removeElement($blog);
+        $blog->removeType($this);
 
         return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

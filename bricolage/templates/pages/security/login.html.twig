@@ -10,7 +10,7 @@
 
     {% if app.user %}
         <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('logout') }}">Logout</a>
         </div>
     {% endif %}
 
@@ -30,5 +30,5 @@
 </form>
 <br>
     <p>Did you forgot your password ?<a href="{{ path('app_forgot_password_request') }}">Click here to reset</a></p>
-    <p>You don't have an account ?<a href="{{ path('app_register') }}" class="btn btn-primary my-3">Register</a></p>
+    <p>You don't have an account ?<a href="{{ path('register') }}" class="btn btn-primary my-3">Register</a></p>
 {% endblock %}

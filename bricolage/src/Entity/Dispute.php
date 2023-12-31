@@ -16,9 +16,6 @@ class Dispute
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 50)]
     private ?string $title = null;
 
     #[ORM\Column(length: 50)]
@@ -50,18 +47,6 @@ class Dispute
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getTitle(): ?string

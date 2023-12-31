@@ -1,10 +1,7 @@
-<footer>
-    {# <a href="#">Contact us</a>
-    <p>Rue des bonbons 23, Bruxelles, Belgique</p>
-    <p>0422558877</p>
-    <p>exemple@lol.com</p>
-
-    <a href="#">Our Services</a> #}
-
-    <p>Copyright © 2023 - All rights reserved || Designed By: Liothasu</p>
+<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
+		<span class="copyright">©
+			{{ 'now'|date('Y') }}
+			{{ configs['blog_copyright'] }} | 
+			{{ configs['blog_about'] }}
+        </span>
 </footer>

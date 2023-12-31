@@ -19,7 +19,8 @@
                 {{ form_row(registrationForm.firstName) }}
                 {{ form_row(registrationForm.lastName) }}
                 {{ form_row(registrationForm.email) }}
-                {{ form_row(registrationForm.plainPassword, {label: 'Password'}) }}
+                {{ form_row(registrationForm.plainPassword.first) }}
+                {{ form_row(registrationForm.plainPassword.second) }}
             </fieldset>
             <fieldset class="mb-3">
                 <legend>My contact details</legend>
@@ -30,7 +31,7 @@
                 {{ form_row(registrationForm.agreeTerms) }}
             </fieldset>
             <button type="submit" class="btn btn-success my-3">Register</button>
-            <a href="{{ path('app_login') }}" class="btn btn-primary my-3">Log in</a>
+            <a href="{{ path('login') }}" class="btn btn-primary my-3">Log in</a>
         {{ form_end(registrationForm) }}
 
     {% endblock %}
