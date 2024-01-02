@@ -28,8 +28,6 @@ class TypeCrudController extends AbstractCrudController
         yield TextField::new('name', 'Nom');
         yield SlugField::new('slug')->setTargetFieldName('name');
         yield ColorField::new('color');
-        // yield AssociationField::new('blogs')
-        //     ->setFormTypeOption('by_reference', false);
     }
 
 }

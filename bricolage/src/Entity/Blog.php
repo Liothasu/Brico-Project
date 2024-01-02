@@ -61,15 +61,7 @@ class Blog
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
-    // #[ORM\Column(type: 'datetime')]
-    // #[Gedmo\Timestampable(on:"create")]
-    // #[Groups('comment')]
-    // private \DateTimeInterface $createdAt;
-
-    // #[ORM\Column(type: 'datetime', nullable: true)]
-    // #[Gedmo\Timestampable(on:"update")]
-    // #[Groups('comment')]
-    // private \DateTimeInterface $updatedAt;
+    // Column createdAt and updatedAt
 
     public function __construct()
     {
@@ -136,29 +128,7 @@ class Blog
         return $this;
     }
 
-    // public function getCreatedAt(): ?\DateTimeInterface 
-    // {
-    //     return $this->createdAt;
-    // }
-
-    // public function setCreatedAt(\DateTimeInterface  $createdAt): self
-    // {
-    //     $this->createdAt = $createdAt;
-
-    //     return $this;
-    // }
-
-    // public function getUpdatedAt(): ?\DateTimeInterface
-    // {
-    //     return $this->updatedAt;
-    // }
-
-    // public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
-    // {
-    //     $this->updatedAt = $updatedAt;
-
-    //     return $this;
-    // }
+    //getters and setters updatedAt/createdAt 
 
     public function __toString(): string
     {

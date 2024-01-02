@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\PromoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PromoRepository::class)]
@@ -15,6 +14,9 @@ class Promo
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $name;
 
     #[ORM\Column]
     private ?float $percent = null;
@@ -36,6 +38,18 @@ class Promo
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function getPercent(): ?float
@@ -96,5 +110,10 @@ class Promo
         $this->products->removeElement($product);
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

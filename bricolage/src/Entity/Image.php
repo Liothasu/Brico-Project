@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
@@ -11,12 +12,19 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    #[Groups('product')]
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
     private ?string $name;
 
-    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'image')]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $filename;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $altText;
+
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'images')]
     #[ORM\JoinColumn(nullable: false)]
     private $product;
 
@@ -35,6 +43,35 @@ class Image
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): self
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getAltText(): ?string
+    {
+        return $this->altText;
+    }
+
+    public function setAltText(?string $altText): self
+    {
+        $this->altText = $altText;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getProduct(): ?Product

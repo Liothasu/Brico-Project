@@ -40,8 +40,9 @@ class Order
     #[ORM\OneToMany(mappedBy: 'order_command', targetEntity: Dispute::class)]
     private Collection $disputes;
 
-    #[ORM\ManyToOne(inversedBy: 'orders')]
-    private ?User $user = null;
+    #[ORM\ManyToOne(targetEntity:User::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: true)]
+    private $user;
 
     public function __construct()
     {

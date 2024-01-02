@@ -21,8 +21,7 @@ class MainController extends AbstractController
     public function home(CategoryRepository $categoryRepository, BlogService $blogService, TypeRepository $typeRepository): Response
     {
         return $this->render('main/home.html.twig', [
-            'categories' => $categoryRepository->findBy([],
-            ['categoryOrder' => 'asc']),
+            'categories' => $categoryRepository->findBy([], ['name' => 'asc']),
             'blogs' => $blogService->getPaginatedBlogs(),
             'types' => $typeRepository->findAllForWidget()
         ]);

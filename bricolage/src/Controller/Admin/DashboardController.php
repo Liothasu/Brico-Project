@@ -3,11 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Blog;
+use App\Entity\Category;
 use App\Entity\Type;
 use App\Entity\Comment;
 use App\Entity\Media;
 use App\Entity\Menu;
 use App\Entity\Config;
+use App\Entity\Image;
+use App\Entity\Product;
+use App\Entity\Supplier;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -52,16 +56,25 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToRoute('Go to the website', 'fas fa-undo', 'home');
 
+        // if ($this->isGranted('ROLE_USER')) {
+        //     yield MenuItem::subMenu('Menus', 'fa-solid fa-bars')->setSubItems([
+        //         MenuItem::linkToCrud('Pages', 'fas fa-file', Menu::class)
+        //             ->setQueryParameter('submenuIndex', 0),
+        //         MenuItem::linkToCrud('Blogs', 'fas fa-newspaper', Menu::class)
+        //             ->setQueryParameter('submenuIndex', 1),
+        //         MenuItem::linkToCrud('Custom Links', 'fas fa-link', Menu::class)
+        //             ->setQueryParameter('submenuIndex', 2),
+        //         MenuItem::linkToCrud('Types', 'fas fa-list', Menu::class)
+        //             ->setQueryParameter('submenuIndex', 3),
+        //     ]);
+        // }
+
         if ($this->isGranted('ROLE_USER')) {
-            yield MenuItem::subMenu('Menus', 'fas fa-list')->setSubItems([
-                MenuItem::linkToCrud('Pages', 'fas fa-file', Menu::class)
-                    ->setQueryParameter('submenuIndex', 0),
-                MenuItem::linkToCrud('Blogs', 'fas fa-newspaper', Menu::class)
-                    ->setQueryParameter('submenuIndex', 1),
-                MenuItem::linkToCrud('Custom Links', 'fas fa-link', Menu::class)
-                    ->setQueryParameter('submenuIndex', 2),
-                MenuItem::linkToCrud('Types', 'fab fa-delicious', Menu::class)
-                    ->setQueryParameter('submenuIndex', 3),
+            yield MenuItem::subMenu('Products', 'fa-solid fa-tags')->setSubItems([
+                MenuItem::linkToCrud('All Products', 'fa-solid fa-tag', Product::class),
+                MenuItem::linkToCrud('Add', 'fas fa-plus', Product::class)->setAction(Crud::PAGE_NEW),
+                MenuItem::linkToCrud('Categories', 'fa-solid fa-lines-leaning', Category::class),
+                MenuItem::linkToCrud('Suppliers', 'fa-solid fa-industry', Supplier::class)
             ]);
         }
 
@@ -72,9 +85,11 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Types', 'fas fa-list', Type::class)
             ]);
 
-            yield MenuItem::subMenu('Media', 'fas fa-photo-video')->setSubItems([
-                MenuItem::linkToCrud('Media Library', 'fas fa-photo-video', Media::class),
+            yield MenuItem::subMenu('Media Library', 'fas fa-photo-video')->setSubItems([
+                MenuItem::linkToCrud('Medias', 'fa-solid fa-image', Media::class),
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Media::class)->setAction(Crud::PAGE_NEW),
+                MenuItem::linkToCrud('Images', 'fa-solid fa-image', Image::class),
+                MenuItem::linkToCrud('Add', 'fas fa-plus', Image::class)->setAction(Crud::PAGE_NEW),
             ]);
         }
 

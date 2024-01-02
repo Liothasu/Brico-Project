@@ -6,33 +6,71 @@
 {% block main %}
 	{% block section %}
 		<div>
-			<h3>Liste des produits de la catégorie {{ category.name }}</h3>
+			<h3>{{ category.name }}</h3>
 		</div>
 		<div>
-			{% for product in category.products %}
-				<div class="card mb-3" style="max-width: 540px;">
-					<div class="row g-0">
-						<div class="col-md-4">
-							<img src="https://www.letablisienne.com/wp-content/uploads/2020/10/20201025_161645-scaled-576x768.jpg" class="card-img-top" alt="...">
-						</div>
-						<div class="col-md-8">
-							<div class="card-body">
-								<h5 class="card-title">{{ product.nameProduct }}</h5>
-								<p class="card-text" style="color: black">{{ product.designation }}</p>
+			{% if category.products is not empty %}
+				{% for product in category.products %}
+					<div class="card mb-3" style="max-width: 540px;">
+						<div class="row g-0">
+							<div class="col-md-4">
+								{% if product.images|length > 0 %}
+									<div id="carouselExampleIndicators{{ product.id }}" class="carousel slide">
+										<div class="carousel-indicators">
+											{% for loopIndex, image in product.images %}
+												<button type="button" data-bs-target="#carouselExampleIndicators{{ product.id }}" data-bs-slide-to="{{ loopIndex }}" {% if loopIndex == 0 %} class="active" {% endif %}></button>
+											{% endfor %}
+										</div>
+										<div class="carousel-inner">
+											{% for loopIndex, image in product.images %}
+												<div class="carousel-item{% if loopIndex == 0 %} active{% endif %}">
+													<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}">
+												</div>
+											{% endfor %}
+										</div>
+										<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators{{ product.id }}" data-bs-slide="prev">
+											<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+										</button>
+										<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators{{ product.id }}" data-bs-slide="next">
+											<span class="carousel-control-next-icon" aria-hidden="true"></span>
+										</button>
+									</div>
+								{% else %}
+									<p style="color: black">No image</p>
+								{% endif %}
 							</div>
-							<ul class="list-group list-group-flush">
-								<li class="list-group-item">{{ product.color }}</li>
-								<li class="list-group-item">{{ product.quantity }}</li>
-								<li class="list-group-item">{{ product.unitPrice }}</li>
-								<li class="list-group-item">{{ product.reference }}</li>
-							</ul>
-							<div class="card-body">
-								<a href="#" class="btn btn-primary">Ajouter au panier</a>
+							<div class="col-md-8">
+								<div class="card-body">
+									<h5 class="card-title">{{ product.nameProduct }}</h5>
+									<p class="card-text" style="color: black">{{ product.designation }}</p>
+								</div>
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item">{{ product.color }}</li>
+									<li class="list-group-item">
+										<strong>Price excluding tax:
+										</strong>
+										{{ product.unitPrice | number_format(2, ',', '.') }}
+										€</li>
+									<li class="list-group-item">
+										<strong>Price includes VAT:
+										</strong>
+										{{ product.priceVAT | number_format(2, ',', '.') }}
+										€</li>
+									<li class="list-group-item">
+
+										{{ product.supplier }}</li>
+									<li class="list-group-item">{{ product.reference }}</li>
+								</ul>
+								<div class="card-body">
+									<a href="#" class="btn btn-primary">Add to cart</a>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			{% endfor %}
+				{% endfor %}
+			{% else %}
+				<p>No products available in this category.</p>
+			{% endif %}
 		</div>
 	{% endblock %}
 {% endblock %}

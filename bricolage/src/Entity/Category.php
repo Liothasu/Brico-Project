@@ -21,9 +21,6 @@ class Category
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 0])]
-    private $categoryOrder;
-
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
     private Collection $products;
 
@@ -45,18 +42,6 @@ class Category
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCategoryOrder(): ?int
-    {
-        return $this->categoryOrder;
-    }
-
-    public function setCategoryOrder(int $categoryOrder): self
-    {
-        $this->categoryOrder = $categoryOrder;
 
         return $this;
     }
@@ -89,6 +74,11 @@ class Category
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 
 }

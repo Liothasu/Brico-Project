@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Product
 {
     use SlugTrait;
@@ -16,34 +17,31 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $reference = null;
+    private ?string $reference;
 
     #[ORM\Column(length: 50)]
-    private ?string $nameProduct = null;
+    private ?string $nameProduct;
 
     #[ORM\Column(length: 50)]
-    private ?string $color = null;
+    private ?string $color;
 
     #[ORM\Column(length: 50)]
-    private ?string $designation = null;
+    private ?string $designation;
 
     #[ORM\Column]
-    private ?int $quantity = null;
+    private int $quantity;
 
-    #[ORM\Column(length: 50)]
-    private ?int $unitPrice;
-
-    #[ORM\Column]
-    private ?int $priceVAT = null;
-
-    #[ORM\Column]
-    private ?int $vat = null;
+    #[ORM\Column(type: 'decimal', precision: 12, scale: 2)]
+    private $unitPrice;
+    
+    #[ORM\Column(type: 'decimal', precision: 12, scale: 2)]
+    private $priceVAT;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Image::class, orphanRemoval: true, cascade: ['persist'])]
-    private $image;
+    private $images;
 
     #[ORM\ManyToMany(targetEntity: Promo::class, mappedBy: 'products')]
     private Collection $promos;
@@ -59,7 +57,7 @@ class Product
 
     public function __construct()
     {
-        $this->image = new ArrayCollection();
+        $this->images = new ArrayCollection();
         $this->lineOrders = new ArrayCollection();
     }
 
@@ -128,66 +126,62 @@ class Product
         return $this;
     }
 
-    public function getUnitPrice(): ?string
+    public function getUnitPrice(): ?float
     {
         return $this->unitPrice;
     }
 
-    public function setUnitPrice(string $unitPrice): static
+    public function setUnitPrice(float $unitPrice): static
     {
         $this->unitPrice = $unitPrice;
 
         return $this;
     }
 
-    public function getPriceVAT(): ?int
+    public function getPriceVAT(): ?float
     {
         return $this->priceVAT;
     }
 
-    public function setPriceVAT(int $priceVAT): static
+    public function setPriceVAT(float $priceVAT): static
     {
         $this->priceVAT = $priceVAT;
 
         return $this;
     }
 
-    public function getVAT(): ?int
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function calculateVAT(): void
     {
-        return $this->vat;
-    }
-
-    public function setVAT(int $vat): static
-    {
-        $this->vat = $vat;
-
-        return $this;
+        $vatRate = 0.21;
+        $this->priceVAT = $this->unitPrice * (1 + $vatRate);
     }
 
      /**
      * @return Collection|Image[]
      */
-    public function getImage(): Collection
+    public function getImages(): Collection
     {
-        return $this->image;
+        return $this->images;
     }
 
-    public function addImage(Image $image): self
+    public function addImage(Image $images): self
     {
-        if (!$this->image->contains($image)) {
-            $this->image[] = $image;
-            $image->setProduct($this);
+        if (!$this->images->contains($images)) {
+            $this->images[] = $images;
+            $images->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeImage(Image $image): self
+    public function removeImage(Image $images): self
     {
-        if ($this->image->removeElement($image)) {
+        if ($this->images->removeElement($images)) {
             // set the owning side to null (unless already changed)
-            if ($image->getProduct() === $this) {
-                $image->setProduct(null);
+            if ($images->getProduct() === $this) {
+                $images->setProduct(null);
             }
         }
 
@@ -274,4 +268,10 @@ class Product
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->nameProduct;
+    }
+
 }
