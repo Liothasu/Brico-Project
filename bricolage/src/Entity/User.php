@@ -65,11 +65,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class)]
     private $comments;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    private Collection $orders;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Dispute::class)]
     private ?Collection $disputes;
+    
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Project::class)]
+    private $projects;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Blog::class, orphanRemoval: true)]
     private Collection $blogs;
+
 
     public function __construct(?string $username = null)
     {
@@ -78,6 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->received = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->disputes = new ArrayCollection();
+        $this->projects = new ArrayCollection();
         $this->blogs = new ArrayCollection();
     }
     
@@ -349,6 +357,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    /**
     * @return Collection|null
     */
     public function getDisputes(): ?Collection
@@ -362,6 +378,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDisputes(?Collection $disputes): void
     {
         $this->disputes = $disputes;
+    }
+
+    /**
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getUser() === $this) {
+                $project->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
     public function __toString(): string

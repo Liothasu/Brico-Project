@@ -19,7 +19,6 @@ class ProductFixtures extends Fixture
         $product->setQuantity(1);
         $product->setUnitPrice(25.99);
         $product->setPriceVAT(10);
-        $product->setVat(12);
         $product->setSlug('marteau');
         $manager->persist($product);
 
@@ -31,7 +30,6 @@ class ProductFixtures extends Fixture
         $product2->setQuantity(1);
         $product2->setUnitPrice(20.00);
         $product2->setPriceVAT(10);
-        $product2->setVat(12);
         $product2->setSlug('tournevis');
         $manager->persist($product2);
 

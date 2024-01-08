@@ -10,6 +10,7 @@ use App\Entity\Media;
 use App\Entity\Menu;
 use App\Entity\Config;
 use App\Entity\Image;
+use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\Supplier;
 use App\Entity\User;
@@ -69,12 +70,18 @@ class DashboardController extends AbstractDashboardController
         //     ]);
         // }
 
-        if ($this->isGranted('ROLE_USER')) {
+        if ($this->isGranted('ROLE_ADMIN')) {
             yield MenuItem::subMenu('Products', 'fa-solid fa-tags')->setSubItems([
                 MenuItem::linkToCrud('All Products', 'fa-solid fa-tag', Product::class),
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Product::class)->setAction(Crud::PAGE_NEW),
                 MenuItem::linkToCrud('Categories', 'fa-solid fa-lines-leaning', Category::class),
                 MenuItem::linkToCrud('Suppliers', 'fa-solid fa-industry', Supplier::class)
+            ]);
+        }
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            yield MenuItem::subMenu('Orders', 'fa-solid fa-cart-shopping')->setSubItems([
+                MenuItem::linkToCrud('All orders', 'fa-solid fa-cart-arrow-down', Order::class),
             ]);
         }
 
@@ -85,15 +92,15 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Types', 'fas fa-list', Type::class)
             ]);
 
+        }
+        
+        if ($this->isGranted('ROLE_ADMIN')) {
             yield MenuItem::subMenu('Media Library', 'fas fa-photo-video')->setSubItems([
                 MenuItem::linkToCrud('Medias', 'fa-solid fa-image', Media::class),
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Media::class)->setAction(Crud::PAGE_NEW),
                 MenuItem::linkToCrud('Images', 'fa-solid fa-image', Image::class),
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Image::class)->setAction(Crud::PAGE_NEW),
             ]);
-        }
-
-        if ($this->isGranted('ROLE_USER')) {
            
             yield MenuItem::linkToCrud('Comments', 'fas fa-comment', Comment::class);
 

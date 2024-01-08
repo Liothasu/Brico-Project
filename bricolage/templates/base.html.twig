@@ -31,8 +31,8 @@
 		<header>
 			<a
 				href="{{ path('home') }}">
-				{# <h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1> #}
-				<i class="fa-solid fa-screwdriver-wrench fa-2xl"></i>
+				<h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1>
+				{# <i class="fa-solid fa-screwdriver-wrench fa-2xl"></i> #}
 			</a>
 
 			<nav>
@@ -40,8 +40,9 @@
 					<a href="{{ path('admin') }}">Admin</a>
 				{% endif %}
 				<a href="{{ path('home') }}">Home</a>
+				
 				<div class="dropdown">
-					<a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Category
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -54,6 +55,7 @@
 				</div>
 
 				<a href="{{ path('blog_list') }}">Blog</a>
+				<a href="{{ path('product_all') }}">Product</a>
 				<a href="{{ path('project') }}">Project</a>
 				<a href="{{ path("message") }}">Message</a>
 				<a href="{{ path('contact') }}">Contact</a>
@@ -63,12 +65,12 @@
 				<a href="#accueil">
 					<i class="fas fa-search"></i>
 				</a>
-				<a href="#accueil">
+				<a href="{{ path('cart_index') }}">
 					<i class="fas fa-shopping-cart"></i>
 				</a>
 
 				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-					<a href="{{ path('home') }}">
+					<a href="{{ path('order_list') }}">
 						<i class="fas fa-user"></i>
 						{{ app.user.username }}</a>
 					<a href="{{ path('logout') }}" class="btn btn-danger">
@@ -81,15 +83,18 @@
 					<a href="{{ path('register') }}">Sign in</a>
 				{% endif %}
 			</div>
-		</body>
+		</header>
 	</body>
-</html></header><main>
-{% block main %}
-	{% for message in app.flashes("message") %}
-		<div class="alert alert-success alert-dismissible fade show" role="alert">
-			{{message}}
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
-	{% endfor %}
-{% endblock %}
-{% include '_partials/_flash.html.twig' %}</main>{% include '_partials/_footer.html.twig' %}</body></html>
+	<main>
+		{% block main %}
+			{% for message in app.flashes("message") %}
+				<div class="alert alert-success alert-dismissible fade show" role="alert">
+					{{message}}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+		{% endblock %}
+	</main>
+	{% include '_partials/_flash.html.twig' %}
+	{% include '_partials/_footer.html.twig' %}
+</html>

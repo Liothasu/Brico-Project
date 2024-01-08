@@ -3,7 +3,7 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "~@fortawesome/fontawesome-free/css/v4-shims.css";
 
-body, h2, h3, p, ul {
+body, h2, h3, p {
   margin: 0;
   padding: 0;
   color: white;
@@ -18,7 +18,7 @@ body {
 }
 
 header {
-  background-color: rgb(0, 195, 172);
+  background-color: rgb(0, 195, 172); //0, 195, 172
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -90,14 +90,20 @@ nav {
     &.dropdown {
       padding: 10px;
       margin-right: 8px;
-
-      // Remove button-like styling
       background-color: transparent;
-      border: none;
 
       &:hover {
         background-color: transparent;
       }
+    }
+  }
+
+  .dropdown {
+    a {
+      padding: 10px;
+    }
+    .dropdown-item :hover {
+      background-color: inherit;
     }
   }
 }

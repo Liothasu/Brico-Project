@@ -1,16 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List product
+{% block title %}Liste des produits
 {% endblock %}
 
 {% block main %}
 	{% block section %}
 		<div>
-			<h3>{{ category.name }}</h3>
+			<h3>List product</h3>
 		</div>
 		<div>
-			{% if category.products is not empty %}
-				{% for product in category.products %}
+			{% if products is not empty %}
+				{% set currentCategory = null %}
+				{% for product in products %}
+					{% if currentCategory != product.category.name %}
+						<div class="col-12">
+							<h3>{{ product.category.name }}</h3>
+						</div>
+						{% set currentCategory = product.category.name %}
+					{% endif %}
 					<div class="card mb-3" style="max-width: 540px;">
 						<div class="row g-0">
 							<div class="col-md-4">
@@ -47,18 +54,16 @@
 								<ul class="list-group list-group-flush">
 									<li class="list-group-item">{{ product.color }}</li>
 									<li class="list-group-item">
-										<strong>Price excluding tax:
-										</strong>
+										<strong>Price excluding tax:</strong>
 										{{ product.unitPrice | number_format(2, ',', '.') }}
-										€</li>
+										€
+									</li>
 									<li class="list-group-item">
-										<strong>Price includes VAT:
-										</strong>
+										<strong>Price includes VAT:</strong>
 										{{ product.priceVAT | number_format(2, ',', '.') }}
-										€</li>
-									<li class="list-group-item">
-
-										{{ product.supplier }}</li>
+										€
+									</li>
+									<li class="list-group-item">{{ product.supplier }}</li>
 									<li class="list-group-item">{{ product.reference }}</li>
 								</ul>
 								<div class="card-body">
@@ -69,7 +74,7 @@
 					</div>
 				{% endfor %}
 			{% else %}
-				<p>No products available in this category.</p>
+				<p>No products available.</p>
 			{% endif %}
 		</div>
 	{% endblock %}

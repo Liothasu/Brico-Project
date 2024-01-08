@@ -11,19 +11,21 @@ class LineOrder
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column]
-    private ?float $sellingPrice = null;
+    private ?float $sellingPrice;
 
     #[ORM\Column]
-    private ?int $quantity = null;
+    private ?int $quantity;
 
-    #[ORM\ManyToOne(inversedBy: 'lineOrders')]
-    private ?Product $product = null;
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'lineOrders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $product;
 
-    #[ORM\ManyToOne(inversedBy: 'lineOrders')]
-    private ?Order $order_command = null;
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'lineOrders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $order;
 
     public function getId(): ?int
     {
@@ -35,7 +37,7 @@ class LineOrder
         return $this->sellingPrice;
     }
 
-    public function setSellingPrice(float $sellingPrice): static
+    public function setSellingPrice(float $sellingPrice): self
     {
         $this->sellingPrice = $sellingPrice;
 
@@ -47,7 +49,7 @@ class LineOrder
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): static
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
 
@@ -59,21 +61,21 @@ class LineOrder
         return $this->product;
     }
 
-    public function setProduct(?Product $product): static
+    public function setProduct(?Product $product): self
     {
         $this->product = $product;
 
         return $this;
     }
 
-    public function getOrderCommand(): ?Order
+    public function getOrder(): ?Order
     {
-        return $this->order_command;
+        return $this->order;
     }
 
-    public function setOrderCommand(?Order $order_command): static
+    public function setOrder(?Order $order): self
     {
-        $this->order_command = $order_command;
+        $this->order = $order;
 
         return $this;
     }

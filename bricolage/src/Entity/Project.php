@@ -31,7 +31,7 @@ class Project
     private Collection $disputes;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
     public function __construct()

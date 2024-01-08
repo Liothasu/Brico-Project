@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+	<main class="container">
+		<section class="row">
+			<div class="col-12">
+				<h2>Order Payment</h2>
+
+				<p>Order ID:
+					{{ order.id }}</p>
+
+				<table class="table table-striped mt-3">
+					<tr>
+						<th>Reference:</th>
+						<td>{{ order.getReference() }}</td>
+					</tr>
+					<tr>
+						<th>Date:</th>
+						<td>{{ order.getDateOrder() | date('d-m-Y') }}</td>
+					</tr>
+					<tr>
+						<th>Total:</th>
+						<td>{{ order.getTotal() }}
+							€</td>
+					</tr>
+					<tr>
+						<th>Products:</th>
+						<td>
+							<ul style="color: black">
+								{% for lineOrder in order.getLineOrders() %}
+									<li>
+										{% if lineOrder.getProduct().getImages() is not empty %}
+											{% set firstImage = lineOrder.getProduct().getImages().first() %}
+											<img src="/uploads/{{ firstImage.filename }}" class="img-fluid" style="max-width: 50px;" alt="{{ firstImage.altText }}">
+										{% endif %}
+										{{ lineOrder.getQuantity() }}
+										x
+										{{ lineOrder.getProduct().getNameProduct() }}
+										({{ lineOrder.getSellingPrice() }}
+										€)
+									</li>
+								{% endfor %}
+							</ul>
+						</td>
+					</tr>
+				</table>
+
+				<p>Total Amount:
+					{{ order.total }}
+					€</p>
+				<a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary">Pay Now</a>
+				<form
+					method="get" action="{{ path('order_cancel_payment', {'id': order.id}) }}">
+					<button class="btn btn-danger" type="submit">Cancel payment</button>
+				</form>
+			</div>
+		</section>
+	</main>
+{% endblock %}

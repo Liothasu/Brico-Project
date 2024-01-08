@@ -21,8 +21,10 @@ class Dispute
     #[ORM\Column(length: 50)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'disputes')]
-    private ?Order $order_command = null;
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'disputes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $order;
+
 
     #[ORM\ManyToOne(inversedBy: 'disputes')]
     private ?User $user = null;
@@ -73,14 +75,14 @@ class Dispute
         return $this;
     }
 
-    public function getOrderCommand(): ?Order
+    public function getOrder(): ?Order
     {
-        return $this->order_command;
+        return $this->order;
     }
 
-    public function setOrderCommand(?Order $order_command): static
+    public function setOrder(?Order $order): static
     {
-        $this->order_command = $order_command;
+        $this->order = $order;
 
         return $this;
     }

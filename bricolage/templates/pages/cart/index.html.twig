@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+	<main class="container">
+		<section class="row">
+			<div class="col-12">
+				<h2>My cart</h2>
+				{% if data is not empty %}
+					<table class="table">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Product</th>
+								<th>Price</th>
+								<th>Price VAT</th>
+								<th>Quantity</th>
+								<th>Total</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for element in data %}
+								<tr>
+									<td>
+										{% if element.product.images is not empty %}
+											{% set firstImage = element.product.images.first %}
+											{% if firstImage %}
+												<img src="/uploads/{{ firstImage.filename }}" class="img-fluid" style="max-width: 150px;" alt="{{ firstImage.altText }}">
+											{% else %}
+												No image
+											{% endif %}
+										{% else %}
+											No image
+										{% endif %}
+									</td>
+									<td>{{ element.product.nameProduct }}</td>
+									<td>{{ element.product.unitPrice }}
+										€</td>
+									<td>{{ element.product.priceVAT }}
+										€</td>
+									<td>
+										<a href="{{ path('cart_remove', {id: element.product.id}) }}" class="btn btn-sm btn-secondary">
+											<i class="fa-solid fa-minus"></i>
+										</a>
+										{{ element.quantity }}
+										<a href="{{ path('cart_add', {id: element.product.id}) }}" class="btn btn-sm btn-secondary">
+											<i class="fa-solid fa-plus"></i>
+										</a>
+									</td>
+									<td>{{ element.quantity * element.product.priceVAT }}
+										€</td>
+									<td>
+										<a href="{{ path('cart_delete', {id: element.product.id}) }}" class="btn btn-danger">
+											<i class="fa-solid fa-trash-can"></i>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<a href="{{ path('product_all') }}" class="btn btn-primary">View all products</a>
+					 <div class="d-flex justify-content-end">
+                        <p>Total: {{ total }} €</p>
+                    </div>
+					<div class="d-flex justify-content-end">
+                        <a href="{{ path('order_add') }}" class="btn btn-primary mx-2">Proceed to Checkout</a>
+                        <a href="{{ path('cart_empty') }}" class="btn btn-danger">Empty Cart</a>
+                    </div>
+				{% else %}
+					<h3 colspan="5">Your cart is empty</h3>
+					<a href="{{ path('product_all') }}" class="btn btn-primary">View all products</a>
+				{% endif %}
+			</div>
+		</section>
+	</main>
+{% endblock %}

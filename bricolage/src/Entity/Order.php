@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -17,37 +16,38 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private array $statutOrders = [];
+    #[ORM\Column(type: 'string', length: 20, unique: true)]
+    private $reference;
 
-    const ORDER_PENDING = 'PENDING';
-    const ORDER_IN_PROCESS = 'IN PROCESS';
-    const ORDER_PAID = 'PAID';
-    const ORDER_CANCELED = 'CANCELED';
+    #[ORM\Column(type: 'json')]
+    private array $statutOrders = [self::POSSIBLE_STATUSES[0]];
+    public const POSSIBLE_STATUSES = ['ORDER_PENDING', 'ORDER_IN_PROCESS', 'ORDER_PAID', 'ORDER_CANCELED'];
 
-    #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private $dateOrder = null;
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private ?\DateTimeImmutable $dateOrder = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $paymentMod = null;
+    // #[ORM\Column(length: 255)]
+    // private ?string $paymentMod = null;
 
-    #[ORM\Column]
-    private ?float $total = null;
+    #[ORM\Column(type: 'float', options: ['default' => 0])]
+    private $total;
 
-    #[ORM\OneToMany(mappedBy: 'order_command', targetEntity: LineOrder::class)]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: LineOrder::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $lineOrders;
 
-    #[ORM\OneToMany(mappedBy: 'order_command', targetEntity: Dispute::class)]
-    private Collection $disputes;
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: Dispute::class)]
+    private ?Collection $disputes;
 
-    #[ORM\ManyToOne(targetEntity:User::class, inversedBy: 'orders')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
     public function __construct()
     {
         $this->lineOrders = new ArrayCollection();
         $this->disputes = new ArrayCollection();
+        $this->dateOrder = new \DateTimeImmutable();
+        $this->total = 0;
     }
 
     public function getId(): ?int
@@ -55,22 +55,28 @@ class Order
         return $this->id;
     }
 
-    public function getStatutOrders(): array
+    public function getReference(): ?string
     {
-        $statutOrders = $this->statutOrders;
-
-        $statutOrders[] = 'ORDER_PENDING';
-        $statutOrders[] = 'ORDER_IN_PROCESS';
-        $statutOrders[] = 'ORDER_PAID';
-        $statutOrders[] = 'ORDER_CANCELED';
-
-        return array_unique($statutOrders);
+        return $this->reference;
     }
 
-    public function setStatutOrders(array $statutOrders): static 
+    public function setReference(string $reference): self
+    {
+        $this->reference = $reference;
+
+        return $this;
+    }
+
+    public function getStatutOrders(): array
+    {
+        return array_intersect($this->statutOrders, self::POSSIBLE_STATUSES);
+    }
+
+
+    public function setStatutOrders(array $statutOrders): static
     {
         $this->statutOrders = $statutOrders;
-        
+
         return $this;
     }
 
@@ -86,17 +92,17 @@ class Order
         return $this;
     }
 
-    public function getPaymentMod(): ?string
-    {
-        return $this->paymentMod;
-    }
+    // public function getPaymentMod(): ?string
+    // {
+    //     return $this->paymentMod;
+    // }
 
-    public function setPaymentMod(string $paymentMod): static
-    {
-        $this->paymentMod = $paymentMod;
+    // public function setPaymentMod(string $paymentMod): static
+    // {
+    //     $this->paymentMod = $paymentMod;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getTotal(): ?float
     {
@@ -111,7 +117,7 @@ class Order
     }
 
     /**
-     * @return Collection<int, LineOrder>
+     * @return Collection|LineOrder[]
      */
     public function getLineOrders(): Collection
     {
@@ -122,7 +128,7 @@ class Order
     {
         if (!$this->lineOrders->contains($lineOrder)) {
             $this->lineOrders->add($lineOrder);
-            $lineOrder->setOrderCommand($this);
+            $lineOrder->setOrder($this);
         }
 
         return $this;
@@ -132,8 +138,8 @@ class Order
     {
         if ($this->lineOrders->removeElement($lineOrder)) {
             // set the owning side to null (unless already changed)
-            if ($lineOrder->getOrderCommand() === $this) {
-                $lineOrder->setOrderCommand(null);
+            if ($lineOrder->getOrder() === $this) {
+                $lineOrder->setOrder(null);
             }
         }
 
@@ -141,18 +147,34 @@ class Order
     }
 
     /**
-     * @return Collection<int, Dispute>
+     * Remove all line orders associated with the order.
      */
-    public function getDisputes(): Collection
+    public function clearLineOrders(): void
+    {
+        $this->lineOrders->clear();
+    }
+
+    /**
+     * @return Collection|null
+     */
+    public function getDisputes(): ?Collection
     {
         return $this->disputes;
+    }
+
+    /**
+     * @param Collection|null $disputes
+     */
+    public function setDisputes(?Collection $disputes): void
+    {
+        $this->disputes = $disputes;
     }
 
     public function addDispute(Dispute $dispute): static
     {
         if (!$this->disputes->contains($dispute)) {
             $this->disputes->add($dispute);
-            $dispute->setOrderCommand($this);
+            $dispute->setOrder($this);
         }
 
         return $this;
@@ -162,8 +184,8 @@ class Order
     {
         if ($this->disputes->removeElement($dispute)) {
             // set the owning side to null (unless already changed)
-            if ($dispute->getOrderCommand() === $this) {
-                $dispute->setOrderCommand(null);
+            if ($dispute->getOrder() === $this) {
+                $dispute->setOrder(null);
             }
         }
 
@@ -175,10 +197,56 @@ class Order
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): self
     {
-        $this->user = $user;
+    $this->user = $user;
 
-        return $this;
+    return $this;
     }
+
+    public function getFormattedStatutOrders(): string
+    {
+        return implode(', ', $this->statutOrders);
+    }
+
+    public function containsProduct(Product $product): bool
+    {
+        foreach ($this->lineOrders as $lineOrder) {
+            if ($lineOrder->getProduct() === $product) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function calculateTotal(): float
+    {
+        $total = 0.0;
+
+        /** @var LineOrder $lineOrder */
+        foreach ($this->lineOrders as $lineOrder) {
+            $total += $lineOrder->getSellingPrice() * $lineOrder->getQuantity();
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get a specific LineOrder by product.
+     *
+     * @param Product $product
+     * @return LineOrder|null
+     */
+    public function getLineOrderByProduct($productId)
+    {
+        foreach ($this->getLineOrders() as $lineOrder) {
+            if ($lineOrder->getProduct()->getId() == $productId) {
+                return $lineOrder;
+            }
+        }
+
+        return null;
+    }
+
 }
