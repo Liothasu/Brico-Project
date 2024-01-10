@@ -11,7 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextBlockField;
 
 class OrderCrudController extends AbstractCrudController
 {
@@ -32,8 +31,9 @@ class OrderCrudController extends AbstractCrudController
         yield AssociationField::new('user');
         yield TextField::new('reference');
         yield TextField::new('formattedStatutOrders')
-            ->setLabel('Current Status')
-            ->onlyOnIndex();
+        ->setLabel('Current Status')
+        ->onlyOnIndex();
+        yield TextField::new('paymentMode');
         yield DateTimeField::new('dateOrder');
         yield IntegerField::new('total');
     }

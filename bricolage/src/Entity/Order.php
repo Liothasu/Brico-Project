@@ -26,8 +26,8 @@ class Order
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $dateOrder = null;
 
-    // #[ORM\Column(length: 255)]
-    // private ?string $paymentMod = null;
+    #[ORM\Column(length: 255)]
+    private ?string $paymentMode = null;
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     private $total;
@@ -92,17 +92,17 @@ class Order
         return $this;
     }
 
-    // public function getPaymentMod(): ?string
-    // {
-    //     return $this->paymentMod;
-    // }
+    public function getPaymentMode(): ?string
+    {
+        return $this->paymentMode;
+    }
 
-    // public function setPaymentMod(string $paymentMod): static
-    // {
-    //     $this->paymentMod = $paymentMod;
+    public function setPaymentMode(string $paymentMode): static
+    {
+        $this->paymentMode = $paymentMode;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getTotal(): ?float
     {

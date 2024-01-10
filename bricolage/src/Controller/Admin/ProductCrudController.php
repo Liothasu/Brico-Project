@@ -56,12 +56,12 @@ class ProductCrudController extends AbstractCrudController
 
         yield IntegerField::new('quantity');
 
-        yield NumberField::new('unitPrice')
-            ->setLabel('Prix unitaire HT');
-            
         yield NumberField::new('priceVAT')
-            ->setLabel('Prix TTC')
-            ->hideOnForm();
+            ->setLabel('Prix TTC');
+
+        yield NumberField::new('unitPrice')
+        ->setLabel('Prix unitaire HT')
+        ->hideOnForm();
     }
 
     public function viewProduct(AdminContext $context): Response

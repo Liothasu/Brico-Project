@@ -152,12 +152,11 @@ class Product
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function calculateVAT(): void
+    public function calculateUnitPrice(): void
     {
         $vatRate = 0.21;
-        $this->priceVAT = $this->unitPrice * (1 + $vatRate);
+        $this->unitPrice = $this->priceVAT / (1 + $vatRate);
     }
-
      /**
      * @return Collection|Image[]
      */

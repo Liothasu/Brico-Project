@@ -3,7 +3,7 @@
 {% block main %}
 	<main class="container">
 		<section class="row">
-			<div class="col-12">
+			<div class="col-10">
 				<h2>Order Payment</h2>
 
 				<p>Order ID:
@@ -17,11 +17,6 @@
 					<tr>
 						<th>Date:</th>
 						<td>{{ order.getDateOrder() | date('d-m-Y') }}</td>
-					</tr>
-					<tr>
-						<th>Total:</th>
-						<td>{{ order.getTotal() }}
-							€</td>
 					</tr>
 					<tr>
 						<th>Products:</th>
@@ -43,17 +38,34 @@
 							</ul>
 						</td>
 					</tr>
-				</table>
+				</td>
+			</tr>
+		</table>
 
-				<p>Total Amount:
-					{{ order.total }}
-					€</p>
-				<a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary">Pay Now</a>
-				<form
-					method="get" action="{{ path('order_cancel_payment', {'id': order.id}) }}">
-					<button class="btn btn-danger" type="submit">Cancel payment</button>
-				</form>
+		<div class="d-flex justify-content-between mb-3">
+			<p>Total Amount:
+				{{ order.total }}
+				€</p>
+
+			<form method="get" action="{{ path('order_cancel_payment', {'id': order.id}) }}">
+				<div class="mb-3">
+					<button class="btn btn-danger" type="submit">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+		<form method="post" action="{{ path('order_pay', {'id': order.id}) }}" class="mb-4">
+			<h3>Payment Information</h3>
+
+			{{ form_start(paymentForm) }}
+			<div class="mb-3">
+				<p class="mb-2">Payment method</p>
+				<div class="d-flex justify-content-between">
+					{{ form_row(paymentForm.paymentMode) }}
+					<button type="submit" class="btn btn-primary">Pay Now</button>
+				</div>
 			</div>
-		</section>
-	</main>
-{% endblock %}
+			{{ form_end(paymentForm) }}
+		</form>
+	</div>
+</section></main>{% endblock %}

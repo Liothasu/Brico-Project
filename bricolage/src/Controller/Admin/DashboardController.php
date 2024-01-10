@@ -37,7 +37,7 @@ class DashboardController extends AbstractDashboardController
             return $this->redirectToRoute('login');
         }
 
-        $controller = $this->isGranted('ROLE_USER') ? MenuCrudController::class : BlogCrudController::class;
+        $controller = $this->isGranted('ROLE_USER') ? ProductCrudController::class : BlogCrudController::class;
 
         $url = $this->adminUrlGenerator
             ->setController($controller)

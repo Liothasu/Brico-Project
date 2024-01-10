@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Entity\LineOrder;
+use App\Form\PaymentType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,13 +31,13 @@ class OrderController extends AbstractController
     public function orderDetails(Order $order): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-    
+
         if ($order->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException('You are not allowed to view details of this order.');
         }
-    
+
         $lineOrders = $order->getLineOrders();
-    
+
         return $this->render('pages/order/details.html.twig', [
             'order' => $order,
             'lineOrders' => $lineOrders,
@@ -43,94 +45,113 @@ class OrderController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(SessionInterface $session, ProductRepository $productRepository, EntityManagerInterface $em): Response
+    public function add(SessionInterface $session, ProductRepository $productRepository, EntityManagerInterface $em, Request $request): Response
     {
         $cart = $session->get('cart', []);
-    
+
         if ($cart === []) {
             $this->addFlash('message', 'Your cart is empty');
             return $this->redirectToRoute('home');
         }
-    
+
         $user = $this->getUser();
-    
-        // Recherchez une commande en cours de paiement pour cet utilisateur
+
         $existingOrder = $em->getRepository(Order::class)->findOneBy([
             'user' => $user,
             'statutOrders' => ['ORDER_PENDING']
         ]);
-    
+
         if ($existingOrder && !in_array('ORDER_PAID', $existingOrder->getStatutOrders(), true)) {
-            // Vérifiez si la commande existante a une référence et si elle est différente de celle générée par uniqid()
-            dump('Existing Order Reference: ' . $existingOrder->getReference());
-    
+
             if (!$existingOrder->getReference() || $existingOrder->getReference() !== uniqid()) {
-                // Mettez à jour la référence uniquement si elle est différente
                 $existingOrder->setReference(uniqid());
                 $em->flush();
-    
+
                 dump('Reference Updated to: ' . $existingOrder->getReference());
             } else {
                 dump('Using Existing Order without Updating Reference');
             }
-    
-            // Utilisez la commande existante qui n'a pas été payée
+
             $order = $existingOrder;
         } else {
-            // Créez une nouvelle commande seulement si aucune commande en cours n'est trouvée
+
             $order = new Order();
             $order->setUser($user);
-            $order->setReference(uniqid()); // ou utilisez une logique appropriée pour générer une référence unique
+            $order->setReference(uniqid());
             $order->setStatutOrders(['ORDER_IN_PROCESS']);
-    
+            $order->setPaymentMode('In process');
+
             dump('New Order Created with Reference: ' . $order->getReference());
-    
-            // Ajoutez des lignes de commande pour chaque élément du panier
+
             foreach ($cart as $item => $quantity) {
                 $product = $productRepository->find($item);
-    
+
                 $lineOrder = new LineOrder();
                 $lineOrder->setProduct($product);
                 $lineOrder->setSellingPrice($product->getPriceVAT());
                 $lineOrder->setQuantity($quantity);
-    
+
                 $order->addLineOrder($lineOrder);
             }
-    
+
             $total = $order->calculateTotal();
             $order->setTotal($total);
-    
+
             $em->persist($order);
             $em->flush();
         }
-    
+
         $this->addFlash('message', 'Commande mise à jour avec succès');
-    
+
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
             'lineOrders' => $order->getLineOrders(),
+            'paymentForm' => $this->createForm(PaymentType::class)->createView(),
         ]);
     }
-    
 
     #[Route('/pay/{id}', name: 'pay')]
-    public function pay(Order $order = null, SessionInterface $session, EntityManagerInterface $em): Response
+    public function pay(Order $order = null, SessionInterface $session, EntityManagerInterface $em, Request $request): Response
     {
         if (!$order) {
             $this->addFlash('error', 'Order not found.');
             return $this->redirectToRoute('cart_index');
         }
 
-        $order->setStatutOrders(['ORDER_PAID']);
+        if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
+            $this->addFlash('message', 'Commande déjà payée.');
+            return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
+        }
 
-        $em->persist($order);
-        $em->flush();
+        $form = $this->createForm(PaymentType::class);
 
-        $session->remove('cart');
+        $form->handleRequest($request);
 
-        $this->addFlash('message', 'Payment successful.');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $paymentData = $form->getData();
 
-        return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
+            $order->setPaymentMode($paymentData->getPaymentMode());
+            $order->setStatutOrders(['ORDER_PAID']);
+
+            $em->persist($order);
+            $em->flush();
+
+            $session->remove('cart');
+
+            $this->addFlash('message', 'Payment successful.');
+
+            return $this->redirectToRoute('order_details', [
+                'id' => $order->getId()
+            ]);
+        }
+
+        $this->addFlash('error', 'Le paiement n\'est pas valide. Veuillez réessayer.');
+
+        return $this->render('pages/order/pay.html.twig', [
+            'order' => $order,
+            'lineOrders' => $order->getLineOrders(),
+            'paymentForm' => $form->createView(),
+        ]);
     }
 
     #[Route('/cancel/{id}', name: 'cancel', methods: ['POST'])]
