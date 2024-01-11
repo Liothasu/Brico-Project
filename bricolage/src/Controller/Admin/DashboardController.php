@@ -7,11 +7,11 @@ use App\Entity\Category;
 use App\Entity\Type;
 use App\Entity\Comment;
 use App\Entity\Media;
-use App\Entity\Menu;
 use App\Entity\Config;
 use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\Project;
 use App\Entity\Supplier;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -21,7 +21,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DashboardController extends AbstractDashboardController
 {
@@ -29,7 +28,6 @@ class DashboardController extends AbstractDashboardController
         private AdminUrlGenerator $adminUrlGenerator
     ) {}
 
-    #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
@@ -77,23 +75,33 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Categories', 'fa-solid fa-lines-leaning', Category::class),
                 MenuItem::linkToCrud('Suppliers', 'fa-solid fa-industry', Supplier::class)
             ]);
-        }
 
-        if ($this->isGranted('ROLE_ADMIN')) {
             yield MenuItem::subMenu('Orders', 'fa-solid fa-cart-shopping')->setSubItems([
                 MenuItem::linkToCrud('All orders', 'fa-solid fa-cart-arrow-down', Order::class),
             ]);
         }
 
-        if ($this->isGranted('ROLE_USER')) {
+        // if ($this->isGranted('ROLE_USER')) {
+        //     yield MenuItem::subMenu('Blogs', 'fas fa-newspaper')->setSubItems([
+        //         MenuItem::linkToCrud('All Blogs', 'fas fa-newspaper', Blog::class),
+        //         MenuItem::linkToCrud('Add', 'fas fa-plus', Blog::class)->setAction(Crud::PAGE_NEW),
+        //         // MenuItem::linkToCrud('Types', 'fas fa-list', Type::class)
+        //     ]);
+        // }
+
+        if ($this->isGranted('ROLE_HANDYMAN')) {
             yield MenuItem::subMenu('Blogs', 'fas fa-newspaper')->setSubItems([
                 MenuItem::linkToCrud('All Blogs', 'fas fa-newspaper', Blog::class),
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Blog::class)->setAction(Crud::PAGE_NEW),
                 MenuItem::linkToCrud('Types', 'fas fa-list', Type::class)
             ]);
 
+            yield MenuItem::subMenu('Project', 'fa-solid fa-pen-ruler')->setSubItems([
+                MenuItem::linkToCrud('All Project', 'fa-solid fa-pen-ruler', Project::class),
+                MenuItem::linkToCrud('Add', 'fas fa-plus', Project::class)->setAction(Crud::PAGE_NEW),
+            ]);
         }
-        
+
         if ($this->isGranted('ROLE_ADMIN')) {
             yield MenuItem::subMenu('Media Library', 'fas fa-photo-video')->setSubItems([
                 MenuItem::linkToCrud('Medias', 'fa-solid fa-image', Media::class),

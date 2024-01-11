@@ -7,12 +7,20 @@ parameters:
     medias_directory: 'public/uploads/'
     uploads_directory: 'uploads/'
     img_directory: 'img/'
-    
+
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\Service\ProjectMailer:
+        autowire: true
+
+    # Include the User class
+    App\Entity\User: ~
+    App\Entity\Project: ~
+
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

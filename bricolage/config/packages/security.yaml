@@ -36,6 +36,7 @@ security:
         # - { path: ^/customer, roles: ROLE_CUSTOMER }
         # - { path: ^/profile, roles: ROLE_USER }
         # - { path: ^/admin/blog, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_HANDYMAN, ROLE_USER] }
 
     role_hierarchy:
         ROLE_CUSTOMER: ROLE_USER

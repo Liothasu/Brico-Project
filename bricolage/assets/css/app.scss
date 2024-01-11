@@ -1,9 +1,12 @@
-@import 'custom';
+@import "custom";
 @import "bootstrap/scss/bootstrap";
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "~@fortawesome/fontawesome-free/css/v4-shims.css";
 
-body, h2, h3, p {
+body,
+h2,
+h3,
+p {
   margin: 0;
   padding: 0;
   color: white;
@@ -118,7 +121,6 @@ nav {
   height: 60px;
 }
 
-
 .btn.btn-danger:hover {
   background-color: inherit;
   background-color: rgb(193, 3, 0);
@@ -178,5 +180,21 @@ form {
   p {
     color: black;
     margin-left: 5px;
+  }
+}
+
+//Form project
+.custom-form {
+  max-width: 400px;
+  margin: 40px;
+}
+
+.custom-form input,
+.custom-form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+
+  .custom-form button {
+    margin-top: 10px;
   }
 }
