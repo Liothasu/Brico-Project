@@ -31,7 +31,17 @@
 										{{ lineOrder.getQuantity() }}
 										x
 										{{ lineOrder.getProduct().getNameProduct() }}
-										({{ lineOrder.getSellingPrice() }}
+										{% if lineOrder.getProduct().getPromos() is not empty %}
+                                            {% set promo = lineOrder.getProduct().getPromos().first %}
+                                            {% if promo.isActivePromo() %}
+                                                {% set discountedPrice = lineOrder.getSellingPrice() * (1 - promo.getPercent() / 100) %}
+                                                ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
+                                            {% else %}
+                                                ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
+                                            {% endif %}
+                                        {% else %}
+                                            ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
+                                        {% endif %}
 										€)
 									</li>
 								{% endfor %}
@@ -44,7 +54,7 @@
 
 		<div class="d-flex justify-content-between mb-3">
 			<p>Total Amount:
-				{{ order.total }}
+				{{ order.total | number_format(2, ',', '.') }}
 				€</p>
 
 			<form method="get" action="{{ path('order_cancel_payment', {'id': order.id}) }}">

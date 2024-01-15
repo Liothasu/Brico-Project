@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Entity\LineOrder;
 use App\Form\PaymentType;
 use App\Repository\ProductRepository;
+use App\Repository\PromoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(SessionInterface $session, ProductRepository $productRepository, EntityManagerInterface $em, Request $request): Response
+    public function add(SessionInterface $session, ProductRepository $productRepository, PromoRepository $promoRepository, EntityManagerInterface $em, Request $request): Response
     {
         $cart = $session->get('cart', []);
 
@@ -88,8 +89,20 @@ class OrderController extends AbstractController
 
                 $lineOrder = new LineOrder();
                 $lineOrder->setProduct($product);
-                $lineOrder->setSellingPrice($product->getPriceVAT());
-                $lineOrder->setQuantity($quantity);
+
+                $discountedPrice = $product->getPriceVAT();
+
+                $activePromos = $promoRepository->findActivePromos();
+                foreach ($activePromos as $promo) {
+                    if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
+                        $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
+                        break;
+                    }
+                }
+
+                $lineOrder->setSellingPrice($discountedPrice);
+
+                $lineOrder->setQuantity($quantity['quantity']);
 
                 $order->addLineOrder($lineOrder);
             }
@@ -145,7 +158,7 @@ class OrderController extends AbstractController
             ]);
         }
 
-        $this->addFlash('error', 'Le paiement n\'est pas valide. Veuillez réessayer.');
+        // $this->addFlash('error', 'Le paiement n\'est pas valide. Veuillez réessayer.');
 
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
@@ -174,7 +187,7 @@ class OrderController extends AbstractController
             $this->addFlash('message', 'Cette commande ne peut pas être annulée.');
         }
 
-        return $this->redirectToRoute('order_list');
+        return $this->redirectToRoute('cart_index');
     }
 
     #[Route('/cancel_payment/{id}', name: 'cancel_payment', methods: ['GET'])]

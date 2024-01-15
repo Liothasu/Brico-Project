@@ -18,7 +18,7 @@
                 </tr>
                 <tr>
                     <th>Total:</th>
-                    <td>{{ order.getTotal() }} €</td>
+                    <td>{{ order.getTotal() | number_format(2, ',', '.') }} €</td>
                 </tr>
                 <tr>
                     <th>Products:</th>
@@ -33,7 +33,7 @@
                                     {{ lineOrder.getQuantity() }}
                                     x
                                     {{ lineOrder.getProduct().getNameProduct() }}
-                                    ({{ lineOrder.getSellingPrice() }} €)
+                                    ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }} €)
                                 </li>
                             {% endfor %}
                         </ul>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use App\Repository\PromoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -13,41 +14,67 @@ use Symfony\Component\Routing\Annotation\Route;
 class CartController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(SessionInterface $session, ProductRepository $productRepository): Response
+    public function index(SessionInterface $session, ProductRepository $productRepository, PromoRepository $promoRepository): Response
     {
         $cart = $session->get('cart', []);
 
         $data = [];
         $total = 0;
 
-        foreach($cart as $id => $quantity){
+        foreach ($cart as $id => $item) {
             $product = $productRepository->find($id);
 
             $data[] = [
                 'product' => $product,
-                'quantity' => $quantity
+                'quantity' => $item['quantity']
             ];
-            $total += $product->getPriceVAT() * $quantity;
+
+            $discountedPrice = $item['discountedPrice'];
+
+            $activePromos = $promoRepository->findActivePromos();
+            foreach ($activePromos as $promo) {
+                if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
+                    $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
+                    break;
+                }
+            }
+
+            $total += ($discountedPrice * $item['quantity']);
         }
 
         return $this->render('pages/cart/index.html.twig', compact('data', 'total'));
     }
 
     #[Route('/add/{id}', name: 'add')]
-    public function add(Product $product, SessionInterface $session)
+    public function add(Product $product, SessionInterface $session, PromoRepository $promoRepository)
     {
         $id = $product->getId();
 
         $cart = $session->get('cart', []);
 
         if (empty($cart[$id])) {
-            $cart[$id] = 1;
+            $cart[$id] = [
+                'quantity' => 1,
+                'discountedPrice' => $product->getPriceVAT(),
+            ];
         } else {
-            $cart[$id]++;
+            $cart[$id]['quantity']++;
+
+            $activePromos = $promoRepository->findActivePromos();
+            $discountedPrice = $product->getPriceVAT();
+
+            foreach ($activePromos as $promo) {
+                if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
+                    $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
+                    break;
+                }
+            }
+
+            $cart[$id]['discountedPrice'] = $discountedPrice;
         }
-    
+
         $session->set('cart', $cart);
-    
+
         return $this->redirectToRoute('cart_index');
     }
 
@@ -59,8 +86,8 @@ class CartController extends AbstractController
         $cart = $session->get('cart', []);
 
         if (!empty($cart[$id])) {
-            if ($cart[$id] > 1) {
-                $cart[$id]--;
+            if ($cart[$id]['quantity'] > 1) {
+                $cart[$id]['quantity']--;
             } else {
                 unset($cart[$id]);
             }
@@ -74,19 +101,16 @@ class CartController extends AbstractController
     #[Route('/delete/{id}', name: 'delete')]
     public function delete(Product $product, SessionInterface $session)
     {
-        //On récupère l'id du produit
         $id = $product->getId();
 
-        // On récupère le cart existant
         $cart = $session->get('cart', []);
 
-        if(!empty($cart[$id])){
+        if (!empty($cart[$id])) {
             unset($cart[$id]);
         }
 
         $session->set('cart', $cart);
-        
-        //On redirige vers la page du cart
+
         return $this->redirectToRoute('cart_index');
     }
 

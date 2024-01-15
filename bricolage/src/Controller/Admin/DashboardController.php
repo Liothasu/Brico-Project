@@ -12,6 +12,7 @@ use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\Project;
+use App\Entity\Promo;
 use App\Entity\Supplier;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -76,6 +77,11 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Suppliers', 'fa-solid fa-industry', Supplier::class)
             ]);
 
+            yield MenuItem::subMenu('Promos', 'fa-solid fa-percent')->setSubItems([
+                MenuItem::linkToCrud('All promos', 'fa-solid fa-percent', Promo::class),
+                MenuItem::linkToCrud('Add', 'fas fa-plus', Promo::class)->setAction(Crud::PAGE_NEW),
+            ]);
+
             yield MenuItem::subMenu('Orders', 'fa-solid fa-cart-shopping')->setSubItems([
                 MenuItem::linkToCrud('All orders', 'fa-solid fa-cart-arrow-down', Order::class),
             ]);
@@ -109,7 +115,7 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Images', 'fa-solid fa-image', Image::class),
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Image::class)->setAction(Crud::PAGE_NEW),
             ]);
-           
+
             yield MenuItem::linkToCrud('Comments', 'fas fa-comment', Comment::class);
 
             yield MenuItem::subMenu('Accounts', 'fas fa-user')->setSubItems([

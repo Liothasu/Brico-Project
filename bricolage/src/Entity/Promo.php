@@ -13,19 +13,19 @@ class Promo
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 50)]
     private ?string $name;
 
     #[ORM\Column]
-    private ?float $percent = null;
+    private ?float $percent;
 
     #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private $dateBegin = null;
+    private ?\DateTimeImmutable $dateBegin;
 
     #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private $dateEnd = null;
+    private ?\DateTimeImmutable $dateEnd;
 
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'promos')]
     private Collection $products;
@@ -88,6 +88,15 @@ class Promo
         return $this;
     }
 
+    public function isactivepromo(): bool
+    {
+        $now = new \DateTimeImmutable();
+
+        $isActive = $this->dateBegin <= $now && $now <= $this->dateEnd;
+
+        return $isActive;
+    }
+
     /**
      * @return Collection<int, Product>
      */
@@ -112,7 +121,7 @@ class Promo
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }
