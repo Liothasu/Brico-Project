@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du litige{% endblock %}
+
+{% block main %}
+    <h2>Détails du litige</h2>
+
+    <p>Dispute ID : {{ dispute.id }}</p>
+    <p>Title : {{ dispute.title }}</p>
+    <p>Description : {{ dispute.description }}</p>
+    <p>problemType : {{ dispute.problemType }}</p>
+
+    {% if dispute.blog %}
+        <p>Blog associé : {{ dispute.blog.title }}</p>
+    {% endif %}
+
+    {% if dispute.project %}
+        <p>Projet associé : <a href="{{ path('project_index', { 'id': dispute.project.id }) }}">{{ dispute.project.nameProject }}</a></p>
+    {% endif %}
+
+    {% if dispute.comment %}
+        <p>Commentaire associé : {{ dispute.comment.content }}</p>
+    {% endif %}
+
+    {% if dispute.order %}
+        <p>Commande associée : <a href="{{ path('order_details', { 'id': dispute.order.id }) }}">n°{{ dispute.order.reference }}</a></p>
+    {% endif %}
+    <a href="{{ path('contact_index') }}" type="submit" class="btn btn-success">Create another</a>
+    <a href="{{ path('contact_edit', {'id': dispute.id}) }}" type="submit" class="btn btn-info">Edit</a>
+    <a href="{{ path('home') }}" type="submit" class="btn btn-primary">Back to home</a>
+{% endblock %}

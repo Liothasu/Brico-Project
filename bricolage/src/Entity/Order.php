@@ -249,4 +249,8 @@ class Order
         return null;
     }
 
+    public function __toString()
+    {
+        return $this->reference;
+    }
 }

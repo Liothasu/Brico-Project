@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\DisputeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DisputeRepository::class)]
@@ -18,13 +16,14 @@ class Dispute
     #[ORM\Column(length: 50)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(type: "string", length: 50)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'disputes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $order;
+    #[ORM\Column(type: "string", length: 50)]
+    private $problemType;
 
+    #[ORM\ManyToOne(inversedBy: 'disputes')]
+    private ?Order $order = null;
 
     #[ORM\ManyToOne(inversedBy: 'disputes')]
     private ?User $user = null;
@@ -35,15 +34,12 @@ class Dispute
     #[ORM\ManyToOne(inversedBy: 'disputes')]
     private ?Blog $blog = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'disputes')]
-    private ?self $comment = null;
-
-    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: self::class)]
-    private Collection $disputes;
+    #[ORM\ManyToOne(inversedBy: 'disputes')]
+    private ?Comment $comment = null;
 
     public function __construct()
     {
-        $this->disputes = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -123,44 +119,26 @@ class Dispute
         return $this;
     }
 
-    public function getComment(): ?self
+    public function getComment(): ?Comment
     {
         return $this->comment;
     }
 
-    public function setComment(?self $comment): static
+    public function setComment(?Comment $comment): static
     {
         $this->comment = $comment;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, self>
-     */
-    public function getDisputes(): Collection
+    public function getProblemType(): ?string
     {
-        return $this->disputes;
+        return $this->problemType;
     }
 
-    public function addDispute(self $dispute): static
+    public function setProblemType(string $problemType): self
     {
-        if (!$this->disputes->contains($dispute)) {
-            $this->disputes->add($dispute);
-            $dispute->setComment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDispute(self $dispute): static
-    {
-        if ($this->disputes->removeElement($dispute)) {
-            // set the owning side to null (unless already changed)
-            if ($dispute->getComment() === $this) {
-                $dispute->setComment(null);
-            }
-        }
+        $this->problemType = $problemType;
 
         return $this;
     }

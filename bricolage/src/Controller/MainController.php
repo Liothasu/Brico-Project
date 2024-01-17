@@ -26,10 +26,4 @@ class MainController extends AbstractController
             'types' => $typeRepository->findAllForWidget()
         ]);
     }
-
-    #[Route('/contact', name: 'contact')]
-    public function showContactForm(): Response
-    {
-        return $this->render('pages/contact/contact.html.twig');
-    }
 } 

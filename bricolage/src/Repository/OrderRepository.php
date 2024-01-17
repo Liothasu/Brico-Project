@@ -43,13 +43,14 @@ class OrderRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-//    public function findOneBySomeField($value): ?Order
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @return Order[]
+     */
+    public function findAllOrders(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->orderBy('o.reference', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

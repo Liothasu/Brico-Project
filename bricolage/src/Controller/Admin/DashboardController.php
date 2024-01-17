@@ -8,6 +8,7 @@ use App\Entity\Type;
 use App\Entity\Comment;
 use App\Entity\Media;
 use App\Entity\Config;
+use App\Entity\Dispute;
 use App\Entity\Image;
 use App\Entity\Order;
 use App\Entity\Product;
@@ -117,6 +118,10 @@ class DashboardController extends AbstractDashboardController
             ]);
 
             yield MenuItem::linkToCrud('Comments', 'fas fa-comment', Comment::class);
+
+            yield MenuItem::subMenu('Dispute', 'fa-solid fa-file-pen')->setSubItems([
+                MenuItem::linkToCrud('All Dispute', 'fa-solid fa-file-pen', Dispute::class),
+            ]);
 
             yield MenuItem::subMenu('Accounts', 'fas fa-user')->setSubItems([
                 MenuItem::linkToCrud('All Accounts', 'fas fa-user-friends', User::class),

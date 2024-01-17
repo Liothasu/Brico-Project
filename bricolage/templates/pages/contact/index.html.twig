@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Dispute
+{% endblock %}
+
+{% block main %}
+	<div class="dispute-form">
+		<h2>Create Dispute</h2>
+			{{ form_start(form, {'attr': {'class': 'mb-3'}}) }}
+			{{ form_row(form.title) }}
+			{{ form_row(form.description) }}
+			{{ form_row(form.problemType) }}
+
+			<div id="blog-field" style="display: none;">
+				{{ form_row(form.blog) }}
+			</div>
+
+			<div id="project-field" style="display: none;">
+				{{ form_row(form.project) }}
+			</div>
+
+			<div id="comment-field" style="display: none;">
+				{{ form_row(form.comment) }}
+			</div>
+
+			<div id="order-field" style="display: none;">
+				{{ form_row(form.order) }}
+			</div>
+			<button type="submit" class="btn btn-primary">Create</button>
+			{{ form_end(form) }}
+	</div>
+{% endblock %}

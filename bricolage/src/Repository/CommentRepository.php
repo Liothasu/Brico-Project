@@ -38,4 +38,15 @@ class CommentRepository extends ServiceEntityRepository
 
         return $qb->getQuery();
     }
+
+    /**
+     * @return Comment[]
+     */
+    public function findAllComments(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.content', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

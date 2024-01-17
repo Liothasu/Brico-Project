@@ -184,17 +184,33 @@ form {
 }
 
 //Form project
-.custom-form {
+.project-form {
   max-width: 400px;
   margin: 40px;
 }
 
-.custom-form input,
-.custom-form textarea {
+.project-form input,
+.project-form textarea {
   width: 100%;
   margin-bottom: 10px;
 
-  .custom-form button {
+  .project-form button {
+    margin-top: 10px;
+  }
+}
+
+//Form dispute
+.dispute-form {
+  max-width: 400px;
+  margin: 40px;
+}
+
+.dispute-form input,
+.dispute-form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+
+  .dispute-form button {
     margin-top: 10px;
   }
 }
