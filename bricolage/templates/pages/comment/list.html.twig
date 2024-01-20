@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="comment-content">
                     <h5 class="card-title">
-                        <a class="text-decoration-none" href="{{ path('user', { 'username': username }) }}">
+                        <a class="text-decoration-none" href="{{ path('profile_show', { 'username': username }) }}">
                             <span class="comment-author">{{ username }}</span>
                         </a> {{ comment.createdAt|date('d M Y à H:i:s') }}
                     </h5>

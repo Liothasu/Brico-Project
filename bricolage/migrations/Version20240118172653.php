@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240113135128 extends AbstractMigration
+final class Version20240118172653 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -25,7 +25,7 @@ final class Version20240113135128 extends AbstractMigration
         $this->addSql('CREATE TABLE category (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(50) NOT NULL, slug VARCHAR(50) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE comment (id INT AUTO_INCREMENT NOT NULL, blog_id INT NOT NULL, user_id INT NOT NULL, parent_id INT DEFAULT NULL, content LONGTEXT NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX IDX_9474526CDAE07E97 (blog_id), INDEX IDX_9474526CA76ED395 (user_id), INDEX IDX_9474526C727ACA70 (parent_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE config (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, value LONGTEXT DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, UNIQUE INDEX UNIQ_D48A2F7C5E237E06 (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE dispute (id INT AUTO_INCREMENT NOT NULL, order_id INT NOT NULL, user_id INT DEFAULT NULL, project_id INT DEFAULT NULL, blog_id INT DEFAULT NULL, comment_id INT DEFAULT NULL, title VARCHAR(50) NOT NULL, description VARCHAR(50) NOT NULL, INDEX IDX_3C9250078D9F6D38 (order_id), INDEX IDX_3C925007A76ED395 (user_id), INDEX IDX_3C925007166D1F9C (project_id), INDEX IDX_3C925007DAE07E97 (blog_id), INDEX IDX_3C925007F8697D13 (comment_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE dispute (id INT AUTO_INCREMENT NOT NULL, order_id INT DEFAULT NULL, user_id INT DEFAULT NULL, project_id INT DEFAULT NULL, blog_id INT DEFAULT NULL, comment_id INT DEFAULT NULL, title VARCHAR(50) NOT NULL, description VARCHAR(50) NOT NULL, problem_type VARCHAR(50) NOT NULL, INDEX IDX_3C9250078D9F6D38 (order_id), INDEX IDX_3C925007A76ED395 (user_id), INDEX IDX_3C925007166D1F9C (project_id), INDEX IDX_3C925007DAE07E97 (blog_id), INDEX IDX_3C925007F8697D13 (comment_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE image (id INT AUTO_INCREMENT NOT NULL, product_id INT NOT NULL, name VARCHAR(255) NOT NULL, filename VARCHAR(255) NOT NULL, alt_text VARCHAR(255) DEFAULT NULL, INDEX IDX_C53D045F4584665A (product_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE line_order (id INT AUTO_INCREMENT NOT NULL, product_id INT NOT NULL, order_id INT NOT NULL, selling_price DOUBLE PRECISION NOT NULL, quantity INT NOT NULL, INDEX IDX_AADB41B4584665A (product_id), INDEX IDX_AADB41B8D9F6D38 (order_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE media (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, filename VARCHAR(255) NOT NULL, alt_text VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -53,7 +53,7 @@ final class Version20240113135128 extends AbstractMigration
         $this->addSql('ALTER TABLE dispute ADD CONSTRAINT FK_3C925007A76ED395 FOREIGN KEY (user_id) REFERENCES `user` (id)');
         $this->addSql('ALTER TABLE dispute ADD CONSTRAINT FK_3C925007166D1F9C FOREIGN KEY (project_id) REFERENCES project (id)');
         $this->addSql('ALTER TABLE dispute ADD CONSTRAINT FK_3C925007DAE07E97 FOREIGN KEY (blog_id) REFERENCES blog (id)');
-        $this->addSql('ALTER TABLE dispute ADD CONSTRAINT FK_3C925007F8697D13 FOREIGN KEY (comment_id) REFERENCES dispute (id)');
+        $this->addSql('ALTER TABLE dispute ADD CONSTRAINT FK_3C925007F8697D13 FOREIGN KEY (comment_id) REFERENCES comment (id)');
         $this->addSql('ALTER TABLE image ADD CONSTRAINT FK_C53D045F4584665A FOREIGN KEY (product_id) REFERENCES product (id)');
         $this->addSql('ALTER TABLE line_order ADD CONSTRAINT FK_AADB41B4584665A FOREIGN KEY (product_id) REFERENCES product (id)');
         $this->addSql('ALTER TABLE line_order ADD CONSTRAINT FK_AADB41B8D9F6D38 FOREIGN KEY (order_id) REFERENCES `order` (id)');

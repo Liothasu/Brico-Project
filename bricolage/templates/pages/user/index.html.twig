@@ -1,34 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-	{{ user.username|capitalize }}
-{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block main %}
-	<div class="container w-25">
-		<div class="row">
-			<div class="col">
-				<h2>User Profile:
-					{{ user.username|capitalize }}</h2>
-				<form>
-					<div class="col-12">
-						<label for="username" class="form-label">Username</label>
+    <h2>Your Profile</h2>
 
-						<div class="mb-3">
-							<div class="input-group">
-								<span class="input-group-text">@</span>
-								<input type="text" class="form-control" id="username" value="{{ user.username }}" readonly>
-							</div>
-						</div>
+    <dl style="color: white">
+        <dt>Username:</dt>
+        <dd>{{ app.user.username }}</dd>
 
-						<div class="mb-3">
-							<p>Number of posted comments:
-								{{ user.comments|length }}</p>
-						</div>
+        <dt>Full Name:</dt>
+        <dd>{{ app.user.getFullname() }}</dd>
 
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+        <dt>Email:</dt>
+        <dd>{{ app.user.email }}</dd>
+
+        <dt>Phone Number:</dt>
+        <dd>{{ app.user.phoneNumber }}</dd>
+
+        <dt>Street Number:</dt>
+        <dd>{{ app.user.numStreet }}</dd>
+
+        <dt>City:</dt>
+        <dd>{{ app.user.city }}</dd>
+
+        <dt>ZIP Code:</dt>
+        <dd>{{ app.user.zipCode }}</dd>
+        <a href="{{ path('profile_edit') }}" class="btn btn-primary">Edit profile</a>
+    </dl>
+    {% if app.user.blogs | length > 0 %}
+        <h2>Blogs de {{ app.user.getFullname() }} ({{ app.user.blogs | length }}) </h2>
+        {% for blog in app.user.blogs %}
+            <p>Title: {{ blog.title }}</p>
+            <a href="{{ path('blog_show', {'slug': blog.slug}) }}" class="btn btn-primary">Go to the blog</a>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

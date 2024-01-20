@@ -9,28 +9,32 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    public function __construct(
-        private UserPasswordHasherInterface $passwordEncoder,
-    ){}
+    private $passwordHasher;
 
-    public function load(ObjectManager $manager): void
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
+    public function load(ObjectManager $manager)
     {
         $admin = new User();
+        $admin->setUsername('admin');
+        $admin->setEmail('admin@hardware-store.com');
         $admin->setRoles(['ROLE_ADMIN']);
-        $admin->setUsername('Admin');
-        $admin->setLastname('Sayedi');
-        $admin->setFirstname('Donia');
-        $admin->setEmail('admin@root.com');
-        $admin->setPassword(
-            $this->passwordEncoder->hashPassword($admin, 'admin')
-        );
-        $admin->setPhoneNumber('012555888');
-        $admin->setNumStreet('78 rue des Dragons');
-        $admin->setCity('Anderlecht');
-        $admin->setZipcode('1070');
+
+        $hashedPassword = $this->passwordHasher->hashPassword($admin, 'admin');
+        $admin->setPassword($hashedPassword);
+
+        $admin->setFirstName('Admin');
+        $admin->setLastName('User');
+        $admin->setPhoneNumber('123456789');
+        $admin->setNumStreet('123 Main St');
+        $admin->setCity('City');
+        $admin->setZipCode(12345);
         $admin->setIsVerified(true);
 
         $manager->persist($admin);
-
+        $manager->flush();
     }
 }

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block main %}
+    <h2>Edit Profile</h2>
+    <div class="user-from">
+        <form method="post" action="{{ path('profile_index') }}" onsubmit="return confirm('Are you sure you want to save your new datas?');">
+            {{ form_errors(form) }}
+
+            {{ form_start(form) }}
+                <fieldset class="mb-3">
+                    <legend>My identity</legend>
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.email) }}
+                </fieldset>
+                <fieldset class="mb-3">
+                    <legend>My contact details</legend>
+                    {{ form_row(form.phoneNumber) }}
+                    {{ form_row(form.numStreet) }}
+                    {{ form_row(form.city) }}
+                    {{ form_row(form.zipCode) }}
+                </fieldset>
+            {{ form_end(form) }}
+            <a href="{{ referer }}" class="btn btn-danger">Back</a>
+        </form>
+    </div>
+{% endblock %}

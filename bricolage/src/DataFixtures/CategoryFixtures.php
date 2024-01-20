@@ -28,12 +28,6 @@ class CategoryFixtures extends Fixture
         $category2->setSlug($this->slugger->slug($category2->getName())->lower());
         $manager->persist($category2);
 
-        $category3 = new Category();
-        $category3->setName('Tools');
-        $category3->setSlug($this->slugger->slug($category3->getName())->lower());
-        $manager->persist($category3);
-
-
         $manager->flush();
     }
 }

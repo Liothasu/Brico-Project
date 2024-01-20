@@ -66,7 +66,8 @@
 				</a>
 
 				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-					<a href="{{ path('order_list') }}">
+					{# <a href="{{ path('order_list') }}"> #}
+					<a href="{{ path('profile_index') }}">
 						<i class="fas fa-user"></i>
 						{{ app.user.username }}</a>
 					<a href="{{ path('logout') }}" class="btn btn-danger">

@@ -19,7 +19,7 @@ class TypeCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->setPageTitle(Crud::PAGE_INDEX, 'Catégories');
+        return $crud->setPageTitle(Crud::PAGE_INDEX, 'Types');
     }
 
 

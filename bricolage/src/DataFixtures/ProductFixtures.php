@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -10,6 +11,10 @@ class ProductFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        $category3 = new Category();
+        $category3->setName('Tools');
+        $category3->setSlug($category3->getName());
+
         $product = new Product();
         $product->setReference('lol');
         $product->setNameProduct('Hammer');
@@ -19,6 +24,7 @@ class ProductFixtures extends Fixture
         $product->setUnitPrice(25.99);
         $product->setPriceVAT(10);
         $product->setSlug('hammer');
+        $product->setCategory($category3);
         $manager->persist($product);
 
         $product2 = new Product();
@@ -30,12 +36,9 @@ class ProductFixtures extends Fixture
         $product2->setUnitPrice(20.00);
         $product2->setPriceVAT(10);
         $product2->setSlug('screwdriver');
+        $product2->setCategory($category3);
         $manager->persist($product2);
 
         $manager->flush();
-
-        // $this->addReference('category_1', $product, $product2);
-        // $this->addReference('category_2', $product2);
-        // $this->addReference('category_3', $product);
     }
 }

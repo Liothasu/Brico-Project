@@ -11,7 +11,7 @@ export function getCommentElement(comment, userId, fromEdit = false) {
 
     html += `<div class="comment-content">
                 <h5 class="card-title" style="margin-bottom: 0 !important;">
-                    <a class="text-decoration-none" href="/user/${comment.username}">
+                    <a class="text-decoration-none" href="/profile/show/${comment.username}">
                         <span class="comment-author">${comment.username}</span>
                     </a>
                 </h5>
