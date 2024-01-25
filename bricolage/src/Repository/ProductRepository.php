@@ -3,8 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Model\FilterData;
+use App\Model\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -16,33 +20,56 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginatorInterface)
     {
         parent::__construct($registry, Product::class);
     }
 
-//    /**
-//     * @return Product[] Returns an array of Product objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findAllCategories()
+    {
+        return $this->createQueryBuilder('c')
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Product
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findBySearch(SearchData $searchData): PaginationInterface
+    {
+        $data = $this->createQueryBuilder('p');
+
+        if (!empty($searchData->q)) {
+            $data = $data
+                ->join('p.category', 'c')
+                ->andWhere('(p.nameProduct LIKE :q OR c.name LIKE :q)')
+                ->setParameter('q', "%{$searchData->q}%");
+        }
+
+        $data = $data
+            ->getQuery()
+            ->getResult();
+
+        $products = $this->paginatorInterface->paginate($data, $searchData->page, 9);
+
+        return $products;
+    }
+
+    public function findByFilter(FilterData $filterData): PaginationInterface
+    {
+        $data = $this->createQueryBuilder('p');
+
+        if (!empty($filterData->categories)) {
+            $data = $data
+                ->join('p.category', 'cat')
+                ->andWhere('cat.id IN (:categories)')
+                ->setParameter('categories', $filterData->categories);
+        }
+
+        $data = $data
+            ->getQuery()
+            ->getResult();
+
+        $products = $this->paginatorInterface->paginate($data, $filterData->page, 9);
+
+        return $products;
+    }
+
 }

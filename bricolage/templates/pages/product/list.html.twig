@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des produits
+{% block title %}List of products
 {% endblock %}
 
 {% block main %}
 	{% block section %}
 		<div>
-			<h3>List product</h3>
+			<h3>List of products</h3>
 		</div>
+		{% if filterForm is defined %}
+			{{ form_start(filterForm) }}
+			{{ form_widget(filterForm.categories) }}
+			{{ form_end(filterForm) }}
+		{% endif %}
 		<div>
 			{% if products is not empty %}
 				{% set currentCategory = null %}
@@ -85,7 +90,9 @@
 					</div>
 				{% endfor %}
 			{% else %}
-				<p>No products available.</p>
+				<div class="alert alert-warning" role="alert">
+					No products or categories found.
+				</div>
 			{% endif %}
 		</div>
 	{% endblock %}

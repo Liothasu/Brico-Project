@@ -1,6 +1,5 @@
 {% set menus = menu_service.findAll %}
 {% set configs = config_service.findAll %}
-
 {% set ea_edit_current_entity = null %}
 
 {% if entity is defined %}
@@ -44,7 +43,7 @@
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						{% for category in cats.getCategory %}
 							<li>
-								<a class="dropdown-item" href="{{ path('category_list', {'slug': category.slug}) }}">{{ category.name }}</a>
+								<a class="dropdown-item" href="{{ path('product_category', {'slug': category.slug}) }}">{{ category.name }}</a>
 							</li>
 						{% endfor %}
 					</ul>
@@ -56,11 +55,9 @@
 				<a href="{{ path("message") }}">Message</a>
 				<a href="{{ path('contact_index') }}">Contact</a>
 			</nav>
-
+				{{ render(controller('App\\Controller\\SearchBarController::index')) }}
 			<div class="icons">
-				<a href="#accueil">
-					<i class="fas fa-search"></i>
-				</a>
+
 				<a href="{{ path('cart_index') }}">
 					<i class="fas fa-shopping-cart"></i>
 				</a>
