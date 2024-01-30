@@ -4,12 +4,12 @@ import fr from 'javascript-time-ago/locale/fr';
 TimeAgo.addDefaultLocale(fr);
 
 export function getCommentElement(comment, userId, fromEdit = false) {
-    let html = fromEdit ? '' : '<div class="card">';
+    let html = fromEdit ? '' : '<div class="card mb-3">'
 
     const timeAgo = new TimeAgo('fr-FR');
     const createdAt = timeAgo.format(new Date(comment.createdAt));
 
-    html += `<div class="comment-content">
+    html += `<div class="comment-content ms-3">
                 <h5 class="card-title" style="margin-bottom: 0 !important;">
                     <a class="text-decoration-none" href="/profile/show/${comment.username}">
                         <span class="comment-author">${comment.username}</span>
@@ -46,8 +46,8 @@ export function getReplyDialogElement(commentId) {
                 <textarea class="form-control" placeholder="Add a reply..." id="answer-content" name="comment[content]" required></textarea>
                 <input type="hidden" name="comment[id]" value="${commentId}">
                 <div class="text-end" id="reply-action">
-                    <button type="button" class="btn btn-danger mt-2" id="hide-reply-dialog-button">Cancel</button>
-                    <button type="submit" class="btn btn-primary mt-2" id="answer-button">Reply</button>
+                <button type="submit" class="btn btn-primary mt-2" id="answer-button">Reply</button>
+                <button type="button" class="btn btn-danger mt-2" id="hide-reply-dialog-button">Cancel</button>
                 </div>
              </form>`;
 }

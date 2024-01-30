@@ -44,7 +44,7 @@ class Blog
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $featuredText;
 
-    #[ORM\ManyToOne(targetEntity: Media::class)]
+    #[ORM\ManyToOne(targetEntity: Media::class, cascade: ["remove"])]
     private ?Media $featuredMedia;
 
     #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Dispute::class)]

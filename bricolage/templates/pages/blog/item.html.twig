@@ -3,7 +3,7 @@
         <div class="col-md-{{ leftCol }}">
             {% if blog.featuredMedia %}
                 <a href="{{ path('blog_show', { 'slug': blog.slug }) }}">
-                    <img src="/uploads/{{ blog.featuredMedia.filename }}" alt="{{ blog.featuredMedia.altText }}" loading="lazy" width="350" height="205" >
+                    <img src="{{ asset('/uploads/' ~ blog.featuredMedia.filename) }}" alt="{{ blog.featuredMedia.altText ?? 'Featured Image' }}" loading="lazy" width="350" height="205">
                 </a>
             {% endif %}
         </div>
@@ -16,6 +16,9 @@
             </p>
             <p style="color: white">
             {{ blog.featuredText ?: '' }}
+            </p>
+            <p>
+                Author: {{ blog.author }}
             </p>
         </div>
     </div>

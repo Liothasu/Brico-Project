@@ -8,10 +8,17 @@
     <section class="container">
         <div class="row g-5">
             <div class="col">
+                <a href="{{ path('blog_list') }}" class="btn btn-danger">Back to the blogs</a>
                 <h3 class="pb-4 mb-4 fst-italic border-bottom">{{ type.name }}</h3>
                 <div id="blogs-list">
                     {% include 'pages/blog/list.html.twig' with { blogs: blogs, leftCol: 4, rightCol: 8 } %}
                 </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <a href="{{ path('blog_new') }}" class="btn btn-primary">Create a blog</a>
+            <div class="position-sticky" style="top: 2rem;">
+                {% include 'widget/types.html.twig' %}
             </div>
         </div>
     </section>

@@ -19,7 +19,7 @@ class ImageCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $mediasDir = $this->getParameter('medias_directory');
-        $imgDir = $this->getParameter('img_directory');
+        $imgDir = $this->getParameter('uploads_directory');
 
         yield AssociationField::new('product');
 

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit blog{% endblock %}
+
+{% block main %}
+    <h2>Edit blog</h2>
+        <form method="post" onsubmit="return confirm('Are you sure you want to modify this blog?');">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </form>
+        <a href="{{ referer }}" class="btn btn-danger">Back</a>
+        <a href="{{ path('blog_delete', {'id': blog.id}) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this blog?')">Delete</a>
+{% endblock %}
+
