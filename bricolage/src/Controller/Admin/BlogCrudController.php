@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Blog;
-use App\Form\Type\CommentType;
+use App\Form\CommentType;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;

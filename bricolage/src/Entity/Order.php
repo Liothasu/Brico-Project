@@ -14,7 +14,7 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 20, unique: true)]
     private $reference;
@@ -24,10 +24,10 @@ class Order
     public const POSSIBLE_STATUSES = ['ORDER_PENDING', 'ORDER_IN_PROCESS', 'ORDER_PAID', 'ORDER_CANCELED'];
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeImmutable $dateOrder = null;
+    private ?\DateTimeImmutable $dateOrder;
 
     #[ORM\Column(length: 255)]
-    private ?string $paymentMode = null;
+    private ?string $paymentMode;
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     private $total;
@@ -35,12 +35,12 @@ class Order
     #[ORM\OneToMany(mappedBy: 'order', targetEntity: LineOrder::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $lineOrders;
 
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: Dispute::class)]
-    private ?Collection $disputes;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: Dispute::class)]
+    private ?Collection $disputes;
 
     public function __construct()
     {
@@ -154,6 +154,18 @@ class Order
         $this->lineOrders->clear();
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+    $this->user = $user;
+
+    return $this;
+    }
+
     /**
      * @return Collection|null
      */
@@ -190,18 +202,6 @@ class Order
         }
 
         return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-    $this->user = $user;
-
-    return $this;
     }
 
     public function getFormattedStatutOrders(): string

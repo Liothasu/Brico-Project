@@ -16,12 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 /** @method User getUser() */
 class CommentController extends AbstractController
 {
-    public function __construct(
-        private BlogRepository $blogRepository,
-        private CommentRepository $commentRepo,
-        private CommentService $commentService
-    )
+    public function __construct(private BlogRepository $blogRepository, private CommentRepository $commentRepo, private CommentService $commentService)
     {
+
     }
 
     #[Route('/ajax/comments', name: 'comment_add', methods: ['POST'])]

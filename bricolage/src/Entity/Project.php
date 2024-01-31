@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Trait\SlugTrait;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,23 +13,23 @@ class Project
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $nameProject = null;
+    private ?string $nameProject;
 
     #[ORM\Column(length: 50)]
-    private ?string $title = null;
+    private ?string $title;
 
     #[ORM\Column(length: 50)]
-    private ?string $description = null;
-
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Dispute::class)]
-    private Collection $disputes;
+    private ?string $description;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Dispute::class)]
+    private Collection $disputes;
 
     public function __construct()
     {
@@ -78,6 +77,18 @@ class Project
         return $this;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Dispute>
      */
@@ -104,18 +115,6 @@ class Project
                 $dispute->setProject(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

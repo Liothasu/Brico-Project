@@ -71,6 +71,18 @@ class Dispute
         return $this;
     }
 
+    public function getProblemType(): ?string
+    {
+        return $this->problemType;
+    }
+
+    public function setProblemType(string $problemType): self
+    {
+        $this->problemType = $problemType;
+
+        return $this;
+    }
+
     public function getOrder(): ?Order
     {
         return $this->order;
@@ -127,18 +139,6 @@ class Dispute
     public function setComment(?Comment $comment): static
     {
         $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getProblemType(): ?string
-    {
-        return $this->problemType;
-    }
-
-    public function setProblemType(string $problemType): self
-    {
-        $this->problemType = $problemType;
 
         return $this;
     }

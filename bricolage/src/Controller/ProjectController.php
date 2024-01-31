@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Project;
-use App\Entity\User;
 use App\Form\ProjectType;
 use App\Service\ProjectMailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,7 +48,7 @@ class ProjectController extends AbstractController
 
             $handymanEmail = 'handyman@hardware-store.com';
             $userEmail = $this->getUser()->getEmail();
-            
+
             if ($handymanEmail) {
                 $this->projectMailer->sendProjectCreationNotification($handymanEmail, $userEmail, $project->getTitle(), $project->getDescription());
             }

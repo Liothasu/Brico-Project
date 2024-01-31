@@ -4,12 +4,9 @@ namespace App\Twig;
 
 use App\Controller\Admin\BlogCrudController;
 use App\Controller\Admin\TypeCrudController;
-use App\Controller\Admin\PageCrudController;
 use App\Entity\Blog;
 use App\Entity\Type;
 use App\Entity\Comment;
-use App\Entity\Menu;
-use App\Entity\Page;
 use Doctrine\Common\Collections\Collection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -48,40 +45,6 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function menuLink(Menu $menu): string
-    {
-        $url = $menu->getLink() ?: '#';
-
-        if ($url !== '#') {
-            return $url;
-        }
-
-        $page = $menu->getPage();
-
-        if ($page) {
-            $name = 'page_show';
-            $slug = $page->getSlug();
-        }
-        
-        $blog = $menu->getBlog();
-
-        if ($blog) {
-            $name = 'blog_show';
-            $slug = $blog->getSlug();
-        }
-
-        $type = $menu->getType();
-
-        if ($type) {
-            $name = 'type_show';
-            $slug = $type->getSlug();
-        }
-
-        return $this->router->generate($name, [
-            'slug' => $slug
-        ]);
-    }
-
     public function typesToString(Collection $types): string
     {
         $generateTypeLink = function(Type $type) {
@@ -101,7 +64,6 @@ class AppExtension extends AbstractExtension
         return match($entity::class) {
             Blog::class => "Edit blog",
             Type::class => 'Edit type',
-            Page::class => 'Edit page'
         };
     }
 
@@ -118,7 +80,6 @@ class AppExtension extends AbstractExtension
         $crudController = match ($entity::class) {
             Blog::class => BlogCrudController::class,
             Type::class => TypeCrudController::class,
-            Page::class => PageCrudController::class
         };
 
         return $this->adminUrlGenerator

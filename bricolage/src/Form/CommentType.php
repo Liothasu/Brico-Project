@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Form\Type;
+namespace App\Form;
 
 use App\Entity\Comment;
 use App\Entity\Blog;
-use Doctrine\ORM\EntityManagerInterface; // Import the EntityManagerInterface
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;

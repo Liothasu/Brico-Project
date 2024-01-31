@@ -13,20 +13,18 @@ class Message
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private ?string $title;
 
     #[ORM\Column(length: 50)]
-    private ?string $content = null;
+    private ?string $content;
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTimeImmutable $timeMsg;
 
-    /**
-    * @ORM\Column(type="boolean")
-    */
+    #[ORM\Column(type: 'boolean')]
     private $is_read = 0;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "sent")]
@@ -82,7 +80,7 @@ class Message
     public function getTimeMsg(): ?\DateTimeImmutable
     {
         return $this->timeMsg;
-    }   
+    }
 
     public function setTimeMsg(?\DateTimeImmutable $timeMsg): self
     {
@@ -102,7 +100,6 @@ class Message
 
         return $this;
     }
-
 
     public function getSender(): ?User
     {

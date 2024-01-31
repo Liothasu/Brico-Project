@@ -19,41 +19,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(type:"json")]
     private array $roles = [];
 
     #[ORM\Column(length: 180, unique: true)]
-    private ?string $username = null;
+    private ?string $username;
 
     #[ORM\Column(length: 50)]
-    private ?string $lastName = null;
+    private ?string $lastName;
 
     #[ORM\Column(length: 50)]
-    private ?string $firstName = null;
+    private ?string $firstName;
 
     #[ORM\Column(length: 50)]
-    private ?string $email = null;
+    private ?string $email;
 
     /**
     * @var string The hashed password
     */
     #[ORM\Column]
-    private ?string $password = null;
+    private ?string $password;
 
     #[ORM\Column]
-    private ?int $phoneNumber = null;
+    private ?int $phoneNumber;
 
     #[ORM\Column(length: 50)]
-    private ?string $numStreet = null;
+    private ?string $numStreet;
 
     #[ORM\Column(length: 50)]
-    private ?string $city = null;
+    private ?string $city;
 
     #[ORM\Column]
-    private ?int $zipCode = null;
-    
+    private ?int $zipCode;
+
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
@@ -71,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Dispute::class)]
     private ?Collection $disputes;
-    
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Project::class)]
     private $projects;
 
@@ -89,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->projects = new ArrayCollection();
         $this->blogs = new ArrayCollection();
     }
-    
+
     /**
      * @see UserInterface
      */
@@ -202,7 +202,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-   
+
     public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
@@ -424,11 +424,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function __toString(): string
-    {
-        return $this->username;
-    }
-
     /**
     * @return Collection<int, Blog>
     */
@@ -459,4 +454,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->username;
+    }
 }

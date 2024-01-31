@@ -8,7 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Media;
 use App\Form\BlogEditType;
 use App\Form\BlogType;
-use App\Form\Type\CommentType;
+use App\Form\CommentType;
 use App\Repository\TypeRepository;
 use App\Service\BlogService;
 use Doctrine\ORM\EntityManagerInterface;

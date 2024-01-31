@@ -37,18 +37,15 @@ class Blog
     #[ORM\Column(length: 50)]
     private ?string $title;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: 'text')]
+    private ?string $featuredText;
+
+    #[ORM\Column(type: 'json')]
     #[Groups(['blog:patch'])]
     private ?string $content;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $featuredText;
-
     #[ORM\ManyToOne(targetEntity: Media::class, cascade: ["remove"])]
     private ?Media $featuredMedia;
-
-    #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Dispute::class)]
-    private ?Collection $disputes;
 
     #[ORM\ManyToOne(inversedBy: 'blogs')]
     #[ORM\JoinColumn(nullable: false)]
@@ -61,14 +58,17 @@ class Blog
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'blog', targetEntity: Dispute::class)]
+    private ?Collection $disputes;
+
     // Column createdAt and updatedAt
 
     public function __construct()
     {
-        $this->types = new ArrayCollection();
-        $this->disputes = new ArrayCollection();
-        $this->comments = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->types = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->disputes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,48 +88,6 @@ class Blog
         return $this;
     }
 
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|null
-     */
-    public function getDisputes(): ?Collection
-    {
-        return $this->disputes;
-    }
-
-    /**
-     * @param Collection|null $disputes
-     */
-    public function setDisputes(?Collection $disputes): void
-    {
-        $this->disputes = $disputes;
-    }
-
-    public function removeDispute(Dispute $dispute): static
-    {
-        if ($this->disputes->removeElement($dispute)) {
-            // set the owning side to null (unless already changed)
-            if ($dispute->getBlog() === $this) {
-                $dispute->setBlog(null);
-            }
-        }
-
-        return $this;
-    }
-
-    //getters and setters updatedAt/createdAt 
-
     public function __toString(): string
     {
         return $this->title;
@@ -143,6 +101,44 @@ class Blog
     public function setFeaturedText(?string $featuredText): self
     {
         $this->featuredText = $featuredText;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): static
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    //getters and setters updatedAt/createdAt
+
+    public function getFeaturedMedia(): ?Media
+    {
+        return $this->featuredMedia;
+    }
+
+    public function setFeaturedMedia(?Media $featuredMedia): self
+    {
+        $this->featuredMedia = $featuredMedia;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }
@@ -201,26 +197,30 @@ class Blog
         return $this;
     }
 
-    public function getFeaturedMedia(): ?Media
+    /**
+     * @return Collection|null
+     */
+    public function getDisputes(): ?Collection
     {
-        return $this->featuredMedia;
+        return $this->disputes;
     }
 
-    public function setFeaturedMedia(?Media $featuredMedia): self
+    /**
+     * @param Collection|null $disputes
+     */
+    public function setDisputes(?Collection $disputes): void
     {
-        $this->featuredMedia = $featuredMedia;
-
-        return $this;
+        $this->disputes = $disputes;
     }
 
-    public function getAuthor(): ?User
+    public function removeDispute(Dispute $dispute): static
     {
-        return $this->author;
-    }
-
-    public function setAuthor(?User $author): self
-    {
-        $this->author = $author;
+        if ($this->disputes->removeElement($dispute)) {
+            // set the owning side to null (unless already changed)
+            if ($dispute->getBlog() === $this) {
+                $dispute->setBlog(null);
+            }
+        }
 
         return $this;
     }

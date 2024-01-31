@@ -51,6 +51,18 @@ class Type
         return $this;
     }
 
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
     /**
     * @return Collection|Blog[]
     */
@@ -73,18 +85,6 @@ class Type
     {
         $this->blogs->removeElement($blog);
         $blog->removeType($this);
-
-        return $this;
-    }
-
-    public function getColor(): ?string
-    {
-        return $this->color;
-    }
-
-    public function setColor(?string $color): self
-    {
-        $this->color = $color;
 
         return $this;
     }

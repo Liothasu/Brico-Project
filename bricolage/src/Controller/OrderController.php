@@ -114,7 +114,7 @@ class OrderController extends AbstractController
             $em->flush();
         }
 
-        $this->addFlash('message', 'Commande mise à jour avec succès');
+        $this->addFlash('message', 'Order successfully updated.');
 
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
@@ -132,7 +132,7 @@ class OrderController extends AbstractController
         }
 
         if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
-            $this->addFlash('message', 'Commande déjà payée.');
+            $this->addFlash('message', 'Order already paid.');
             return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
         }
 
@@ -158,7 +158,7 @@ class OrderController extends AbstractController
             ]);
         }
 
-        // $this->addFlash('error', 'Le paiement n\'est pas valide. Veuillez réessayer.');
+        // $this->addFlash('error', 'The payment is not valid. Please try again.');
 
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
@@ -182,9 +182,9 @@ class OrderController extends AbstractController
             $em->persist($order);
             $em->flush();
 
-            $this->addFlash('message', 'Commande annulée avec succès.');
+            $this->addFlash('message', 'Order successfully cancelled.');
         } else {
-            $this->addFlash('message', 'Cette commande ne peut pas être annulée.');
+            $this->addFlash('message', 'This order cannot be cancelled.');
         }
 
         return $this->redirectToRoute('cart_index');
@@ -199,7 +199,6 @@ class OrderController extends AbstractController
             throw $this->createAccessDeniedException('You are not allowed to cancel payment for this order.');
         }
 
-        // Mettez à jour le statut de la commande
         $order->setStatutOrders(['ORDER_PENDING']);
 
         $em->persist($order);
@@ -207,7 +206,6 @@ class OrderController extends AbstractController
 
         $this->addFlash('message', 'Payment canceled successfully.');
 
-        // Redirigez l'utilisateur vers le panier en cours
         return $this->redirectToRoute('cart_index');
     }
 }

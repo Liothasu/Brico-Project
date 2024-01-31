@@ -34,5 +34,4 @@ class CommentCrudController extends AbstractCrudController
             AssociationField::new('user'),
         ];
     }
-    
 }

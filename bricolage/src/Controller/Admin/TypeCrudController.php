@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Entity\Type;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ColorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -21,7 +20,6 @@ class TypeCrudController extends AbstractCrudController
     {
         return $crud->setPageTitle(Crud::PAGE_INDEX, 'Types');
     }
-
 
     public function configureFields(string $pageName): iterable
     {

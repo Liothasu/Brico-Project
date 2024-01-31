@@ -16,13 +16,13 @@ class Supplier
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $nameFactory = null;
+    private ?string $nameFactory;
 
     #[ORM\Column(length: 50)]
-    private ?string $city = null;
+    private ?string $city;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Product::class)]
     private Collection $products;
@@ -60,7 +60,6 @@ class Supplier
 
         return $this;
     }
-
 
     /**
      * @return Collection<int, Product>

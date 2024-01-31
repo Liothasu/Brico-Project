@@ -43,14 +43,14 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Image::class, orphanRemoval: true, cascade: ['persist'])]
     private $images;
 
-    #[ORM\ManyToMany(targetEntity: Promo::class, mappedBy: 'products')]
-    private Collection $promos;
-
     #[ORM\ManyToOne(inversedBy: 'products', cascade: ['persist'])]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Supplier $supplier = null;
+
+    #[ORM\ManyToMany(targetEntity: Promo::class, mappedBy: 'products')]
+    private Collection $promos;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: LineOrder::class)]
     private Collection $lineOrders;
@@ -157,7 +157,8 @@ class Product
         $vatRate = 0.21;
         $this->unitPrice = $this->priceVAT / (1 + $vatRate);
     }
-     /**
+
+    /**
      * @return Collection|Image[]
      */
     public function getImages(): Collection
@@ -187,6 +188,30 @@ class Product
         return $this;
     }
 
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getSupplier(): ?Supplier
+    {
+        return $this->supplier;
+    }
+
+    public function setSupplier(?Supplier $supplier): static
+    {
+        $this->supplier = $supplier;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Promo>
      */
@@ -210,30 +235,6 @@ class Product
         if ($this->promos->removeElement($promo)) {
             $promo->removeProduct($this);
         }
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): static
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    public function getSupplier(): ?Supplier
-    {
-        return $this->supplier;
-    }
-
-    public function setSupplier(?Supplier $supplier): static
-    {
-        $this->supplier = $supplier;
 
         return $this;
     }
@@ -272,5 +273,4 @@ class Product
     {
         return $this->nameProduct;
     }
-
 }

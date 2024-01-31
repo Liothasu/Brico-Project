@@ -12,12 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * Require ROLE_ROLE for *every* controller method in this class.
- *
- * @IsGranted("ROLE_USER")
- */
-
 class MessageController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
@@ -47,7 +41,7 @@ class MessageController extends AbstractController
             $this->entityManager->persist($message);
             $this->entityManager->flush();
 
-            $this->addFlash("message", "Message envoyé avec succès.");
+            $this->addFlash("message", "Message sent successfully.");
             return $this->redirectToRoute("message");
         }
 

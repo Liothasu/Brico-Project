@@ -31,9 +31,6 @@ class Comment implements EventSubscriber
     #[Groups('comment')]
     private \DateTime $updatedAt;
 
-    #[ORM\OneToMany(targetEntity: Dispute::class, mappedBy: 'comment')]
-    private ?Collection $disputes;
-
     #[ORM\ManyToOne(targetEntity: Blog::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private Blog $blog;
@@ -49,14 +46,17 @@ class Comment implements EventSubscriber
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $replies;
 
+    #[ORM\OneToMany(targetEntity: Dispute::class, mappedBy: 'comment')]
+    private ?Collection $disputes;
+
     public function __construct(Blog $blog, UserInterface $user)
     {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
         $this->blog = $blog;
         $this->user = $user;
         $this->replies = new ArrayCollection();
         $this->disputes = new ArrayCollection();
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -98,22 +98,6 @@ class Comment implements EventSubscriber
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|null
-     */
-    public function getDisputes(): ?Collection
-    {
-        return $this->disputes;
-    }
-
-    /**
-     * @param Collection|null $disputes
-     */
-    public function setDisputes(?Collection $disputes): void
-    {
-        $this->disputes = $disputes;
     }
 
     public function getBlog(): ?Blog
@@ -165,6 +149,22 @@ class Comment implements EventSubscriber
     public function getReplies(): Collection
     {
         return $this->replies;
+    }
+
+    /**
+     * @return Collection|null
+     */
+    public function getDisputes(): ?Collection
+    {
+        return $this->disputes;
+    }
+
+    /**
+     * @param Collection|null $disputes
+     */
+    public function setDisputes(?Collection $disputes): void
+    {
+        $this->disputes = $disputes;
     }
 
     #[Groups('comment')]

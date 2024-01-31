@@ -19,7 +19,7 @@ class Category
     private ?int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $name = null;
+    private ?string $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class, cascade: ['persist'])]
     private Collection $products;

@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Require ROLE_ROLE for *every* controller method in this class.
@@ -138,16 +137,16 @@ class UserController extends AbstractController
 
             if ($request->isMethod('POST')) {
                 $form->handleRequest($request);
-            
+
                 if ($form->isSubmitted() && $form->isValid()) {
                     // $hashedPassword = $userPasswordHasher->hashPassword($user, $form->get('newPassword')->getData());
                     // $user->setPassword($hashedPassword);
-            
+
                     $entityManager->persist($user);
                     $entityManager->flush();
-            
+
                     $this->addFlash('success', 'Profile updated successfully.');
-            
+
                     return $this->redirectToRoute('profile_index');
                 }
             }

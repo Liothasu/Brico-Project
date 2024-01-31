@@ -84,5 +84,4 @@ class ProductCrudController extends AbstractCrudController
 
         return $this->redirectToRoute('home');
     }
-
 }

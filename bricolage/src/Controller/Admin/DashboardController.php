@@ -57,19 +57,6 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToRoute('Go to the website', 'fas fa-undo', 'home');
 
-        // if ($this->isGranted('ROLE_USER')) {
-        //     yield MenuItem::subMenu('Menus', 'fa-solid fa-bars')->setSubItems([
-        //         MenuItem::linkToCrud('Pages', 'fas fa-file', Menu::class)
-        //             ->setQueryParameter('submenuIndex', 0),
-        //         MenuItem::linkToCrud('Blogs', 'fas fa-newspaper', Menu::class)
-        //             ->setQueryParameter('submenuIndex', 1),
-        //         MenuItem::linkToCrud('Custom Links', 'fas fa-link', Menu::class)
-        //             ->setQueryParameter('submenuIndex', 2),
-        //         MenuItem::linkToCrud('Types', 'fas fa-list', Menu::class)
-        //             ->setQueryParameter('submenuIndex', 3),
-        //     ]);
-        // }
-
         if ($this->isGranted('ROLE_ADMIN')) {
             yield MenuItem::subMenu('Products', 'fa-solid fa-tags')->setSubItems([
                 MenuItem::linkToCrud('All Products', 'fa-solid fa-tag', Product::class),
@@ -125,7 +112,6 @@ class DashboardController extends AbstractDashboardController
 
             yield MenuItem::subMenu('Accounts', 'fas fa-user')->setSubItems([
                 MenuItem::linkToCrud('All Accounts', 'fas fa-user-friends', User::class),
-                MenuItem::linkToCrud('Add', 'fas fa-plus', User::class)->setAction(Crud::PAGE_NEW)
             ]);
 
             yield MenuItem::subMenu('Settings', 'fas fa-cog')->setSubItems([

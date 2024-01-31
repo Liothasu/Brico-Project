@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 *
 * @IsGranted("ROLE_ADMIN")
 */
-
 class VerifEmailController extends AbstractController
 {
     #[Route('/verif/email', name: 'app_verif_email')]
@@ -19,7 +18,7 @@ class VerifEmailController extends AbstractController
     {
         $this->denyAccessUnlessGranted("IS_AUTHENTICATED_FULLY");
 
-        /**@var User $user */
+        /** @var User $user */
         $user = $this->getUser();
 
         return match ($user->isVerified()) {

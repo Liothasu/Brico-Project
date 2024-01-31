@@ -34,8 +34,6 @@ class MediaCrudController extends AbstractCrudController
         if (Crud::PAGE_EDIT == $pageName) {
             $imageField->setRequired(false);
         }
-
-        // yield $imageField
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -45,7 +43,7 @@ class MediaCrudController extends AbstractCrudController
 
         $mediaName = $media->getName() ?: $media->getFilename();
         $media->setName($mediaName);
-        
+
         parent::persistEntity($entityManager, $media);
     }
 
