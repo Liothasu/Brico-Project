@@ -22,21 +22,33 @@ class PromoRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne les promotions actives à la date actuelle.
+     * Returns promotions active at the current date.
      *
      * @return array|Promo[]
      */
     public function findActivePromos()
-{
-    $now = new \DateTimeImmutable();
+    {
+        $now = new \DateTimeImmutable();
 
-    return $this->createQueryBuilder('p')
-        ->andWhere('p.dateBegin <= :now')
-        ->andWhere('p.dateEnd >= :now')
-        ->setParameter('now', $now)
-        ->orderBy('p.dateBegin', 'ASC')
-        ->getQuery()
-        ->getResult();
-}
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.dateBegin <= :now')
+            ->andWhere('p.dateEnd >= :now')
+            ->setParameter('now', $now)
+            ->orderBy('p.dateBegin', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findCurrentPromotions()
+    {
+        $queryBuilder = $this->createQueryBuilder('promo')
+            ->leftJoin('promo.products', 'product')
+            ->leftJoin('product.images', 'image')
+            ->where('promo.dateBegin <= :currentDate')
+            ->andWhere('promo.dateEnd >= :currentDate')
+            ->setParameter('currentDate', new \DateTimeImmutable());
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
 

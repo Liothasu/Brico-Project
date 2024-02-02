@@ -54,7 +54,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/category/{slug}', name: 'category')]
-    public function category(Category $category, PromoRepository $promoRepository, ProductRepository $productRepository, Request $request): Response
+    public function category(Category $category, PromoRepository $promoRepository, ProductRepository $productRepository): Response
     {
         $products = $productRepository->findBy(['category' => $category]);
         $activePromos = $promoRepository->findActivePromos();
@@ -77,9 +77,23 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'list')]
-    public function list(Product $product): Response
+    #[Route('/detail/{id}', name: 'detail')]
+    public function detail(Product $product, PromoRepository $promoRepository): Response
     {
-        return $this->render('pages/shop/product_list.html.twig', compact('product'));
+        $activePromos = $promoRepository->findActivePromos();
+        $discountedPrices = [];
+
+        foreach ($activePromos as $promo) {
+            if ($promo->isActivePromo()) {
+                $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
+                $discountedPrices[$product->getId()] = $discountedPrice;
+            }
+        }
+
+        return $this->render('pages/product/detail.html.twig', [
+            'product' => $product,
+            'activePromos' => $activePromos,
+            'discountedPrices' => $discountedPrices,
+        ]);
     }
 }

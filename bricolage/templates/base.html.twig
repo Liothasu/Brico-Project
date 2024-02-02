@@ -54,7 +54,7 @@
 				<a href="{{ path("message") }}">Message</a>
 				<a href="{{ path('contact_index') }}">Contact</a>
 			</nav>
-				{{ render(controller('App\\Controller\\SearchBarController::index')) }}
+			{{ render(controller('App\\Controller\\SearchBarController::index')) }}
 			<div class="icons">
 
 				<a href="{{ path('cart_index') }}">
@@ -62,7 +62,6 @@
 				</a>
 
 				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-					{# <a href="{{ path('order_list') }}"> #}
 					<a href="{{ path('profile_index') }}">
 						<i class="fas fa-user"></i>
 						{{ app.user.username }}</a>

@@ -27,9 +27,10 @@
         <dt>ZIP Code:</dt>
         <dd>{{ app.user.zipCode }}</dd>
         <a href="{{ path('profile_edit') }}" class="btn btn-primary">Edit profile</a>
+        <a href="{{ path('order_list') }}" class="btn btn-primary">List orders</a>
     </dl>
     {% if app.user.blogs | length > 0 %}
-        <h2>Blogs de {{ app.user.getFullname() }} ({{ app.user.blogs | length }}) </h2>
+        <h2>Blogs of {{ app.user.getFullname() }} ({{ app.user.blogs | length }}) </h2>
         {% for blog in app.user.blogs %}
             <p>Title: {{ blog.title }}</p>
             <a href="{{ path('blog_show', {'slug': blog.slug}) }}" class="btn btn-primary">Go to the blog</a>

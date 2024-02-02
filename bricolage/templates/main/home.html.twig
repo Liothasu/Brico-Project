@@ -3,6 +3,41 @@
 {% block title %}Home{% endblock %}
 
 {% block main %}
+   {% for promo in currentPromos %}
+        <div class="promo">
+            <p>Promotion details: {{ promo.name }}, {{ promo.percent }}%</p>
+            <div id="promoCarousel{{ promo.id }}" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    {% for loopIndex, product in promo.products %}
+                        <div class="carousel-item {% if loopIndex == 0 %}active{% endif %}">
+                            {% if product.images|length > 0 %}
+                                <div class="products-container">
+                                    {% set firstImage = product.images.first %}
+                                    <img src="/uploads/{{ firstImage.filename }}" style="max-width: 150px;" alt="{{ firstImage.altText }}">
+                                </div>
+                            {% endif %}
+                            <h5 style="color: white">{{ product.nameProduct }}</h5>
+                            <p>Prix promo : {{ (product.priceVAT * (1 - promo.percent / 100)) | number_format(2, ',', '.') }} €
+                                instead of {{ product.priceVAT | number_format(2, ',', '.') }} €</p>
+                            <a href="{{ path('product_detail', {'id': product.id}) }}" class="btn btn-primary">View product</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+                {# voir pour la mise en page carrousel fonctionnel pas le bouton #}
+
+                {# <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel{{ promo.id }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel{{ promo.id }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button> #}
+            </div>
+        </div>
+    {% endfor %}
+
+<br>
     <section>
         <h2>Presentation of Brico-Projet - Your DIY Partner</h2>
         <img class="home_image_one" src="{{ asset('images/img_home_one.jpg') }}" alt="brico">

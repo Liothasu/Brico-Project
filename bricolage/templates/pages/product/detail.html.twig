@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ product.nameProduct }}
+{% endblock %}
+
+{% block main %}
+	<div>
+		<h3>Produit details</h3>
+	</div>
+	<div class="card mb-3" style="max-width: 900px;">
+		<div class="row g-0">
+			<div class="col-md-4">
+				{% if product.images|length > 0 %}
+					<div id="carouselExampleIndicators{{ product.id }}" class="carousel slide">
+						<div class="carousel-indicators">
+							{% for loopIndex, image in product.images %}
+								<button type="button" data-bs-target="#carouselExampleIndicators{{ product.id }}" data-bs-slide-to="{{ loopIndex }}" {% if loopIndex == 0 %} class="active" {% endif %}></button>
+							{% endfor %}
+						</div>
+						<div class="carousel-inner">
+							{% for loopIndex, image in product.images %}
+								<div class="carousel-item{% if loopIndex == 0 %} active{% endif %}">
+									<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}">
+								</div>
+							{% endfor %}
+						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators{{ product.id }}" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators{{ product.id }}" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						</button>
+					</div>
+				{% else %}
+					<p style="color: black">No image</p>
+				{% endif %}
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title">{{ product.nameProduct }}</h5>
+					<p class="card-text" style="color: black">{{ product.designation }}</p>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">
+						<strong>Color:</strong>
+						{{ product.color }}</li>
+					<li class="list-group-item">
+						<strong>Price excluding tax:</strong>
+						{{ product.unitPrice | number_format(2, ',', '.') }}
+						€
+					</li>
+					{% if product.promos is not empty %}
+						{% if discountedPrices[product.id] is defined %}
+							<li class="list-group-item">
+								<strong>New price:</strong>
+								<del>{{ product.priceVAT | number_format(2, ',', '.') }}
+									€</del>
+								{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
+								€
+							</li>
+						{% endif %}
+					{% else %}
+						<li class="list-group-item">
+							<strong>Price includes VAT:</strong>
+							{{ product.priceVAT | number_format(2, ',', '.') }}
+							€
+						</li>
+					{% endif %}
+					<li class="list-group-item">{{ product.supplier }}
+						-
+						{{ product.supplier.city }}
+					</li>
+					<li class="list-group-item">{{ product.reference }}</li>
+				</ul>
+				<div class="card-body">
+					<a href="{{ path("cart_add", {id: product.id}) }}" class="btn btn-primary">Add to cart</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<a href="{{ path('product_all') }}" class="btn btn-success">View all products</a>
+{% endblock %}

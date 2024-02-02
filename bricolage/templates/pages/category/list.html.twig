@@ -51,11 +51,6 @@
 										</strong>
 										{{ product.unitPrice | number_format(2, ',', '.') }}
 										€</li>
-									<li class="list-group-item">
-										<strong>Price includes VAT:
-										</strong>
-										{{ product.priceVAT | number_format(2, ',', '.') }}
-										€</li>
 									{% if product.promos is not empty %}
 										{% if discountedPrices[product.id] is defined %}
 											<li class="list-group-item">
@@ -66,12 +61,19 @@
 												€
 											</li>
 										{% endif %}
+									{% else %}
+										<li class="list-group-item">
+											<strong>Price includes VAT:</strong>
+											{{ product.priceVAT | number_format(2, ',', '.') }}
+											€
+										</li>
 									{% endif %}
 									<li class="list-group-item">{{ product.supplier }}</li>
 									<li class="list-group-item">{{ product.reference }}</li>
 								</ul>
 								<div class="card-body">
 									<a href="{{ path("cart_add", {id: product.id}) }}" class="btn btn-primary">Add to cart</a>
+									<a href="{{ path('product_detail', {'id': product.id}) }}" class="btn btn-primary">View product</a>
 								</div>
 							</div>
 						</div>

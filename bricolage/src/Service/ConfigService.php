@@ -6,9 +6,10 @@ use App\Repository\ConfigRepository;
 
 class ConfigService
 {
-    public function __construct(
-        private ConfigRepository $configRepository
-    ) {}
+    public function __construct(private ConfigRepository $configRepository) 
+    {
+
+    }
 
     public function findAll(): array
     {
