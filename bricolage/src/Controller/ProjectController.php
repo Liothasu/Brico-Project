@@ -11,8 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/project', name: 'project_')]
+#[IsGranted("ROLE_USER")]
 class ProjectController extends AbstractController
 {
     private ProjectMailer $projectMailer;

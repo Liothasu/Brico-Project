@@ -85,6 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sent = new ArrayCollection();
         $this->received = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->orders = new ArrayCollection();
         $this->disputes = new ArrayCollection();
         $this->projects = new ArrayCollection();
         $this->blogs = new ArrayCollection();

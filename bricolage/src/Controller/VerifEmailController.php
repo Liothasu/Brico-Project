@@ -21,9 +21,13 @@ class VerifEmailController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        return match ($user->isVerified()) {
-            true => $this->render("main/home.html.twig"),
-            false => $this->render("pages/registration/verify_email.html.twig"),
-        };
+        if ($user->isVerified()) {
+            // Redirect to home or any other route upon successful email verification
+            return $this->redirectToRoute('home');
+        }
+
+        // If not verified, render the verify_email template
+        return $this->render("pages/registration/verify_email.html.twig");
     }
+
 }

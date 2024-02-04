@@ -4,74 +4,69 @@
 {% endblock %}
 
 {% block main %}
-	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-		<section class="container">
-			<div class="row">
+	<section class="container">
+		<div class="row">
+			<div class="col-12">
+				<h2>Inbox</h2>
+			</div>
+			{% if not app.user.received is empty %}
 				<div class="col-12">
-					<h2>Inbox</h2>
-				</div>
-				{% if not app.user.received is empty %}
-					<div class="col-12">
-						<table class="table table-dark table-hover">
-							<thead>
+					<table class="table table-dark table-hover">
+						<thead>
+							<tr>
+								<th scope="col">From</th>
+								<th scope="col">Subject</th>
+								<th scope="col">Date</th>
+								<th scope="col"></th>
+							</tr>
+						</thead>
+						<tbody class="table-group-divider">
+							{% set sortedReceived = app.user.received|sort((a, b) => b.timeMsg <=> a.timeMsg) %}
+							{% for message in sortedReceived %}
+								{% set bold = message.isRead == 0 ? "fw-bold" : "" %}
 								<tr>
-									<th scope="col">From</th>
-									<th scope="col">Subject</th>
-									<th scope="col">Date</th>
-									<th scope="col"></th>
+									<td>{{ message.sender.username }}</td>
+									<td>
+										<a href="{{ path("read", {id: message.id}) }}">{{ message.title }}</a>
+									</td>
+									<td>{{ message.timeMsg|date }}</td>
+									<td>
+										<a href="{{ path("delete", {id: message.id}) }}">
+											<button type="button" class="btn-close" aria-label="Close"></button>
+										</a>
+									</td>
 								</tr>
-							</thead>
-							<tbody class="table-group-divider">
-								{% set sortedReceived = app.user.received|sort((a, b) => b.timeMsg <=> a.timeMsg) %}
-								{% for message in sortedReceived %}
-									{% set bold = message.isRead == 0 ? "fw-bold" : "" %}
-									<tr>
-										<td>{{ message.sender.username }}</td>
-										<td>
-											<a href="{{ path("read", {id: message.id}) }}">{{ message.title }}</a>
-										</td>
-										<td>{{ message.timeMsg|date }}</td>
-										<td>
-											<a href="{{ path("delete", {id: message.id}) }}">
-												<button type="button" class="btn-close" aria-label="Close"></button>
-											</a>
-										</td>
-									</tr>
-								{% endfor %}
-							</tbody>
-						{% else %}
-							<p>You have received no message</p>
-						{% endif %}
-					</table>
-				</div>
-				<div class="col">
-					<br>
-					<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-						View my folders
-					</a>
-				</div>
+							{% endfor %}
+						</tbody>
+					{% else %}
+						<p>You have received no message</p>
+					{% endif %}
+				</table>
 			</div>
-		</section>
-
-		<div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-			<div class="offcanvas-header">
-				<h2 class="offcanvas-title" id="offcanvasExampleLabel">Message private</h2>
-				<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-			</div>
-			<div class="offcanvas-body">
-				<div class="list-group">
-					<a href="{{ path("message") }}" class="list-group-item list-group-item-action active">Inbox</a>
-				</div>
-				<div class="list-group">
-					<a href="{{ path("sent") }}" class="list-group-item list-group-item-action">Sent Items</a>
-				</div>
-				<div class="list-group">
-					<a href="{{ path("send") }}" class="list-group-item list-group-item-action">Send a message</a>
-				</div>
+			<div class="col">
+				<br>
+				<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+					View my folders
+				</a>
 			</div>
 		</div>
+	</section>
 
-	{% else %}
-		<p>You do not have the necessary rights.</p>
-	{% endif %}
+	<div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+		<div class="offcanvas-header">
+			<h2 class="offcanvas-title" id="offcanvasExampleLabel">Message private</h2>
+			<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<div class="list-group">
+				<a href="{{ path("message") }}" class="list-group-item list-group-item-action active">Inbox</a>
+			</div>
+			<div class="list-group">
+				<a href="{{ path("sent") }}" class="list-group-item list-group-item-action">Sent Items</a>
+			</div>
+			<div class="list-group">
+				<a href="{{ path("send") }}" class="list-group-item list-group-item-action">Send a message</a>
+			</div>
+		</div>
+	</div>
 {% endblock %}

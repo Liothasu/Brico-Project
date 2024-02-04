@@ -23,29 +23,23 @@ class DisputeController extends AbstractController
 {
     #[Route('/', name: 'index')]
     public function createDispute(Request $request, BlogRepository $blogRepository, ProjectRepository $projectRepository, CommentRepository $commentRepository, 
-        OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
-    {
+        OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response {
         $user = $this->getUser();
 
         $dispute = new Dispute();
 
-        $blogs = $blogRepository->findAll();
-        $projects = $projectRepository->findAll();
-        $comments = $commentRepository->findAll();
-        $orders = $orderRepository->findAll();
-
-        $defaultBlog = $blogRepository->find(1);
-        $defaultProject = $projectRepository->find(1);
-        $defaultComment = $commentRepository->find(1);
-        $defaultOrder = $orderRepository->find(1);
+        $blogs = $blogRepository->find(1);
+        $projects = $projectRepository->findBy(['user' => $user]);
+        $comments = $commentRepository->find(1);
+        $orders = $orderRepository->findBy(['user' => $user]);
 
         $form = $this->createForm(DisputeType::class, $dispute, [
-            'default_blog' => $defaultBlog,
-            'default_project' => $defaultProject,
-            'default_comment' => $defaultComment,
-            'default_order' => $defaultOrder,
+            'blogs' => $blogs,
+            'projects' => $projects,
+            'comments' => $comments,
+            'orders' => $orders,
         ]);
-        
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -68,7 +62,7 @@ class DisputeController extends AbstractController
                 $dispute->setProject(null);
                 $dispute->setComment(null);
             }
-            
+
             $dispute->setUser($user);
             $entityManager->persist($dispute);
             $entityManager->flush();
@@ -78,15 +72,14 @@ class DisputeController extends AbstractController
             $this->addFlash("message", "Your dispute has been created and notify an adminstrator.");
 
             return $this->redirectToRoute('contact_details', [
-                'id' => $dispute->getId()]);
+                'id' => $dispute->getId()
+            ]);
         }
 
         return $this->render('pages/contact/index.html.twig', [
             'form' => $form->createView(),
-            'blogs' => $blogs,
-            'projects' => $projects,
-            'comments' => $comments,
             'orders' => $orders,
+            'projects' => $projects,
         ]);
     }
 
@@ -105,7 +98,8 @@ class DisputeController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function editDispute($id, Security $security, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function editDispute($id, Security $security, Request $request, BlogRepository $blogRepository, ProjectRepository $projectRepository, CommentRepository $commentRepository, 
+        OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $user = $security->getUser();
 
@@ -115,7 +109,18 @@ class DisputeController extends AbstractController
             throw $this->createNotFoundException('Dispute not found');
         }
 
-        $form = $this->createForm(DisputeType::class, $dispute);
+        $blogs = $blogRepository->find(1);
+        $projects = $projectRepository->findBy(['user' => $user]);
+        $comments = $commentRepository->find(1);
+        $orders = $orderRepository->findBy(['user' => $user]);
+
+        $form = $this->createForm(DisputeType::class, $dispute, [
+            'blogs' => $blogs,
+            'projects' => $projects,
+            'comments' => $comments,
+            'orders' => $orders,
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -155,6 +160,8 @@ class DisputeController extends AbstractController
         return $this->render('pages/contact/edit.html.twig', [
             'form' => $form->createView(),
             'dispute' => $dispute,
+            'orders' => $orders,
+            'projects' => $projects,
         ]);
     }
 

@@ -1,39 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Profile
+{% endblock %}
 
 {% block main %}
-    <h2>Your Profile</h2>
+	<h2>Your Profile</h2>
 
-    <dl style="color: white">
-        <dt>Username:</dt>
-        <dd>{{ app.user.username }}</dd>
+	<dl style="color: white">
+		<dt>Username:</dt>
+		<dd>{{ app.user.username }}</dd>
 
-        <dt>Full Name:</dt>
-        <dd>{{ app.user.getFullname() }}</dd>
+		<dt>Full Name:</dt>
+		<dd>{{ app.user.getFullname() }}</dd>
 
-        <dt>Email:</dt>
-        <dd>{{ app.user.email }}</dd>
+		<dt>Email:</dt>
+		<dd>{{ app.user.email }}</dd>
 
-        <dt>Phone Number:</dt>
-        <dd>{{ app.user.phoneNumber }}</dd>
+		<dt>Phone Number:</dt>
+		<dd>{{ app.user.phoneNumber }}</dd>
 
-        <dt>Street Number:</dt>
-        <dd>{{ app.user.numStreet }}</dd>
+		<dt>Street Number:</dt>
+		<dd>{{ app.user.numStreet }}</dd>
 
-        <dt>City:</dt>
-        <dd>{{ app.user.city }}</dd>
+		<dt>City:</dt>
+		<dd>{{ app.user.city }}</dd>
 
-        <dt>ZIP Code:</dt>
-        <dd>{{ app.user.zipCode }}</dd>
-        <a href="{{ path('profile_edit') }}" class="btn btn-primary">Edit profile</a>
-        <a href="{{ path('order_list') }}" class="btn btn-primary">List orders</a>
-    </dl>
-    {% if app.user.blogs | length > 0 %}
-        <h2>Blogs of {{ app.user.getFullname() }} ({{ app.user.blogs | length }}) </h2>
-        {% for blog in app.user.blogs %}
-            <p>Title: {{ blog.title }}</p>
-            <a href="{{ path('blog_show', {'slug': blog.slug}) }}" class="btn btn-primary">Go to the blog</a>
-        {% endfor %}
-    {% endif %}
+		<dt>ZIP Code:</dt>
+		<dd>{{ app.user.zipCode }}</dd>
+		<a href="{{ path('profile_edit') }}" class="btn btn-primary">Edit profile</a>
+		<a href="{{ path('order_list') }}" class="btn btn-primary">List orders</a>
+	</dl>
+	{% if app.user.blogs | length > 0 %}
+		<h2>Your Blogs
+			({{ app.user.blogs | length }})
+		</h2>
+		{% for blog in app.user.blogs %}
+			<p>Title:
+				{{ blog.title }}</p>
+			<a href="{{ path('blog_show', {'slug': blog.slug}) }}" class="btn btn-primary">Go to the blog</a>
+		{% endfor %}
+	{% endif %}
+	{% if app.user.disputes | length > 0 %}
+		<h2>Your Disputes ({{ app.user.disputes | length }})
+		</h2>
+		{% for dispute in app.user.disputes %}
+			<p>Title:
+				{{ dispute.title }}</p>
+			<a href="{{ path('contact_details', {'id': dispute.id}) }}" class="btn btn-primary">Details</a>
+		{% endfor %}
+	{% endif %}
 {% endblock %}
