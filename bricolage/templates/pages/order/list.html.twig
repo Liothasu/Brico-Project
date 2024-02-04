@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des commandes{% endblock %}
+{% block title %}List of Orders{% endblock %}
 
 {% block main %}
     <section style="color: white">
@@ -11,14 +11,14 @@
                 {% for order in orders %}
                     {% if 'ORDER_PAID' in order.getStatutOrders() or 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
                         <li>
-                            Reference : {{ order.reference }} - {{ order.total }} € - {{ order.dateOrder|date('d/m/Y H:i:s') }}
-                            <a href="{{ path('order_details', {'id': order.id}) }}">Détails</a>
+                            Reference: {{ order.reference }} - {{ order.total }} € - {{ order.dateOrder|date('d/m/Y H:i:s') }}
+                            <a href="{{ path('order_details', {'id': order.id}) }}">Details</a>
                         </li>
                     {% endif %}
                 {% endfor %}
             </ul>
         {% else %}
-            <p>Aucune commande payée ou en cours de traitement trouvée.</p>
+            <p>No paid or in-process orders found.</p>
         {% endif %}
     </section>
 {% endblock %}

@@ -1,56 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order Details{% endblock %}
+{% block title %}Order Details
+{% endblock %}
 
 {% block main %}
-    <section class="container mt-5">
-        <h1>Order Details</h1>
+	<section class="container mt-5">
+		<h1>Order Details</h1>
 
-        {% if 'ORDER_PAID' in order.getStatutOrders() or 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
-            <table class="table table-striped mt-3">
-                <tr>
-                    <th>Reference:</th>
-                    <td>{{ order.getReference() }}</td>
-                </tr>
-                <tr>
-                    <th>Date:</th>
-                    <td>{{ order.getDateOrder() | date('d-m-Y') }}</td>
-                </tr>
-                <tr>
-                    <th>Total:</th>
-                    <td>{{ order.getTotal() | number_format(2, ',', '.') }} €</td>
-                </tr>
-                <tr>
-                    <th>Products:</th>
-                    <td>
-                        <ul style="color: black">
-                            {% for lineOrder in order.getLineOrders() %}
-                                <li>
-                                    {% if lineOrder.getProduct().getImages() is not empty %}
-                                        {% set firstImage = lineOrder.getProduct().getImages().first() %}
-                                        <img src="/uploads/{{ firstImage.filename }}" class="img-fluid" style="max-width: 50px;" alt="{{ firstImage.altText }}">
-                                    {% endif %}
-                                    {{ lineOrder.getQuantity() }}
-                                    x
-                                    {{ lineOrder.getProduct().getNameProduct() }}
-                                    ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }} €)
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-            {% if 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
-                <a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary">Payer</a>
-            {% endif %}
-        {% endif %}
+		{% if 'ORDER_PAID' in order.getStatutOrders() or 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
+			<table class="table table-striped mt-3">
+				<tr>
+					<th>Reference:</th>
+					<td>{{ order.getReference() }}</td>
+				</tr>
+				<tr>
+					<th>Date:</th>
+					<td>{{ order.getDateOrder() | date('d-m-Y') }}</td>
+				</tr>
+				<tr>
+					<th>Total:</th>
+					<td>{{ order.getTotal() | number_format(2, ',', '.') }}
+						€</td>
+				</tr>
+				<tr>
+					<th>Products:</th>
+					<td>
+						<ul style="color: black">
+							{% for lineOrder in order.getLineOrders() %}
+								<li>
+									{% if lineOrder.getProduct().getImages() is not empty %}
+										{% set firstImage = lineOrder.getProduct().getImages().first() %}
+										<img src="/uploads/{{ firstImage.filename }}" class="img-fluid" style="max-width: 50px;" alt="{{ firstImage.altText }}">
+									{% endif %}
+									{{ lineOrder.getQuantity() }}
+									x
+									{{ lineOrder.getProduct().getNameProduct() }}
+									({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
+									€)
+								</li>
+							{% endfor %}
+						</ul>
+					</td>
+				</tr>
+			</table>
+			{% if 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
+				<a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary">Pay</a>
+			{% endif %}
+		{% endif %}
 
-        {% if 'ORDER_PAID' in order.getStatutOrders() %}
-            <form action="{{ path('order_cancel', {'id': order.getId()}) }}" method="post" class="mt-3">
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-danger">Cancel Order</button>
-                </div>
-            </form>
-        {% endif %}
-    </section>
+		{% if 'ORDER_PAID' in order.getStatutOrders() %}
+			<form action="{{ path('order_cancel', {'id': order.getId()}) }}" method="post" class="mt-3">
+				<div class="d-flex justify-content-end">
+					<button type="submit" class="btn btn-danger">Cancel Order</button>
+				</div>
+			</form>
+		{% endif %}
+	</section>
 {% endblock %}
