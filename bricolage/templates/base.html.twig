@@ -52,11 +52,23 @@
 
 				<a href="{{ path('blog_list') }}">Blog</a>
 				<a href="{{ path('product_all') }}">Product</a>
-				<a href="{{ path('project_index') }}">Project</a>
+				{# <a href="{{ path('project_index') }}">Project</a> #}
 				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 					<a href="{{ path("message") }}">Message</a>
 				{% endif %}
-				<a href="{{ path('contact_index') }}">Contact</a>
+				<div class="dropdown">
+					<a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Contact
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li>
+							<a class="dropdown-item" href="{{ path('contact_index') }}">Litige</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="{{ path('project_index') }}">Project</a>
+						</li>
+					</ul>
+				</div>
 			</nav>
 			{{ render(controller('App\\Controller\\SearchBarController::index')) }}
 			<div class="icons">

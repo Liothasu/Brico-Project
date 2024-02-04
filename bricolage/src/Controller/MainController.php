@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\BlogRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\PromoRepository;
 use App\Repository\TypeRepository;
@@ -19,15 +20,17 @@ class MainController extends AbstractController
     }
 
     #[Route('/', name: 'home')]
-    public function home(CategoryRepository $categoryRepository, BlogService $blogService,TypeRepository $typeRepository, PromoRepository $promoRepository): Response
+    public function home(CategoryRepository $categoryRepository, BlogRepository $blogRepository, BlogService $blogService,TypeRepository $typeRepository, PromoRepository $promoRepository): Response
     {
         $currentPromos = $promoRepository->findCurrentPromotions();
+        $recentBlogs = $blogRepository->findRecentBlogs();
 
         return $this->render('main/home.html.twig', [
             'categories' => $categoryRepository->findBy([], ['name' => 'asc']),
             'blogs' => $blogService->getPaginatedBlogs(),
             'types' => $typeRepository->findAllForWidget(),
             'currentPromos' => $currentPromos,
+            'recentBlogs' => $recentBlogs,
         ]);
     }
 }

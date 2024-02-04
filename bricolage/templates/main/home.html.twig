@@ -36,7 +36,19 @@
             </div>
         </div>
     {% endfor %}
-
+    {% if recentBlogs is defined and recentBlogs is not empty %}
+            <div class="recent-blogs">
+                <h2>Recent Blogs</h2>
+                {% for blog in recentBlogs %}
+                    <div class="recent-blog">
+                        <h3>{{ blog.title }}</h3>
+                        <p>{{ blog.featuredText }}</p>
+                        <img src="{{ asset('uploads/' ~ blog.featuredMedia.filename) }}" alt="{{ blog.featuredMedia.altText ?? 'Featured Image' }}" width="350" height="205">
+                        <a href="{{ path('blog_show', { 'slug': blog.slug }) }}" class="btn btn-primary">View Blog</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 <br>
     <section>
         <h2>Presentation of Brico-Projet - Your DIY Partner</h2>

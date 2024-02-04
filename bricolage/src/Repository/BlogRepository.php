@@ -36,4 +36,19 @@ class BlogRepository extends ServiceEntityRepository
 
         return $qb->getQuery();
     }
+
+    /**
+     * Get the most recent blogs
+     *
+     * @param int $limit Maximum number of blogs to retrieve
+     * @return Blog[]
+     */
+    public function findRecentBlogs($limit = 5)
+    {
+        return $this->createQueryBuilder('b')
+            ->orderBy('b.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
