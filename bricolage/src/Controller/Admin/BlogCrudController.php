@@ -53,7 +53,7 @@ class BlogCrudController extends AbstractCrudController
 
         yield TextEditorField::new('content');
 
-        yield TextareaField::new('featuredText', 'Texte mis en avant');
+        yield TextareaField::new('featuredText', 'Featured text');
 
         yield AssociationField::new('types');
 

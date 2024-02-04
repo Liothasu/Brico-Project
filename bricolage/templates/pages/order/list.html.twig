@@ -4,15 +4,22 @@
 
 {% block main %}
     <section style="color: white">
-        <h1>Order List</h1>
-
+        <h2>Order List</h2>
         {% if orders is not empty %}
             <ul>
                 {% for order in orders %}
                     {% if 'ORDER_PAID' in order.getStatutOrders() or 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
                         <li>
-                            Reference: {{ order.reference }} - {{ order.total }} € - {{ order.dateOrder|date('d/m/Y H:i:s') }}
-                            <a href="{{ path('order_details', {'id': order.id}) }}">Details</a>
+                            Reference: {{ order.reference }} -
+                            Total: {{ order.total | number_format(2, ',', '.') }} € -
+                            Date: {{ order.dateOrder|date('d/m/Y H:i:s') }} -
+                            Status:
+                                {% if 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
+                                    in process
+                                {% elseif 'ORDER_PAID' in order.getStatutOrders() %}
+                                    paid
+                                {% endif %}
+                            <a href="{{ path('order_details', {'id': order.id}) }}" class="btn btn-success">View details</a>
                         </li>
                     {% endif %}
                 {% endfor %}
@@ -20,5 +27,6 @@
         {% else %}
             <p>No paid or in-process orders found.</p>
         {% endif %}
+        <a href="{{ path('profile_index') }}" class="btn btn-danger">Back</a>
     </section>
 {% endblock %}

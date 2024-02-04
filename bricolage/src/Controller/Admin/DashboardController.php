@@ -10,6 +10,7 @@ use App\Entity\Media;
 use App\Entity\Config;
 use App\Entity\Dispute;
 use App\Entity\Image;
+use App\Entity\Message;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\Project;
@@ -26,21 +27,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    public function __construct(
-        private AdminUrlGenerator $adminUrlGenerator
-    ) {}
+    public function __construct(private AdminUrlGenerator $adminUrlGenerator) 
+    {
+
+    }
 
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirectToRoute('login');
+        if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_HANDYMAN')) {
+            return new Response($this->renderView('pages/security/access_denied.html.twig'), Response::HTTP_FORBIDDEN);
         }
 
-        $controller = $this->isGranted('ROLE_USER') ? ProductCrudController::class : BlogCrudController::class;
-
         $url = $this->adminUrlGenerator
-            ->setController($controller)
+            ->setController(BlogCrudController::class)
             ->generateUrl();
 
         return $this->redirect($url);
@@ -49,7 +49,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Hardware-Store')
+            ->setTitle('Hardware-Store | Admin')
             ->renderContentMaximized();
     }
 
@@ -70,18 +70,8 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Promo::class)->setAction(Crud::PAGE_NEW),
             ]);
 
-            yield MenuItem::subMenu('Orders', 'fa-solid fa-cart-shopping')->setSubItems([
-                MenuItem::linkToCrud('All orders', 'fa-solid fa-cart-arrow-down', Order::class),
-            ]);
+            yield MenuItem::linkToCrud('Orders', 'fa-solid fa-cart-arrow-down', Order::class);
         }
-
-        // if ($this->isGranted('ROLE_USER')) {
-        //     yield MenuItem::subMenu('Blogs', 'fas fa-newspaper')->setSubItems([
-        //         MenuItem::linkToCrud('All Blogs', 'fas fa-newspaper', Blog::class),
-        //         MenuItem::linkToCrud('Add', 'fas fa-plus', Blog::class)->setAction(Crud::PAGE_NEW),
-        //         // MenuItem::linkToCrud('Types', 'fas fa-list', Type::class)
-        //     ]);
-        // }
 
         if ($this->isGranted('ROLE_HANDYMAN')) {
             yield MenuItem::subMenu('Blogs', 'fas fa-newspaper')->setSubItems([
@@ -90,8 +80,8 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Types', 'fas fa-list', Type::class)
             ]);
 
-            yield MenuItem::subMenu('Project', 'fa-solid fa-pen-ruler')->setSubItems([
-                MenuItem::linkToCrud('All Project', 'fa-solid fa-pen-ruler', Project::class),
+            yield MenuItem::subMenu('Projects', 'fa-solid fa-pen-ruler')->setSubItems([
+                MenuItem::linkToCrud('All Projects', 'fa-solid fa-pen-ruler', Project::class),
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Project::class)->setAction(Crud::PAGE_NEW),
             ]);
         }
@@ -104,15 +94,13 @@ class DashboardController extends AbstractDashboardController
                 MenuItem::linkToCrud('Add', 'fas fa-plus', Image::class)->setAction(Crud::PAGE_NEW),
             ]);
 
-            yield MenuItem::linkToCrud('Comments', 'fas fa-comment', Comment::class);
+            yield MenuItem::linkToCrud('Messages', 'fa-solid fa-envelope', Message::class);
 
-            yield MenuItem::subMenu('Dispute', 'fa-solid fa-file-pen')->setSubItems([
-                MenuItem::linkToCrud('All Dispute', 'fa-solid fa-file-pen', Dispute::class),
-            ]);
+            yield MenuItem::linkToCrud('Comments', 'fa-solid fa-comments', Comment::class);
 
-            yield MenuItem::subMenu('Accounts', 'fas fa-user')->setSubItems([
-                MenuItem::linkToCrud('All Accounts', 'fas fa-user-friends', User::class),
-            ]);
+            yield MenuItem::linkToCrud('Disputes', 'fa-solid fa-file-pen', Dispute::class);
+
+            yield MenuItem::linkToCrud('Accounts', 'fas fa-user-friends', User::class);
 
             yield MenuItem::subMenu('Settings', 'fas fa-cog')->setSubItems([
                 MenuItem::linkToCrud('General', 'fas fa-cog', Config::class),

@@ -32,8 +32,8 @@
 			</a>
 
 			<nav>
-				{% if is_granted("ROLE_ADMIN") %}
-				<a href="{{ path('admin') }}">Dashboard</a>
+				{% if is_granted("ROLE_ADMIN") or is_granted("ROLE_HANDYMAN") %}
+					<a href="{{ path('admin') }}">Dashboard</a>
 				{% endif %}
 				<a href="{{ path('home') }}">Home</a>
 
@@ -54,7 +54,7 @@
 				<a href="{{ path('product_all') }}">Product</a>
 				<a href="{{ path('project_index') }}">Project</a>
 				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-				<a href="{{ path("message") }}">Message</a>
+					<a href="{{ path("message") }}">Message</a>
 				{% endif %}
 				<a href="{{ path('contact_index') }}">Contact</a>
 			</nav>

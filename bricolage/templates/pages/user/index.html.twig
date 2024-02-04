@@ -6,6 +6,12 @@
 {% block main %}
 	<h2>Your Profile</h2>
 
+	{% if not app.user.isVerified() %}
+        <div class="alert alert-warning" role="alert">
+            Please verify your email address <strong>{{ app.user.email }}</strong>. Check your inbox for a verification email.
+        </div>
+    {% endif %}
+
 	<dl style="color: white">
 		<dt>Username:</dt>
 		<dd>{{ app.user.username }}</dd>
