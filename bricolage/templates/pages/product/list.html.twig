@@ -63,16 +63,14 @@
 										{{ product.unitPrice | number_format(2, ',', '.') }}
 										€
 									</li>
-									{% if product.promos is not empty %}
-										{% if discountedPrices[product.id] is defined %}
-											<li class="list-group-item">
-												<strong>New price:</strong>
-												<del>{{ product.priceVAT | number_format(2, ',', '.') }}
-													€</del>
-												{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
-												€
-											</li>
-										{% endif %}
+									{% if product.promos is not empty and discountedPrices[product.id] is defined %}
+										<li class="list-group-item">
+											<strong>New price:</strong>
+											<del>{{ product.priceVAT | number_format(2, ',', '.') }}
+												€</del>
+											{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
+											€
+										</li>
 									{% else %}
 										<li class="list-group-item">
 											<strong>Price includes VAT:</strong>

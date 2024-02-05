@@ -35,9 +35,9 @@ class ProductController extends AbstractController
             $products = $productRepository->findByFilter($filterData);
         }
 
-        foreach ($activePromos as $promo) {
-            if ($promo->isActivePromo()) {
-                foreach ($products as $product) {
+        foreach ($products as $product) {
+            foreach ($activePromos as $promo) {
+                if ($promo->isActivePromo()) {
                     $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
                     $discountedPrices[$product->getId()] = $discountedPrice;
                 }

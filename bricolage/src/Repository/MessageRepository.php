@@ -22,11 +22,11 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Trouve un message par son ID.
+     * Find a message by its ID.
      *
-     * @param int $id L'ID du message à trouver.
+     * @param int $id The ID of the message to find.
      *
-     * @return Message|null Le message correspondant à l'ID donné, ou null si aucun message n'est trouvé.
+     * @return Message|null The message corresponding to the given ID, or null if no message is found.
      */
     public function findMessageById(int $id): ?Message
     {
@@ -34,10 +34,10 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère l'émetteur d'un message par son ID
+     * Retrieves the sender of a message by its ID
      *
-     * @param int $messageId L'ID du message
-     * @return \App\Entity\User|null L'émetteur du message ou null si non trouvé
+     * @param int $messageId Message ID
+     * @return \App\Entity\User|null Message sender or null if not found
      */
     public function findSenderByMessageId(int $messageId): ?\App\Entity\User
     {
@@ -50,28 +50,14 @@ class MessageRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-//    /**
-//     * @return Message[] Returns an array of Message objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Message
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function countUnreadMessagesForUser($user)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(m.id)')
+            ->where('m.recipient = :user')
+            ->andWhere('m.is_read = false')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

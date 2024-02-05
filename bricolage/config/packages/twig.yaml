@@ -3,6 +3,7 @@ twig:
         '%kernel.project_dir%/templates/main': main
     globals:
         cats: '@App\Twig\CatsExtension'
+        unread_message_count: '@App\Twig\UnreadMessageExtension'
         menu_service: '@App\Service\MenuService'
         config_service: '@App\Service\ConfigService'
 

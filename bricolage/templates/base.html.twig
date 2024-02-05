@@ -1,5 +1,6 @@
 {% set configs = config_service.findAll %}
 {% set ea_edit_current_entity = null %}
+{% set unreadMessageCount = unread_message_count() %}
 
 {% if entity is defined %}
 	{% set label_edit_current_entity = entity_label(entity) %}
@@ -54,7 +55,14 @@
 				<a href="{{ path('product_all') }}">Product</a>
 				{# <a href="{{ path('project_index') }}">Project</a> #}
 				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-					<a href="{{ path("message") }}">Message</a>
+					{% set messagePath = path("message") %}
+					{% if unreadMessageCount > 0 %}
+						<a href="{{ messagePath }}" class="position-relative">
+							Message <span class="badge bg-danger rounded-pill">{{ unreadMessageCount }}</span>
+						</a>
+					{% else %}
+						<a href="{{ messagePath }}">Message</a>
+					{% endif %}
 				{% endif %}
 				<div class="dropdown">
 					<a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
