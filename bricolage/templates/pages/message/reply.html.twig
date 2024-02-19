@@ -1,5 +1,3 @@
-{# templates/pages/message/reply.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Reply to "{{ originalMessage.title }}"
@@ -11,7 +9,7 @@
 	<p>Original Message:</p>
 	<blockquote>
 		<p>{{ originalMessage.content }}</p>
-		<small style="color: white">Sent by
+		<small>Sent by
 			{{ originalMessage.sender.username }}
 			on
 			{{ originalMessage.timeMsg|date }}</small>
@@ -21,7 +19,7 @@
         {{ form_row(form.content) }}
         <br>
         <button type="submit" class="btn btn-primary">Send Reply</button>
-	    <a href="{{ path('message') }}" class="btn btn-danger">Cancel</a>
+	    <a href="{{ path('message_index') }}" class="btn btn-danger">Cancel</a>
 	{{ form_end(form) }}
 
 {% endblock %}

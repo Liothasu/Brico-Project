@@ -43,7 +43,7 @@ class BlogRepository extends ServiceEntityRepository
      * @param int $limit Maximum number of blogs to retrieve
      * @return Blog[]
      */
-    public function findRecentBlogs($limit = 5)
+    public function findRecentBlogs($limit = 3)
     {
         return $this->createQueryBuilder('b')
             ->orderBy('b.createdAt', 'DESC')

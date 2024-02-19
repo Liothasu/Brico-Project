@@ -14,7 +14,7 @@
             <p>
                 {{ blog.createdAt|date('d M Y') }} / <b>{{ blog.types|typesToString|raw }}</b>
             </p>
-            <p style="color: white">
+            <p>
             {{ blog.featuredText ?: '' }}
             </p>
             <p>

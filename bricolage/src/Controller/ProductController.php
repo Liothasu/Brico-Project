@@ -12,19 +12,22 @@ use App\Model\FilterData;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use App\Repository\PromoRepository;
+use App\Service\ProductService;
 use Symfony\Component\HttpFoundation\Request;
 
 #[Route('/shop', name: 'product_')]
 class ProductController extends AbstractController
 {
     #[Route('/all', name: 'all')]
-    public function all(ProductRepository $productRepository, PromoRepository $promoRepository, CategoryRepository $categoryRepository, Request $request): Response
+    public function all(ProductRepository $productRepository, PromoRepository $promoRepository, CategoryRepository $categoryRepository, Request $request, ProductService $productService): Response
     {
+        // $productsPage = $productService->getPaginatedProduts();
+
         $filterData = new FilterData();
         $form = $this->createForm(FilterType::class, $filterData);
         $form->handleRequest($request);
 
-        $products = $productRepository->findAll();
+        $products = $productRepository->findAllOrderedByName();
         $activePromos = $promoRepository->findActivePromos();
         $discountedPrices = [];
 
@@ -50,6 +53,7 @@ class ProductController extends AbstractController
             'activePromos' => $activePromos,
             'discountedPrices' => $discountedPrices,
             'categories' => $categories,
+            // 'productsPage' => $productsPage,
         ]);
     }
 

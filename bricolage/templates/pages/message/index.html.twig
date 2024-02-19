@@ -11,7 +11,7 @@
 			</div>
 			{% if not app.user.received is empty %}
 				<div class="col-12">
-					<table class="table table-dark table-hover">
+					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th scope="col">From</th>
@@ -27,11 +27,11 @@
 								<tr>
 									<td>{{ message.sender.username }}</td>
 									<td>
-										<a href="{{ path("read", {id: message.id}) }}">{{ message.title }}</a>
+										<a href="{{ path("message_read", {id: message.id}) }}">{{ message.title }}</a>
 									</td>
 									<td>{{ message.timeMsg|date }}</td>
 									<td>
-										<a href="{{ path("delete", {id: message.id}) }}">
+										<a href="{{ path("message_delete", {id: message.id}) }}">
 											<button type="button" class="btn-close" aria-label="Close"></button>
 										</a>
 									</td>
@@ -59,13 +59,13 @@
 		</div>
 		<div class="offcanvas-body">
 			<div class="list-group">
-				<a href="{{ path("message") }}" class="list-group-item list-group-item-action active">Inbox</a>
+				<a href="{{ path("message_index") }}" class="list-group-item list-group-item-action active">Inbox</a>
 			</div>
 			<div class="list-group">
-				<a href="{{ path("sent") }}" class="list-group-item list-group-item-action">Sent Items</a>
+				<a href="{{ path("message_sent") }}" class="list-group-item list-group-item-action">Sent Items</a>
 			</div>
 			<div class="list-group">
-				<a href="{{ path("send") }}" class="list-group-item list-group-item-action">Send a message</a>
+				<a href="{{ path("message_send") }}" class="list-group-item list-group-item-action">Send a message</a>
 			</div>
 		</div>
 	</div>

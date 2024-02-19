@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DisputeController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function createDispute(Request $request, BlogRepository $blogRepository, ProjectRepository $projectRepository, CommentRepository $commentRepository, 
+    public function createDispute(Request $request, BlogRepository $blogRepository, ProjectRepository $projectRepository, CommentRepository $commentRepository,
         OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response {
         $user = $this->getUser();
 

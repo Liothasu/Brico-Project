@@ -3,25 +3,25 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "~@fortawesome/fontawesome-free/css/v4-shims.css";
 
-body,
 h2,
 h3,
 p {
   margin: 0;
   padding: 0;
-  color: white;
   margin-bottom: 30px;
 }
 
 body {
   font-family: "Arial", sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #282828;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
 }
 
 header {
-  background-color: rgb(0, 195, 172); //0, 195, 172
+  background-color: rgb(97, 135, 110);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,16 +36,13 @@ header {
 }
 
 main {
-  padding: 20px;
-  margin: 30px;
+  margin-left: 150px;
+  margin-top: 60px;
 }
 
 section {
   margin-bottom: 30px;
-}
-
-h2 {
-  color: #ffffff;
+  margin-right: 30px;
 }
 
 h1 {
@@ -56,25 +53,11 @@ h1 {
 // Logo
 .logo-image {
   max-width: 100%;
-  max-height: 60px;
+  max-height: 65px;
   width: auto;
   height: auto;
   display: flex;
   align-items: center;
-  color: rgb(255, 255, 255);
-}
-
-// Home images
-.home_image_one,
-.home_image_two,
-.home_image_three {
-  max-width: 100%;
-  max-height: 400px;
-  width: auto;
-  height: auto;
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
 }
 
 // Navigation
@@ -85,19 +68,28 @@ nav {
   a {
     padding: 10px;
     margin-right: 8px;
+    font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+      sans-serif;
 
     &:hover:not(.active) {
-      background-color: rgb(0, 157, 155);
+      background-color: rgb(60, 98, 85);
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-block;
+      font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+        sans-serif;
+      transition-duration: 0.35s;
+    }
+
+    &:hover {
+      background-color: rgb(60, 98, 85);
+      opacity: 1;
+      transition-duration: 0.35s;
     }
 
     &.dropdown {
       padding: 10px;
       margin-right: 8px;
-      background-color: transparent;
-
-      &:hover {
-        background-color: transparent;
-      }
     }
   }
 
@@ -105,10 +97,16 @@ nav {
     a {
       padding: 10px;
     }
-    .dropdown-item :hover {
-      background-color: inherit;
+    .dropdown-item:hover {
+      background-color: rgb(166, 187, 141);
     }
   }
+}
+
+nav a.active {
+  color: rgb(234, 231, 177);
+  font-weight: bold;
+  border-radius: 8px;
 }
 
 // Dropdown content
@@ -121,50 +119,86 @@ nav {
   height: 60px;
 }
 
-.btn.btn-danger:hover {
-  background-color: inherit;
-  background-color: rgb(193, 3, 0);
+.btn.btn-danger {
+  margin-bottom: 5px;
+}
+
+.i-flex {
+  display: inline-flex;
 }
 
 // Icons
 .icons {
-  a {
+  display: inline;
+  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+
+  a:not(.btn.btn-danger) {
     color: white;
     text-decoration: none;
-    margin-left: 8px;
+    padding: 10px;
+
+    &:hover:not(.active) {
+      background-color: rgb(60, 98, 85);
+      border-radius: 8px;
+    }
   }
 
   i {
-    font-size: 18px;
+    font-size: 20px;
   }
+}
+
+.promo {
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 60px;
+
+  .products-container {
+    transition: transform 0.5s ease-in;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+
+  p {
+    font-size: 24px;
+  }
+}
+
+.recent-blogs {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 60px;
+}
+
+.recent-blog {
+  h3,
+  p {
+    margin-bottom: 20px;
+  }
+
+  a {
+    margin-left: 20px;
+  }
+}
+
+// Home images
+.image-home {
+  max-width: 100%;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 // Footer
 footer {
-  background-color: rgb(0, 195, 172);
+  background-color: rgb(97, 135, 110);
   color: white;
-  padding: 20px;
-  text-align: center;
-
-  a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-  }
-
-  p {
-    margin: 5px 0;
-  }
-}
-
-// Product form
-.texte-blanc-form {
-  color: white;
-}
-
-// Contact form
-form {
-  color: white;
+  margin-top: auto;
+  padding: 15px;
 }
 
 .btn-close {
@@ -183,34 +217,61 @@ form {
   }
 }
 
-//Form project
-.project-form {
-  max-width: 400px;
-  margin: 40px;
-}
-
-.project-form input,
-.project-form textarea {
-  width: 100%;
-  margin-bottom: 10px;
-
-  .project-form button {
-    margin-top: 10px;
+//All Form
+main {
+  form {
+    max-width: 400px;
+    margin: 40px;
+    input,
+    textarea {
+      margin-bottom: 10px;
+    }
+    button {
+      margin-top: 10px;
+    }
   }
 }
 
-//Form dispute
-.dispute-form {
-  max-width: 400px;
-  margin: 40px;
+//category_list
+.col-md-4 {
+  margin-bottom: 50px;
 }
 
-.dispute-form input,
-.dispute-form textarea {
-  width: 100%;
-  margin-bottom: 10px;
-
-  .dispute-form button {
-    margin-top: 10px;
+//carousel_product
+.carousel.slide {
+  .carousel-item {
+    transition: transform 0.5s ease-in;
   }
+}
+
+.strike-through {
+  position: relative;
+  display: inline-block;
+}
+
+.strike-through::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: black;
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+
+.promo_red {
+  color: red;
+}
+
+.card.mb-3 {
+  max-width: 540px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+// Filter Product
+.form-check {
+  padding-left: 0;
+  margin-bottom: 25px;
 }

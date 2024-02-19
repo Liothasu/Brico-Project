@@ -1,38 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register
+{% endblock %}
 
 {% block main %}
-    {% block section %}
-        {% for flash_error in app.flashes('verify_email_error') %}
-            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-        {% endfor %}
+	{% block section %}
+		{% for flash_error in app.flashes('verify_email_error') %}
+			<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+		{% endfor %}
 
-        <h2>Register</h2>
+		<h2>Register</h2>
 
-        {{ form_errors(registrationForm) }}
+		{{ form_errors(registrationForm) }}
 
-        {{ form_start(registrationForm) }}
-            <fieldset class="mb-3">
-                <legend>My identity</legend>
-                {{ form_row(registrationForm.username) }}
-                {{ form_row(registrationForm.firstName) }}
-                {{ form_row(registrationForm.lastName) }}
-                {{ form_row(registrationForm.email) }}
-                {{ form_row(registrationForm.plainPassword.first) }}
-                {{ form_row(registrationForm.plainPassword.second) }}
-            </fieldset>
-            <fieldset class="mb-3">
-                <legend>My contact details</legend>
-                {{ form_row(registrationForm.phoneNumber) }}
-                {{ form_row(registrationForm.numStreet) }}
-                {{ form_row(registrationForm.city) }}
-                {{ form_row(registrationForm.zipCode) }}
-                {{ form_row(registrationForm.agreeTerms) }}
-            </fieldset>
-            <button type="submit" class="btn btn-success my-3">Register</button>
-            <a href="{{ path('login') }}" class="btn btn-primary my-3">Log in</a>
-        {{ form_end(registrationForm) }}
-
-    {% endblock %}
+		{{ form_start(registrationForm) }}
+		<fieldset class="mb-3">
+			<legend>My identity</legend>
+			{{ form_row(registrationForm.username) }}
+			{{ form_row(registrationForm.firstName) }}
+			{{ form_row(registrationForm.lastName) }}
+			{{ form_row(registrationForm.email) }}
+			{{ form_row(registrationForm.plainPassword.first) }}
+			{{ form_row(registrationForm.plainPassword.second) }}
+		</fieldset>
+		<fieldset class="mb-3">
+			<legend>My contact details</legend>
+			{{ form_row(registrationForm.phoneNumber) }}
+			{{ form_row(registrationForm.numStreet) }}
+			{{ form_row(registrationForm.city) }}
+			{{ form_row(registrationForm.zipCode) }}
+			{{ form_label(registrationForm.agreeTerms) }}
+			{{ form_widget(registrationForm.agreeTerms) }}
+		</fieldset>
+		<button type="submit" class="btn btn-success my-3">Register</button>
+		<a href="{{ path('login') }}" class="btn btn-primary my-3">Log in</a>
+		{{ form_end(registrationForm) }}
+	{% endblock %}
 {% endblock %}

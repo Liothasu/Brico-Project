@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/message', name: 'message_')]
 class MessageController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
@@ -21,7 +22,7 @@ class MessageController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/message', name: 'message')]
+    #[Route('/', name: 'index')]
     public function index(): Response
     {
         return $this->render('/pages/message/index.html.twig');
@@ -42,7 +43,7 @@ class MessageController extends AbstractController
             $this->entityManager->flush();
 
             $this->addFlash("message", "Message sent successfully.");
-            return $this->redirectToRoute("message");
+            return $this->redirectToRoute("message_index");
         }
 
         return $this->render("pages/message/send.html.twig", [
@@ -101,7 +102,7 @@ class MessageController extends AbstractController
             $this->entityManager->flush();
 
             $this->addFlash("message", "Reply sent successfully.");
-            return $this->redirectToRoute('message');
+            return $this->redirectToRoute('message_index');
         }
 
         return $this->render('pages/message/reply.html.twig', [
@@ -112,14 +113,14 @@ class MessageController extends AbstractController
 
     #[Route('/delete/{id}', name: 'delete')]
     public function delete(Message $message, EntityManagerInterface $entityManager): Response
-{
-    foreach ($message->getReplies() as $reply) {
-        $entityManager->remove($reply);
+    {
+        foreach ($message->getReplies() as $reply) {
+            $entityManager->remove($reply);
+        }
+
+        $entityManager->remove($message);
+        $entityManager->flush();
+
+        return $this->redirectToRoute("message_index");
     }
-
-    $entityManager->remove($message);
-    $entityManager->flush();
-
-    return $this->redirectToRoute("message");
-}
 }

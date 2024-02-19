@@ -2,10 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Model\FilterData;
 use App\Model\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -23,6 +25,14 @@ class ProductRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginatorInterface)
     {
         parent::__construct($registry, Product::class);
+    }
+
+    public function findAllOrderedByName()
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.nameProduct', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findAllCategories()
@@ -60,6 +70,7 @@ class ProductRepository extends ServiceEntityRepository
             $data = $data
                 ->join('p.category', 'cat')
                 ->andWhere('cat.id IN (:categories)')
+                ->orderBy('p.nameProduct', 'ASC')
                 ->setParameter('categories', $filterData->categories);
         }
 
@@ -72,4 +83,17 @@ class ProductRepository extends ServiceEntityRepository
         return $products;
     }
 
+    // public function findForPagination(?Category $category = null): Query
+    // {
+    //     $qb = $this->createQueryBuilder('p')
+    //         ->orderBy('p.nameProduct', 'ASC');
+
+    //     if ($category) {
+    //         $qb->leftJoin('p.categories', 'c')
+    //             ->where($qb->expr()->eq('c.id', ':id'))
+    //             ->setParameter('id', $category->getId());
+    //     }
+
+    //     return $qb->getQuery();
+    // }
 }

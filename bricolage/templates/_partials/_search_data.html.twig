@@ -1,6 +1,8 @@
-<form action="{{ path('search_bar') }}" method="get" class="d-flex" role="search">
-    {{ form_start(searchForm) }}
-    {{ form_widget(searchForm.q) }}
-    <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
-    {{ form_end(searchForm) }}
+<form action="{{ path('search_bar') }}" method="get" class="i-flex" role="search">
+	{{ form_start(searchForm) }}
+	{{ form_widget(searchForm.q) }}
+	<button class="btn btn-success" type="submit">
+		<i class="fas fa-search"></i>
+	</button>
+	{{ form_end(searchForm) }}
 </form>

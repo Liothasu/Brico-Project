@@ -9,15 +9,15 @@
                 <h2>Subject : {{ message.title }}</h2>
                 <p>Message from
                     {{ message.sender.username }}</p>
-                <div style="color: white">{{ message.content }}</div>
+                <div>{{ message.content }}</div>
 				<br>
                 <p>Sent on
                     {{ message.timeMsg|date }}</p>
                 <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
                     View my messages
                 </a>
-				<a href="{{ path("reply", {id: message.id}) }}" class="btn btn-success">Reply</a>
-                <a href="{{ path("message") }}" class="btn btn-primary">Back to Inbox</a>
+				<a href="{{ path("message_reply", {id: message.id}) }}" class="btn btn-success">Reply</a>
+                <a href="{{ path("message_index") }}" class="btn btn-primary">Back to Inbox</a>
             </div>
         </div>
     </section>
@@ -28,13 +28,13 @@
 			</div>
 			<div class="offcanvas-body">
 				<div class="list-group">
-					<a href="{{ path("message") }}" class="list-group-item list-group-item-action">Inbox</a>
+					<a href="{{ path("message_index") }}" class="list-group-item list-group-item-action active">Inbox</a>
 				</div>
 				<div class="list-group">
-					<a href="{{ path("sent") }}" class="list-group-item list-group-item-action active">Sent Items</a>
+					<a href="{{ path("message_sent") }}" class="list-group-item list-group-item-action">Sent Items</a>
 				</div>
 				<div class="list-group">
-					<a href="{{ path("send") }}" class="list-group-item list-group-item-action">Send a message</a>
+					<a href="{{ path("message_send") }}" class="list-group-item list-group-item-action">Send a message</a>
 				</div>
 			</div>
 		</div>

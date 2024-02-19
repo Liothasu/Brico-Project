@@ -29,17 +29,17 @@
 	<body>
 		<header>
 			<a href="{{ path('home') }}">
-				<h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="Logo"></h1>
+				<h1><img class="logo-image" src="{{ asset('images/logo.png') }}" alt="logo"></h1>
 			</a>
 
 			<nav>
 				{% if is_granted("ROLE_ADMIN") or is_granted("ROLE_HANDYMAN") %}
 					<a href="{{ path('admin') }}">Dashboard</a>
 				{% endif %}
-				<a href="{{ path('home') }}">Home</a>
+				<a href="{{ path('home') }}" {% if app.request.attributes.get('_route') == 'home' %} class="active" {% endif %}>Home</a>
 
-				<div class="dropdown">
-					<a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<div class="dropdown" id="myDropdown">
+					<a href="#" class="nav-link dropdown-toggle {% if app.request.attributes.get('_route') starts with 'product_category' %} active {% endif %}" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Category
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -51,21 +51,21 @@
 					</ul>
 				</div>
 
-				<a href="{{ path('blog_list') }}">Blog</a>
-				<a href="{{ path('product_all') }}">Product</a>
-				{# <a href="{{ path('project_index') }}">Project</a> #}
+				<a href="{{ path('blog_list') }}" {% if app.request.attributes.get('_route') starts with 'blog_' %} class="active" {% endif %}>Blog</a>
+				<a href="{{ path('product_all') }}" {% if app.request.attributes.get('_route') starts with 'product_all' or app.request.attributes.get('_route') starts with 'product_detail' %} class="active" {% endif %}>Product</a>
 				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-					{% set messagePath = path("message") %}
+					{% set messagePath = path("message_index") %}
 					{% if unreadMessageCount > 0 %}
-						<a href="{{ messagePath }}" class="position-relative">
-							Message <span class="badge bg-danger rounded-pill">{{ unreadMessageCount }}</span>
+						<a href="{{ messagePath }}" {% if app.request.attributes.get('_route') starts with 'message_' %} class="active" {% endif %}>
+							Message
+							<span class="badge bg-danger rounded-pill">{{ unreadMessageCount }}</span>
 						</a>
 					{% else %}
-						<a href="{{ messagePath }}">Message</a>
+						<a href="{{ messagePath }}" {% if app.request.attributes.get('_route') starts with 'message_' %} class="active" {% endif %}>Message</a>
 					{% endif %}
 				{% endif %}
 				<div class="dropdown">
-					<a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<a href="#" class="nav-link dropdown-toggle {% if app.request.attributes.get('_route') starts with 'contact_' or app.request.attributes.get('_route') starts with 'project_' %} active {% endif %}" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Contact
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -78,38 +78,36 @@
 					</ul>
 				</div>
 			</nav>
-			{{ render(controller('App\\Controller\\SearchBarController::index')) }}
-			<div class="icons">
-
-				<a href="{{ path('cart_index') }}">
-					<i class="fas fa-shopping-cart"></i>
-				</a>
-
-				{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-					<a href="{{ path('profile_index') }}">
-						<i class="fas fa-user"></i>
-						{{ app.user.username }}</a>
-					<a href="{{ path('logout') }}" class="btn btn-danger">
-						<i class="fa-solid fa-right-from-bracket"></i>
+			<div>
+				{{ render(controller('App\\Controller\\SearchBarController::index')) }}
+				<div class="icons">
+					<a href="{{ path('cart_index') }}">
+						<i class="fas fa-shopping-cart"></i>
 					</a>
-				{% else %}
-					<a href="{{ path('login') }}">
-						<i class="fas fa-user"></i>
-						Log in</a>
-					<a href="{{ path('register') }}">Sign in</a>
-				{% endif %}
+					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+						<a href="{{ path('profile_index') }}">
+							<i class="fas fa-user"></i>
+							{% if app.user.username|length > 10 %}
+								{{ app.user.username|slice(0, 10) ~ '...' }}
+							{% else %}
+								{{ app.user.username }}
+							{% endif %}
+						</a>
+						<a href="{{ path('logout') }}" class="btn btn-danger">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</a>
+					{% else %}
+						<a href="{{ path('login') }}">
+							<i class="fas fa-user"></i>
+							Log in</a>
+						<a href="{{ path('register') }}">Sign in</a>
+					{% endif %}
+				</div>
 			</div>
 		</header>
 	</body>
 	<main>
-		{% block main %}
-			{% for message in app.flashes("message") %}
-				<div class="alert alert-success alert-dismissible fade show" role="alert">
-					{{message}}
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			{% endfor %}
-		{% endblock %}
+		{% block main %}{% endblock %}
 	</main>
 	{% include '_partials/_flash.html.twig' %}
 	{% include '_partials/_footer.html.twig' %}

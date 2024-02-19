@@ -19,11 +19,6 @@ class FilterType extends AbstractType
                 'class' => Category::class,
                 'expanded' => true,
                 'multiple' => true,
-            ])
-            ->add('submit', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-primary mt-4'
-                ]
             ]);
     }
 

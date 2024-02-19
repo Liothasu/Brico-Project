@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block main %}
-	<div>
-		<h3>Produit details</h3>
-	</div>
+	<h3>{{ product.nameProduct }}
+		{{ product.color }}</h3>
 	<div class="card mb-3" style="max-width: 900px;">
 		<div class="row g-0">
 			<div class="col-md-4">
@@ -21,7 +20,7 @@
 						<div class="carousel-inner">
 							{% for loopIndex, image in product.images %}
 								<div class="carousel-item{% if loopIndex == 0 %} active{% endif %}">
-									<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}">
+									<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}" style="object-fit: cover; height: 350px; border-top-left-radius: 10px;">
 								</div>
 							{% endfor %}
 						</div>
@@ -33,13 +32,12 @@
 						</button>
 					</div>
 				{% else %}
-					<p style="color: black">No image</p>
+					<p>No image</p>
 				{% endif %}
 			</div>
 			<div class="col-md-8">
 				<div class="card-body">
-					<h5 class="card-title">{{ product.nameProduct }}</h5>
-					<p class="card-text" style="color: black">{{ product.designation }}</p>
+					<p class="card-text">{{ product.designation }}</p>
 				</div>
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
@@ -52,15 +50,17 @@
 					</li>
 					{% if product.promos is not empty and discountedPrices[product.id] is defined %}
 						<li class="list-group-item">
-							<strong>New price:</strong>
-							<del>{{ product.priceVAT | number_format(2, ',', '.') }}
-								€</del>
-							{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
-							€
+							<strong>Price VAT:
+							</strong>
+							<span class="strike-through">{{ product.priceVAT | number_format(2, ',', '.') }}
+								€</span>
+							<span class="promo_red">
+								{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
+								€
+							</span>
 						</li>
 					{% else %}
 						<li class="list-group-item">
-							<strong>Price includes VAT:</strong>
 							{{ product.priceVAT | number_format(2, ',', '.') }}
 							€
 						</li>

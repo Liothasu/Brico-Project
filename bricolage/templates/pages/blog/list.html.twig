@@ -1,11 +1,7 @@
 {% for blog in blogs %}
-    {% include 'pages/blog/item.html.twig' with { blog, leftCol: leftCol, rightCol: rightCol } %}
+	{% include 'pages/blog/item.html.twig' with { blog, leftCol: leftCol, rightCol: rightCol } %}
 {% endfor %}
 
-<section class="container">
-    <div class="row">
-        <div class="d-flex align-items-center justify-content-center">
-            {{ knp_pagination_render(blogs) }}
-        </div>
-    </div>
-</section>
+<div class="page_blogs">
+	{{ knp_pagination_render(blogs) }}
+</div>

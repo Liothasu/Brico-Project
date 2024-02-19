@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List product
+{% block title %}
+	{{ category.name }}
 {% endblock %}
 
 {% block main %}
-	{% block section %}
-		<div>
-			<h3>{{ category.name }}</h3>
-		</div>
-		<div>
-			{% if category.products is not empty %}
-				{% for product in category.products %}
-					<div class="card mb-3" style="max-width: 540px;">
+	<h3>{{ category.name }}</h3>
+	{% if category.products is not empty %}
+		<div class="row">
+			{% for product in category.products %}
+				<div class="col-md-4">
+					<div class="card mb-3">
 						<div class="row g-0">
 							<div class="col-md-4">
 								{% if product.images|length > 0 %}
@@ -24,7 +23,9 @@
 										<div class="carousel-inner">
 											{% for loopIndex, image in product.images %}
 												<div class="carousel-item{% if loopIndex == 0 %} active{% endif %}">
-													<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}">
+													<div class"image-product">
+														<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}" style="object-fit: cover; height: 200px; border-top-left-radius: 10px;">
+													</div>
 												</div>
 											{% endfor %}
 										</div>
@@ -36,50 +37,46 @@
 										</button>
 									</div>
 								{% else %}
-									<p style="color: black">No image</p>
+									<p>No image</p>
 								{% endif %}
 							</div>
 							<div class="col-md-8">
 								<div class="card-body">
-									<h5 class="card-title">{{ product.nameProduct }}</h5>
-									<p class="card-text" style="color: black">{{ product.designation }}</p>
+									<h5 class="card-title">
+										<strong>{{ product.nameProduct }} 
+											{{ product.color }}</strong>
+									</h5>
+									<p class="card-text">{{ product.designation }}</p>
 								</div>
 								<ul class="list-group list-group-flush">
-									<li class="list-group-item">{{ product.color }}</li>
-									<li class="list-group-item">
-										<strong>Price excluding tax:
-										</strong>
-										{{ product.unitPrice | number_format(2, ',', '.') }}
-										€</li>
+									<li class="list-group-item"></li>
 									{% if product.promos is not empty and discountedPrices[product.id] is defined %}
 										<li class="list-group-item">
-											<strong>New price:</strong>
-											<del>{{ product.priceVAT | number_format(2, ',', '.') }}
-												€</del>
-											{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
-											€
+											<span class="strike-through">{{ product.priceVAT | number_format(2, ',', '.') }}
+												€</span>
+											<span class="promo_red">
+												{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
+												€
+											</span>
 										</li>
 									{% else %}
 										<li class="list-group-item">
-											<strong>Price includes VAT:</strong>
 											{{ product.priceVAT | number_format(2, ',', '.') }}
 											€
 										</li>
 									{% endif %}
-									<li class="list-group-item">{{ product.supplier }}</li>
-									<li class="list-group-item">{{ product.reference }}</li>
 								</ul>
 								<div class="card-body">
-									<a href="{{ path("cart_add", {id: product.id}) }}" class="btn btn-primary">Add to cart</a>
+									<a href="{{ path("cart_add", {id: product.id}) }}" class="btn btn-success">Add to cart</a>
 									<a href="{{ path('product_detail', {'id': product.id}) }}" class="btn btn-primary">View product</a>
 								</div>
 							</div>
 						</div>
 					</div>
-				{% endfor %}
-			{% else %}
-				<p>No products available in this category.</p>
-			{% endif %}
+				</div>
+			{% endfor %}
 		</div>
-	{% endblock %}
+	{% else %}
+		<p>No products available in this category.</p>
+	{% endif %}
 {% endblock %}

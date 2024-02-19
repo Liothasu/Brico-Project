@@ -1,107 +1,115 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home
+{% endblock %}
 
 {% block main %}
-   {% for promo in currentPromos %}
-        <div class="promo">
-            <p>Promotion details: {{ promo.name }}, {{ promo.percent }}%</p>
-            <div id="promoCarousel{{ promo.id }}" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    {% for loopIndex, product in promo.products %}
-                        <div class="carousel-item {% if loopIndex == 0 %}active{% endif %}">
-                            {% if product.images|length > 0 %}
-                                <div class="products-container">
-                                    {% set firstImage = product.images.first %}
-                                    <img src="/uploads/{{ firstImage.filename }}" style="max-width: 150px;" alt="{{ firstImage.altText }}">
-                                </div>
-                            {% endif %}
-                            <h5 style="color: white">{{ product.nameProduct }}</h5>
-                            <p>Prix promo : {{ (product.priceVAT * (1 - promo.percent / 100)) | number_format(2, ',', '.') }} €
-                                instead of {{ product.priceVAT | number_format(2, ',', '.') }} €</p>
-                            <a href="{{ path('product_detail', {'id': product.id}) }}" class="btn btn-primary">View product</a>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+	{% for promo in currentPromos %}
+		<div class="promo">
+			<h2>{{ promo.name }}</h2>
+			<p>{{ promo.percent }}%</p>
+			<div
+				id="promoCarousel{{ promo.id }}" class="carousel carousel-dark slide" data-ride="carousel">
+				{# <div class="carousel-indicators">
+					{% for loopIndex, promo in promo.products %}
+						<button type="button" data-bs-target="{{ promo.id }}" data-bs-slide-to="{{ loopIndex }}" {% if loopIndex == 0 %} class="active" {% endif %}></button>
+					{% endfor %}
+				</div> #}
+				<div class="carousel-inner">
+					{% for loopIndex, product in promo.products %}
+						<div class="carousel-item {% if loopIndex == 0 %}active{% endif %}">
+							{% if product.images|length > 0 %}
+								<div class="products-container">
+									{% set firstImage = product.images.first %}
+									<img src="/uploads/{{ firstImage.filename }}" style="max-width: 150px;" alt="{{ firstImage.altText }}">
+								</div>
+							{% endif %}
+							<h5>{{ product.nameProduct }}</h5>
+							<p>Special price:
+								{{ (product.priceVAT * (1 - promo.percent / 100)) | number_format(2, ',', '.') }}
+								€ instead of
+								{{ product.priceVAT | number_format(2, ',', '.') }}
+								€</p>
+							<a href="{{ path('product_detail', {'id': product.id}) }}" class="btn btn-primary">View product</a>
+						</div>
+					{% endfor %}
+				</div>
+				<button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel{{ promo.id }}" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				</button>
+				<button class="carousel-control-next" type="button" data-bs-target="#promoCarousel{{ promo.id }}" data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				</button>
+			</div>
+		</div>
+	{% endfor %}
+	{% if recentBlogs is defined and recentBlogs is not empty %}
+		<h2>Recent Blogs</h2>
+		<div class="recent-blogs">
+			{% for blog in recentBlogs %}
+				<div class="recent-blog">
+					<h3>{{ blog.title }}</h3>
+					<p>{{ blog.featuredText }}</p>
+					<img src="{{ asset('uploads/' ~ blog.featuredMedia.filename) }}" alt="{{ blog.featuredMedia.altText ?? 'Featured Image' }}" width="350" height="205">
+					<a href="{{ path('blog_show', { 'slug': blog.slug }) }}" class="btn btn-primary">View Blog</a>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
 
-                {# voir pour la mise en page carrousel fonctionnel pas le bouton #}
+	<br>
+	<section>
+		<h2>Presentation of Brico-Projet - Your DIY Partner</h2>
+		<img class="image-home" src="{{ asset('images/img_home_one.jpg') }}" alt="brico">
+		<h2>Our Mission</h2>
+		<p>
+			At Brico-Projet, our mission is to provide an exceptional experience to every customer.
+									            We understand that DIY is an expression of creativity, passion, and craftsmanship. 
+									            That's why we've created a space that goes beyond simple shelves filled with tools and materials.
+		</p>
+	</section>
 
-                {# <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel{{ promo.id }}" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel{{ promo.id }}" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button> #}
-            </div>
-        </div>
-    {% endfor %}
-    {% if recentBlogs is defined and recentBlogs is not empty %}
-            <div class="recent-blogs">
-                <h2>Recent Blogs</h2>
-                {% for blog in recentBlogs %}
-                    <div class="recent-blog">
-                        <h3>{{ blog.title }}</h3>
-                        <p>{{ blog.featuredText }}</p>
-                        <img src="{{ asset('uploads/' ~ blog.featuredMedia.filename) }}" alt="{{ blog.featuredMedia.altText ?? 'Featured Image' }}" width="350" height="205">
-                        <a href="{{ path('blog_show', { 'slug': blog.slug }) }}" class="btn btn-primary">View Blog</a>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-<br>
-    <section>
-        <h2>Presentation of Brico-Projet - Your DIY Partner</h2>
-        <img class="home_image_one" src="{{ asset('images/img_home_one.jpg') }}" alt="brico">
-        <h2>Our Mission</h2>
-        <p>
-            At Brico-Projet, our mission is to provide an exceptional experience to every customer. 
-            We understand that DIY is an expression of creativity, passion, and craftsmanship. 
-            That's why we've created a space that goes beyond simple shelves filled with tools and materials.
-        </p>
-    </section>
+	<section>
+		<h2>Our Services</h2>
+		<img class="image-home" src="{{ asset('images/img_home_two.jpg') }}" alt="brico2">
 
-    <section>
-        <h2>Our Services</h2>
-        <img class="home_image_two" src="{{ asset('images/img_home_two.jpg') }}" alt="brico2">
+		<article>
+			<h3>Custom Project Realization</h3>
+			<p>
+				We believe in bringing your dreams to life. Our dedicated team of skilled professionals is ready to work with you to turn your ideas into tangible projects. 
+												                Whether it's building a custom shelf, 
+												                renovating a room, or creating a unique piece of art, we are here to assist you at every step of the process.
+			</p>
+		</article>
 
-        <article>
-            <h3>Custom Project Realization</h3>
-            <p>
-                We believe in bringing your dreams to life. Our dedicated team of skilled professionals is ready to work with you to turn your ideas into tangible projects. 
-                Whether it's building a custom shelf, 
-                renovating a room, or creating a unique piece of art, we are here to assist you at every step of the process.
-            </p>
-        </article>
+		<article>
+			<h3>Blogs and Ideas Sharing</h3>
+			<p>
+				Explore our online platform where you can discover a multitude of inspiring blogs, creative ideas, and practical tutorials. 
+												                We believe in sharing knowledge and mutual inspiration. Join our community and exchange ideas with other DIY enthusiasts.
+			</p>
+		</article>
 
-        <article>
-            <h3>Blogs and Ideas Sharing</h3>
-            <p>
-                Explore our online platform where you can discover a multitude of inspiring blogs, creative ideas, and practical tutorials. 
-                We believe in sharing knowledge and mutual inspiration. Join our community and exchange ideas with other DIY enthusiasts.
-            </p>
-        </article>
+		<article>
+			<h3>Workshops and Events</h3>
+			<p>
+				Enhance your skills with our hands-on workshops led by experts in the field. 
+												                From woodworking to decorative painting, our events are designed for all levels of experience. 
+												                Learn, create, and connect with other DIY enthusiasts.
+			</p>
+		</article>
+	</section>
 
-        <article>
-            <h3>Workshops and Events</h3>
-            <p>
-                Enhance your skills with our hands-on workshops led by experts in the field. 
-                From woodworking to decorative painting, our events are designed for all levels of experience. 
-                Learn, create, and connect with other DIY enthusiasts.
-            </p>
-        </article>
-    </section>
+	<section>
+		<h2>Engage with Brico-Projet</h2>
+		<img class="image-home" src="{{ asset('images/img_home_three.jpg') }}" alt="brico3">
 
-    <section>
-        <h2>Engage with Brico-Projet</h2>
-        <img class="home_image_three" src="{{ asset('images/img_home_three.jpg') }}" alt="brico3">
+		<p>
+			At Brico-Projet, we believe that every project is an adventure in itself. 
+									            Whether you're an enthusiastic beginner or a seasoned DIYer, our store is designed to meet your needs. 
+									            Engage with us and discover a new dimension of DIY.
+		</p>
 
-        <p>
-            At Brico-Projet, we believe that every project is an adventure in itself. 
-            Whether you're an enthusiastic beginner or a seasoned DIYer, our store is designed to meet your needs. 
-            Engage with us and discover a new dimension of DIY.
-        </p>
-
-        <p>Visit us today and be part of a community that shares your passion for DIY. At Brico-Projet, your creativity knows no bounds!</p>
-    </section>
+		<p>Visit us today and be part of a community that shares your passion for DIY. At Brico-Projet, your creativity knows no bounds!</p>
+	</section>
 {% endblock %}
