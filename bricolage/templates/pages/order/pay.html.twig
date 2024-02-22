@@ -21,7 +21,7 @@
 					<tr>
 						<th>Products:</th>
 						<td>
-							<ul style="color: black">
+							<ul>
 								{% for lineOrder in order.getLineOrders() %}
 									<li>
 										{% if lineOrder.getProduct().getImages() is not empty %}
@@ -32,16 +32,16 @@
 										x
 										{{ lineOrder.getProduct().getNameProduct() }}
 										{% if lineOrder.getProduct().getPromos() is not empty %}
-                                            {% set promo = lineOrder.getProduct().getPromos().first %}
-                                            {% if promo.isActivePromo() %}
-                                                {% set discountedPrice = lineOrder.getSellingPrice() * (1 - promo.getPercent() / 100) %}
-                                                ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
-                                            {% else %}
-                                                ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
-                                            {% endif %}
-                                        {% else %}
-                                            ({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
-                                        {% endif %}
+											{% set promo = lineOrder.getProduct().getPromos().first %}
+											{% if promo.isActivePromo() %}
+												{% set discountedPrice = lineOrder.getSellingPrice() * (1 - promo.getPercent() / 100) %}
+												({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
+											{% else %}
+												({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
+											{% endif %}
+										{% else %}
+											({{ lineOrder.getSellingPrice() | number_format(2, ',', '.') }}
+										{% endif %}
 										€)
 									</li>
 								{% endfor %}
@@ -63,19 +63,22 @@
 				</div>
 			</form>
 		</div>
+		{% if order.isValid == true %}
+			<form method="post" action="{{ path('order_pay', {'id': order.id}) }}" class="mb-4">
+				<h3>Payment Information</h3>
 
-		<form method="post" action="{{ path('order_pay', {'id': order.id}) }}" class="mb-4">
-			<h3>Payment Information</h3>
-
-			{{ form_start(paymentForm) }}
-			<div class="mb-3">
-				<p class="mb-2">Payment method</p>
-				<div class="d-flex justify-content-between">
-					{{ form_row(paymentForm.paymentMode) }}
-					<button type="submit" class="btn btn-primary">Pay Now</button>
+				{{ form_start(paymentForm) }}
+				<div class="mb-3">
+					<p class="mb-2">Payment method</p>
+					<div class="d-flex justify-content-between">
+						{{ form_row(paymentForm.paymentMode) }}
+						<button type="submit" class="btn btn-primary">Pay Now</button>
+					</div>
 				</div>
-			</div>
-			{{ form_end(paymentForm) }}
-		</form>
+				{{ form_end(paymentForm) }}
+			</form>
+		{% else %}
+			<p class="text-danger">Your order is being validated by admin.</p>
+		{% endif %}
 	</div>
 </section></main>{% endblock %}

@@ -85,9 +85,25 @@
 													€
 												</li>
 											{% endif %}
+											{% if product.stock > 0 %}
+												<li class="list-group-item {% if product.stock <= 5 %}low-stock{% else %}high-stock{% endif %}">
+													{% if product.stock <= 5 %}
+														<i class="fa-solid fa-hourglass-half"></i>
+														Almost sold out,
+														{{ product.stock }}
+														left in stock.
+													{% else %}
+														<i class="fa-solid fa-circle-check"></i> Available
+													{% endif %}
+												</li>
+											{% endif %}
 										</ul>
 										<div class="card-body">
-											<a href="{{ path("cart_add", {id: product.id}) }}" class="btn btn-success">Add to cart</a>
+											{% if product.stock > 0 %}
+												<a href="{{ path('cart_add', {id: product.id}) }}" class="btn btn-success">Add to cart</a>
+											{% else %}
+												<p class="text-danger"><i class="fa-solid fa-circle-xmark"></i> Temporary out of stock.</p>
+											{% endif %}
 											<a href="{{ path('product_detail', {'id': product.id}) }}" class="btn btn-primary">View product</a>
 										</div>
 									</div>
@@ -98,8 +114,8 @@
 				</div>
 			</div>
 			{# <div class="page_products">
-				{{ knp_pagination_render(productsPage) }}
-			</div> #}
+										{{ knp_pagination_render(productsPage) }}
+									</div> #}
 		{% else %}
 			<p>No products available in this category.</p>
 		{% endif %}

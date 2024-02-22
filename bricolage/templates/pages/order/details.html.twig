@@ -25,7 +25,7 @@
 				<tr>
 					<th>Products:</th>
 					<td>
-						<ul style="color: black">
+						<ul>
 							{% for lineOrder in order.getLineOrders() %}
 								<li>
 									{% if lineOrder.getProduct().getImages() is not empty %}

@@ -7,6 +7,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -31,8 +32,9 @@ class Product
     #[ORM\Column(length: 50)]
     private ?string $designation;
 
-    #[ORM\Column]
-    private int $quantity;
+    #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero(message: "Stock can't be negative")]
+    private $stock;
 
     #[ORM\Column(type: 'decimal', precision: 12, scale: 2)]
     private $unitPrice;
@@ -114,14 +116,14 @@ class Product
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getStock(): ?int
     {
-        return $this->quantity;
+        return $this->stock;
     }
 
-    public function setQuantity(int $quantity): static
+    public function setStock(int $stock): self
     {
-        $this->quantity = $quantity;
+        $this->stock = $stock;
 
         return $this;
     }

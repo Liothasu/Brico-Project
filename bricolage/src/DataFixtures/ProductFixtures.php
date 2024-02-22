@@ -58,7 +58,7 @@ class ProductFixtures extends Fixture
         $product->setNameProduct('Hammer');
         $product->setColor('red');
         $product->setDesignation('Very good!');
-        $product->setQuantity(1);
+        $product->setStock(1);
         $product->setUnitPrice(0);
         $product->setPriceVAT(5);
         $product->setSlug($this->slugger->slug($product->getNameProduct())->lower());
@@ -71,7 +71,7 @@ class ProductFixtures extends Fixture
         $product2->setNameProduct('Screwdriver');
         $product2->setColor('pink');
         $product2->setDesignation('I like it');
-        $product2->setQuantity(1);
+        $product2->setStock(1);
         $product2->setUnitPrice(0);
         $product2->setPriceVAT(15);
         $product2->setSlug($this->slugger->slug($product2->getNameProduct())->lower());
@@ -84,7 +84,7 @@ class ProductFixtures extends Fixture
         $product3->setNameProduct('Levis Paint');
         $product3->setColor('White');
         $product3->setDesignation('I like it');
-        $product3->setQuantity(1);
+        $product3->setStock(1);
         $product3->setUnitPrice(0);
         $product3->setPriceVAT(40);
         $product3->setSlug($this->slugger->slug($product3->getNameProduct())->lower());

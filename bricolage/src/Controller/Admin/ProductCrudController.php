@@ -54,7 +54,8 @@ class ProductCrudController extends AbstractCrudController
 
         yield TextField::new('designation');
 
-        yield IntegerField::new('quantity');
+        yield IntegerField::new('stock')
+            ->setLabel('Units in stock');
 
         yield NumberField::new('priceVAT')
             ->setLabel('Price incl. VAT')
@@ -74,11 +75,9 @@ class ProductCrudController extends AbstractCrudController
         /** @var Product $product */
         $product = $context->getEntity()->getInstance();
 
-        $category = $product->getCategory();
-
-        if ($category) {
-            return $this->redirectToRoute('category_list', [
-                'slug' => $category->getSlug()
+        if ($product) {
+            return $this->redirectToRoute('product_detail', [
+                'id' => $product->getId()
             ]);
         }
 

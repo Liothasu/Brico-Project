@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\LineOrder;
+use App\Entity\Order;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Repository\PromoRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -46,10 +49,9 @@ class CartController extends AbstractController
     }
 
     #[Route('/add/{id}', name: 'add')]
-    public function add(Product $product, SessionInterface $session, PromoRepository $promoRepository)
+    public function add(Product $product, SessionInterface $session, PromoRepository $promoRepository, EntityManagerInterface $em)
     {
         $id = $product->getId();
-
         $cart = $session->get('cart', []);
 
         if (empty($cart[$id])) {
@@ -58,10 +60,15 @@ class CartController extends AbstractController
                 'discountedPrice' => $product->getPriceVAT(),
             ];
         } else {
+            if ($product->getStock() <= $cart[$id]['quantity']) {
+                $this->addFlash('message', 'Insufficient stock for product: ' . $product->getNameProduct());
+                return $this->redirectToRoute('cart_index');
+            }
+
             $cart[$id]['quantity']++;
 
-            $activePromos = $promoRepository->findActivePromos();
             $discountedPrice = $product->getPriceVAT();
+            $activePromos = $promoRepository->findActivePromos();
 
             foreach ($activePromos as $promo) {
                 if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
@@ -75,11 +82,42 @@ class CartController extends AbstractController
 
         $session->set('cart', $cart);
 
+        $orderReference = $session->get('order_reference');
+        if ($orderReference) {
+            $existingOrder = $em->getRepository(Order::class)->findOneBy(['reference' => $orderReference]);
+            if ($existingOrder) {
+                foreach ($existingOrder->getLineOrders() as $lineOrder) {
+                    if (isset($cart[$lineOrder->getProduct()->getId()])) {
+                        $lineOrder->setQuantity($cart[$lineOrder->getProduct()->getId()]['quantity']);
+                        $lineOrder->setSellingPrice($cart[$lineOrder->getProduct()->getId()]['discountedPrice']);
+                        unset($cart[$lineOrder->getProduct()->getId()]);
+                    } else {
+                        $existingOrder->removeLineOrder($lineOrder);
+                    }
+                }
+
+                foreach ($cart as $productId => $cartItem) {
+                    $productToAdd = $em->getRepository(Product::class)->find($productId);
+                    $lineOrder = new LineOrder();
+                    $lineOrder->setProduct($productToAdd);
+                    $lineOrder->setQuantity($cartItem['quantity']);
+                    $lineOrder->setSellingPrice($cartItem['discountedPrice']);
+                    $existingOrder->addLineOrder($lineOrder);
+                }
+
+                $total = $existingOrder->calculateTotal();
+                $existingOrder->setTotal($total);
+
+                $em->persist($existingOrder);
+                $em->flush();
+            }
+        }
+
         return $this->redirectToRoute('cart_index');
     }
 
     #[Route('/remove/{id}', name: 'remove')]
-    public function remove(Product $product, SessionInterface $session)
+    public function remove(Product $product, SessionInterface $session, EntityManagerInterface $em)
     {
         $id = $product->getId();
 
@@ -95,14 +133,36 @@ class CartController extends AbstractController
 
         $session->set('cart', $cart);
 
+        $orderReference = $session->get('order_reference');
+        if ($orderReference) {
+            $existingOrder = $em->getRepository(Order::class)->findOneBy(['reference' => $orderReference]);
+
+            if ($existingOrder) {
+                foreach ($existingOrder->getLineOrders() as $lineOrder) {
+                    if ($lineOrder->getProduct()->getId() == $id) {
+                        if ($lineOrder->getQuantity() > 1) {
+                            $lineOrder->setQuantity($lineOrder->getQuantity() - 1);
+                        } else {
+                            $existingOrder->removeLineOrder($lineOrder);
+                        }
+
+                        $total = $existingOrder->calculateTotal();
+                        $existingOrder->setTotal($total);
+
+                        $em->persist($existingOrder);
+                        $em->flush();
+                    }
+                }
+            }
+        }
+
         return $this->redirectToRoute('cart_index');
     }
 
     #[Route('/delete/{id}', name: 'delete')]
-    public function delete(Product $product, SessionInterface $session)
+    public function delete(Product $product, SessionInterface $session, EntityManagerInterface $entityManager)
     {
         $id = $product->getId();
-
         $cart = $session->get('cart', []);
 
         if (!empty($cart[$id])) {
@@ -111,12 +171,45 @@ class CartController extends AbstractController
 
         $session->set('cart', $cart);
 
+        $orderReference = $session->get('order_reference');
+        if ($orderReference) {
+            $existingOrder = $entityManager->getRepository(Order::class)->findOneBy(['reference' => $orderReference]);
+
+            if ($existingOrder) {
+                foreach ($existingOrder->getLineOrders() as $lineOrder) {
+                    if ($lineOrder->getProduct()->getId() === $id) {
+                        $existingOrder->removeLineOrder($lineOrder);
+                        break;
+                    }
+                }
+
+                $total = $existingOrder->calculateTotal();
+                $existingOrder->setTotal($total);
+
+                $entityManager->persist($existingOrder);
+                $entityManager->flush();
+            }
+        }
+
         return $this->redirectToRoute('cart_index');
     }
 
     #[Route('/empty', name: 'empty')]
-    public function empty(SessionInterface $session)
+    public function empty(SessionInterface $session, EntityManagerInterface $em)
     {
+        $orderReference = $session->get('order_reference');
+
+        if ($orderReference) {
+            $order = $em->getRepository(Order::class)->findOneBy(['reference' => $orderReference]);
+
+            if ($order) {
+                $em->remove($order);
+                $em->flush();
+            }
+
+            $session->remove('order_reference');
+        }
+
         $session->remove('cart');
 
         return $this->redirectToRoute('cart_index');

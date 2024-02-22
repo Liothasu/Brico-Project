@@ -58,33 +58,21 @@ class OrderController extends AbstractController
         }
 
         $user = $this->getUser();
+        $orderReference = $session->get('order_reference');
+        $existingOrder = null;
 
-        $existingOrder = $em->getRepository(Order::class)->findOneBy([
-            'user' => $user,
-            'statutOrders' => ['ORDER_PENDING']
-        ]);
+        if ($orderReference) {
+            $existingOrder = $em->getRepository(Order::class)->findOneBy(['reference' => $orderReference]);
+        }
 
-        if ($existingOrder && !in_array('ORDER_PAID', $existingOrder->getStatutOrders(), true)) {
-
-            if (!$existingOrder->getReference() || $existingOrder->getReference() !== uniqid()) {
-                $existingOrder->setReference(uniqid());
-                $em->flush();
-
-                dump('Reference Updated to: ' . $existingOrder->getReference());
-            } else {
-                dump('Using Existing Order without Updating Reference');
-            }
-
+        if ($existingOrder && !in_array('ORDER_PAID', $existingOrder->getStatutOrders(), true) && !in_array('ORDER_CANCELED', $existingOrder->getStatutOrders(), true)) {
             $order = $existingOrder;
         } else {
-
             $order = new Order();
             $order->setUser($user);
             $order->setReference(uniqid());
             $order->setStatutOrders(['ORDER_IN_PROCESS']);
             $order->setPaymentMode('In process');
-
-            dump('New Order Created with Reference: ' . $order->getReference());
 
             foreach ($cart as $item => $quantity) {
                 $product = $productRepository->find($item);
@@ -103,7 +91,6 @@ class OrderController extends AbstractController
                 }
 
                 $lineOrder->setSellingPrice($discountedPrice);
-
                 $lineOrder->setQuantity($quantity['quantity']);
 
                 $order->addLineOrder($lineOrder);
@@ -114,9 +101,28 @@ class OrderController extends AbstractController
 
             $em->persist($order);
             $em->flush();
+
+            $session->set('order_reference', $order->getReference());
         }
 
-        $this->addFlash('message', 'Order successfully updated.');
+        foreach ($cart as $productId => $cartItem) {
+            $lineOrder = $order->getLineOrderByProduct($productId);
+
+            if ($lineOrder) {
+                $lineOrderQuantity = $lineOrder->getQuantity();
+                $cartQuantity = $cartItem['quantity'];
+
+                if ($lineOrderQuantity !== $cartQuantity) {
+                    $lineOrder->setQuantity($cartQuantity);
+                    $total = $order->calculateTotal();
+                    $order->setTotal($total);
+
+                    $em->persist($lineOrder);
+                    $em->persist($order);
+                    $em->flush();
+                }
+            }
+        }
 
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
@@ -124,6 +130,7 @@ class OrderController extends AbstractController
             'paymentForm' => $this->createForm(PaymentType::class)->createView(),
         ]);
     }
+
 
     #[Route('/pay/{id}', name: 'pay')]
     public function pay(Order $order = null, SessionInterface $session, EntityManagerInterface $em, Request $request): Response
@@ -139,11 +146,25 @@ class OrderController extends AbstractController
         }
 
         $form = $this->createForm(PaymentType::class);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $paymentData = $form->getData();
+
+            $lineOrders = $order->getLineOrders();
+
+            foreach ($lineOrders as $lineOrder) {
+                $product = $lineOrder->getProduct();
+                $quantity = $lineOrder->getQuantity();
+
+                if ($product->getStock() < $quantity) {
+                    $this->addFlash('error', 'Insufficient stock for product: ' . $product->getNameProduct());
+                    return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
+                }
+
+                $product->setStock($product->getStock() - $quantity);
+                $em->persist($product);
+            }
 
             $order->setPaymentMode($paymentData->getPaymentMode());
             $order->setStatutOrders(['ORDER_PAID']);
@@ -159,8 +180,6 @@ class OrderController extends AbstractController
                 'id' => $order->getId()
             ]);
         }
-
-        // $this->addFlash('error', 'The payment is not valid. Please try again.'); 
 
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
@@ -193,7 +212,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/cancel_payment/{id}', name: 'cancel_payment', methods: ['GET'])]
-    public function cancelPayment(Order $order, EntityManagerInterface $em): Response
+    public function cancelPayment(Order $order, EntityManagerInterface $em, SessionInterface $session): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -201,7 +220,7 @@ class OrderController extends AbstractController
             throw $this->createAccessDeniedException('You are not allowed to cancel payment for this order.');
         }
 
-        $order->setStatutOrders(['ORDER_PENDING']);
+        $order->setStatutOrders(['ORDER_IN_PROCESS']);
 
         $em->persist($order);
         $em->flush();

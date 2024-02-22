@@ -205,10 +205,6 @@ footer {
   background-color: rgb(206, 0, 0);
 }
 
-.black-text {
-  color: black;
-}
-
 //Comment
 .comment-content {
   p {
@@ -244,6 +240,16 @@ main {
   }
 }
 
+//Stock product
+.low-stock {
+  color: rgb(251, 130, 22);
+}
+
+.high-stock {
+  color: green;
+}
+
+//Barred price
 .strike-through {
   position: relative;
   display: inline-block;

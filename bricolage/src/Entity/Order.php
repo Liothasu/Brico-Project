@@ -21,7 +21,7 @@ class Order
 
     #[ORM\Column(type: 'json')]
     private array $statutOrders = [self::POSSIBLE_STATUSES[0]];
-    public const POSSIBLE_STATUSES = ['ORDER_PENDING', 'ORDER_IN_PROCESS', 'ORDER_PAID', 'ORDER_CANCELED'];
+    public const POSSIBLE_STATUSES = ['ORDER_IN_PROCESS', 'ORDER_PAID', 'ORDER_CANCELED'];
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $dateOrder;
@@ -31,6 +31,9 @@ class Order
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     private $total;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private $is_valid = false;
 
     #[ORM\OneToMany(mappedBy: 'order', targetEntity: LineOrder::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $lineOrders;
@@ -115,6 +118,19 @@ class Order
 
         return $this;
     }
+
+    public function getIsValid(): bool
+    {
+        return $this->is_valid;
+    }
+
+    public function setIsValid(bool $is_valid): self
+    {
+        $this->is_valid = $is_valid;
+
+        return $this;
+    }
+
 
     /**
      * @return Collection|LineOrder[]
