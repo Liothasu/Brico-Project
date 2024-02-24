@@ -119,8 +119,10 @@ nav {
   height: 60px;
 }
 
-.btn.btn-danger {
-  margin-bottom: 5px;
+.nav-right {
+  .btn.btn-danger {
+    margin-bottom: 5px;
+  }
 }
 
 .i-flex {
@@ -280,4 +282,85 @@ main {
 .form-check {
   padding-left: 0;
   margin-bottom: 25px;
+}
+
+//Show Profile
+.profile-container {
+  display: flex;
+  justify-content: space-between;
+
+  .profile-info {
+    flex: 0 0 calc(40% - 5px);
+    padding-right: 10px;
+
+    .show-profile {
+      margin: 0;
+      background-color: #a6bb8d;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .button-show-profile {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+  }
+
+  .additional-info {
+    flex: 0 0 calc(60% - 5px);
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+
+    .blog-show-profile,
+    .dispute-show-profile {
+      margin-bottom: 30px;
+      a {
+        margin-bottom: 30px;
+      }
+      p {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+// Edit profile
+.user-form {
+  form {
+    margin: 0;
+    max-width: 800px;
+  }
+  .form-column {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    .identity-details,
+    .password {
+      flex-basis: calc(47% - 5px);
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #a6bb8d;
+    }
+  }
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-top: 0;
+      margin-right: 10px;
+    }
+  }
+}
+
+//Order list
+.order-list {
+  li {
+    margin-bottom: 20px;
+    a {
+      margin-left: 10px;
+    }
+  }
 }
