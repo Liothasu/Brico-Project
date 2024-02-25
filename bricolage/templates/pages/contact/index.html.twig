@@ -39,11 +39,11 @@
 				<p>No order available.</p>
 			{% endif %}
 		</div>
-		{% if app.user %}
-			<button type="submit" class="btn btn-primary">Create</button>
-		{% else %}
-			<button type="button" class="btn btn-primary" disabled>Create</button>
-		{% endif %}
-		{{ form_end(form) }}
 	</div>
+	{% if app.user %}
+		<button type="submit" class="btn btn-success">Create</button>
+	{% else %}
+		<button type="button" class="btn btn-success" disabled>Create</button>
+	{% endif %}
+	{{ form_end(form) }}
 {% endblock %}

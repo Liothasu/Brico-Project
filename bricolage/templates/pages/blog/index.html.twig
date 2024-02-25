@@ -8,32 +8,19 @@
 
 {% block main %}
 	<section class="container">
-		<a href="{{ path('blog_list') }}" class="btn btn-danger">Back to the blogs</a>
-		<div class="row">
-			<div class="col">
-				<h2 class="blog-title">{{ blog.title }}</h2>
-				<img src="{{ asset('uploads/' ~ entity.featuredMedia.filename) }}" alt="{{ entity.featuredMedia.altText ?? 'Featured Image' }}" width="350" height="205">
-			</div>
-		</div>
+		<h2 class="blog-title">{{ blog.title }}</h2>
+		<img src="{{ asset('uploads/' ~ entity.featuredMedia.filename) }}" alt="{{ entity.featuredMedia.altText ?? 'Featured Image' }}" width="350" height="205">
 		{% if blog.author == app.user %}
-			<a href="{{ path('blog_edit', {'id': blog.id}) }}" class="btn btn-primary mt-4">Edit Blog</a>
+			<a href="{{ path('blog_edit', {'id': blog.id}) }}" style="margin-left: 1rem;" class="btn btn-primary">Edit Blog</a>
 		{% endif %}
 		<hr>
-		<div class="row">
-			<div class="col">
-				<div id="blog-content" class="blog-content">
-					<p>
-						{{ blog.content|striptags }}
-					</p>
-				</div>
-			</div>
+		<div id="blog-content" class="blog-content">
+			<p>
+				{{ blog.content|striptags }}
+			</p>
 		</div>
 		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-			<div>
-				{{ form(commentForm, { attr: { class: 'comment-form' } }) }}
-					<hr>
-				</div>
-
+			{{ form(commentForm, { attr: { class: 'comment-form' } }) }}
 				<h2 class="comments-title mt-5">
 					<span id="comment-count">{{ blog.comments|length }}</span>
 					comment(s)
@@ -52,6 +39,10 @@
 					<a href="{{ path('login') }}" class="btn btn-primary">Log in</a>
 				</div>
 			{% endif %}
+
+			<div class="blog-back">
+				<a href="{{ path('blog_list') }}" class="btn btn-danger">Back to the blogs</a>
+			</div>
 		</section>
 	{% endblock %}
 

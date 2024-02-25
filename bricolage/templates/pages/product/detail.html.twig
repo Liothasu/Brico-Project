@@ -7,7 +7,7 @@
 {% block main %}
 	<h3>{{ product.nameProduct }}
 		{{ product.color }}</h3>
-	<div class="card mb-3" style="max-width: 900px;">
+	<div class="card mb-3" style="max-width: 900px; height: 350px;">
 		<div class="row g-0">
 			<div class="col-md-4">
 				{% if product.images|length > 0 %}
@@ -20,7 +20,7 @@
 						<div class="carousel-inner">
 							{% for loopIndex, image in product.images %}
 								<div class="carousel-item{% if loopIndex == 0 %} active{% endif %}">
-									<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}" style="object-fit: cover; height: 350px; border-top-left-radius: 10px;">
+									<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}" style="object-fit: cover; height: 350px; border-radius: 10px 0 0 10px;">
 								</div>
 							{% endfor %}
 						</div>
@@ -94,7 +94,9 @@
 					{% endif %}
 				</div>
 			</div>
+			<div>
+				<a href="{{ path('product_all') }}" class="btn btn-success">View all products</a>
+			</div>
 		</div>
 	</div>
-	<a href="{{ path('product_all') }}" class="btn btn-success">View all products</a>
 {% endblock %}

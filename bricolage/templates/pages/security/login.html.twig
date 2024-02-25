@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sign in
+{% block title %}Log in
 {% endblock %}
 
 {% block main %}
-	<div>
+	<div class="login-form">
 		<form method="post">
 			{% if error %}
 				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -25,17 +25,15 @@
 			<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
 			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-			<button class="btn btn-lg btn-success" type="submit">
-				Sign in
-			</button>
-		</form>
-		<div style="margin-left: 40px;">
-			<p>Did you forgot your password ?
-				<a href="{{ path('app_forgot_password_request') }}">Click here to reset</a>
-			</p>
+			<div class="button-link-container">
+				<button class="btn btn-lg btn-success" type="submit">
+					Log in
+				</button>
+				<a href="{{ path('app_forgot_password_request') }}">Forgot Password?</a>
+			</div>
 			<p>You don't have an account ?
-				<a href="{{ path('register') }}" class="btn btn-primary my-3">Register</a>
+				<a href="{{ path('register') }}" class="btn btn-primary">Register</a>
 			</p>
-		</div>
+		</form>
 	</div>
 {% endblock %}

@@ -1,25 +1,33 @@
-<article class="mb-5">
-    <div class="row">
-        <div class="col-md-{{ leftCol }}">
-            {% if blog.featuredMedia %}
-                <a href="{{ path('blog_show', { 'slug': blog.slug }) }}">
-                    <img src="{{ asset('/uploads/' ~ blog.featuredMedia.filename) }}" alt="{{ blog.featuredMedia.altText ?? 'Featured Image' }}" loading="lazy" width="350" height="205">
-                </a>
-            {% endif %}
-        </div>
-        <div class="col-md-{{ rightCol }}">
-            <h2 class="blog-title">
-                <a href="{{ path('blog_show', { 'slug': blog.slug }) }}" class="text-decoration-none">{{ blog.title }}</a>
-            </h2>
-            <p>
-                {{ blog.createdAt|date('d M Y') }} / <b>{{ blog.types|typesToString|raw }}</b>
-            </p>
-            <p>
-            {{ blog.featuredText ?: '' }}
-            </p>
-            <p>
-                Author: {{ blog.author }}
-            </p>
-        </div>
-    </div>
-</article>
+{% for blog in blogs %}
+	<article class="mb-5">
+		<div class="row">
+			<div class="col-md-{{ leftCol }}">
+				{% if blog.featuredMedia %}
+					<a href="{{ path('blog_show', { 'slug': blog.slug }) }}">
+						<img src="{{ asset('/uploads/' ~ blog.featuredMedia.filename) }}" alt="{{ blog.featuredMedia.altText ?? 'Featured Image' }}" loading="lazy" width="350" height="205">
+					</a>
+				{% endif %}
+			</div>
+			<div class="col-md-{{ rightCol }}">
+				<h2 class="blog-title">
+					<a href="{{ path('blog_show', { 'slug': blog.slug }) }}" class="text-decoration-none">{{ blog.title }}</a>
+				</h2>
+				<p>
+					{{ blog.createdAt|date('d M Y') }}
+					/
+					<b>{{ blog.types|typesToString|raw }}</b>
+				</p>
+				<p>
+					{{ blog.featuredText ?: '' }}
+				</p>
+				<p>
+					Author:
+					{{ blog.author }}
+				</p>
+			</div>
+		</div>
+	</article>
+{% endfor %}
+<div class="page-blogs">
+	{{ knp_pagination_render(blogs) }}
+</div>

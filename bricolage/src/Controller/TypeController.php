@@ -22,7 +22,7 @@ class TypeController extends AbstractController
 
         return $this->render('pages/type/index.html.twig', [
             'entity' => $type,
-            'types' => $types,
+            'types' => $typeRepository->findAllForWidget(),
             'blogs' => $blogService->getPaginatedBlogs($type)
         ]);
     }

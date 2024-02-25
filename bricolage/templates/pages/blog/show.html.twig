@@ -1,26 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All blogs{% endblock %}
+{% block title %}All blogs
+{% endblock %}
 
 {% block main %}
-    <div class="row g-5">
-        <div class="col-xl-8">
-            <h3 class="pb-4 mb-4 fst-italic border-bottom">All blogs</h3>
-            <div id="blogs-list">
-                {% if blogs is not empty %}
-                    {% include 'pages/blog/list.html.twig' with { blogs: blogs, leftCol: 5, rightCol: 7 } %}
-                {% else %}
-                    <p>Blog not found.</p>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-xl-4">
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <a href="{{ path('blog_new') }}" class="btn btn-primary">Create a blog</a>
-            {% endif %}
-            <div class="position-sticky" style="top: 2rem;">
-                {% include 'widget/types.html.twig' %}
-            </div>
-        </div>
-    </div>
+	<div class="row g-5">
+		<div class="col-xl-8">
+			<h3 class="pb-4 mb-4 fst-italic border-bottom">All blogs</h3>
+			<div id="blogs-list">
+				{% if blogs is not empty %}
+					{% include 'pages/blog/item.html.twig' with { blogs: blogs, leftCol: 5, rightCol: 7 } %}
+				{% else %}
+					<p>Blog not found.</p>
+				{% endif %}
+			</div>
+		</div>
+		<div class="col-xl-4">
+			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+				<a href="{{ path('blog_new') }}" class="btn btn-primary">Create a blog</a>
+			{% endif %}
+			<div class="position-sticky" style="top: 2rem;">
+				<div class="p-4">
+					<h4 class="fst-italic">Types</h4>
+					<ol class="list-unstyled mb-0">
+						{%  for type in types %}
+							<li>
+								<a class="text-decoration-none" href="{{ path('type_show', { 'slug': type.slug }) }}">{{ type.name }}</a>
+							</li>
+						{% endfor %}
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

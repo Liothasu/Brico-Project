@@ -1,18 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create project{% endblock %}
+{% block title %}Create project
+{% endblock %}
 
 {% block main %}
-    <div class="project-form">
-        <h2>Request to create a project</h2>
-            <form method="post" action="{{ path('project_index') }}">
-                {{ form_start(form) }}
-                {{ form_row(form.nameProject) }}
-                {{ form_row(form.title) }}
-                {{ form_row(form.description) }}
-
-                <button type="submit" class="btn btn-primary">Create</button>
-                {{ form_end(form) }}
-            </form>
-    </div>
+	<h2>Request to create a project</h2>
+	<div class="project-form">
+		{{ form_start(form, {'attr': {'class': 'mb-3'}}) }}
+		{{ form_row(form.nameProject) }}
+		{{ form_row(form.title) }}
+		{{ form_row(form.description) }}
+	</div>
+	<button type="submit" class="btn btn-success">Create</button>
+	{{ form_end(form) }}
 {% endblock %}

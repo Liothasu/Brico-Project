@@ -151,14 +151,14 @@ nav {
   }
 }
 
-.promo {
+.promo-container {
   text-align: center;
-  display: inline-block;
   margin-bottom: 60px;
+  transition: transform 1s ease-in;
+}
 
-  .products-container {
-    transition: transform 0.5s ease-in;
-  }
+.title-promo {
+  margin-bottom: 20px;
 
   h2 {
     font-size: 32px;
@@ -167,6 +167,10 @@ nav {
   p {
     font-size: 24px;
   }
+}
+
+.promo .carousel {
+  display: inline-block;
 }
 
 .recent-blogs {
@@ -219,13 +223,9 @@ footer {
 main {
   form {
     max-width: 400px;
-    margin: 40px;
     input,
     textarea {
       margin-bottom: 10px;
-    }
-    button {
-      margin-top: 10px;
     }
   }
 }
@@ -294,7 +294,6 @@ main {
     padding-right: 10px;
 
     .show-profile {
-      margin: 0;
       background-color: #a6bb8d;
       border-radius: 8px;
       padding: 20px;
@@ -328,7 +327,6 @@ main {
 // Edit profile
 .user-form {
   form {
-    margin: 0;
     max-width: 800px;
   }
   .form-column {
@@ -339,7 +337,7 @@ main {
     .identity-details,
     .password {
       flex-basis: calc(47% - 5px);
-      padding: 10px;
+      padding: 20px;
       border-radius: 8px;
       background-color: #a6bb8d;
     }
@@ -349,7 +347,6 @@ main {
     justify-content: flex-end;
 
     button {
-      margin-top: 0;
       margin-right: 10px;
     }
   }
@@ -361,6 +358,122 @@ main {
     margin-bottom: 20px;
     a {
       margin-left: 10px;
+    }
+  }
+}
+
+//Pagination blog Temporary
+.page-blogs {
+  nav {
+    height: 0;
+    margin-top: 40px;
+    margin-bottom: 60px;
+
+    .page-item {
+      &.active {
+        .page-link {
+          background-color: #3c6255;
+          border-color: #3c6255;
+        }
+      }
+    }
+
+    .page-link {
+      color: #222;
+    }
+
+    a:hover:not(.active) {
+      background-color: #61876e;
+      border-radius: inherit;
+    }
+  }
+}
+
+//form project and dispute
+.project-form,
+.dispute-form {
+  form {
+    background-color: #a6bb8d;
+    border-radius: 8px;
+    padding: 20px;
+
+    button {
+      margin-top: 20px;
+    }
+  }
+}
+
+//Blog show
+.blog-back {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 70px;
+}
+
+//login
+.login-form {
+  margin-top: 60px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    background-color: #a6bb8d;
+    border-radius: 8px;
+    padding: 20px;
+
+    button {
+      margin-top: 20px;
+      align-self: flex-start;
+    }
+
+    .button-link-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: #eae7b1;
+        text-decoration: underline;
+      }
+    }
+
+    p {
+      margin-top: 30px;
+    }
+  }
+}
+
+//Register
+.register-form {
+  form {
+    max-width: 800px;
+  }
+  .form-columns {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    .identity-details,
+    .contact-details {
+      flex-basis: calc(47% - 5px);
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #a6bb8d;
+    }
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-right: 10px;
     }
   }
 }

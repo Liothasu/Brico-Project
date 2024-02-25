@@ -24,7 +24,7 @@ class DisputeType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control mb-3'
                 ],
             ])
             ->add('problemType', ChoiceType::class, [

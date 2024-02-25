@@ -1,7 +1,0 @@
-{% for blog in blogs %}
-	{% include 'pages/blog/item.html.twig' with { blog, leftCol: leftCol, rightCol: rightCol } %}
-{% endfor %}
-
-<div class="page_blogs">
-	{{ knp_pagination_render(blogs) }}
-</div>

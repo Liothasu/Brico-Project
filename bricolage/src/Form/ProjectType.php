@@ -16,17 +16,17 @@ class ProjectType extends AbstractType
         $builder
             ->add('nameProject', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-3',
                 ],
             ])
             ->add('title', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-3',
                 ],
             ])
             ->add('description', TextareaType::class, [
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-3',
                 ],
             ])
         ;

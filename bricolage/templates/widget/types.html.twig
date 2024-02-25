@@ -1,8 +1,0 @@
-<div class="p-4">
-    <h4 class="fst-italic">Types</h4>
-    <ol class="list-unstyled mb-0">
-        {%  for type in types %}
-            <li><a class="text-decoration-none" href="{{ path('type_show', { 'slug': type.slug }) }}">{{ type.name }}</a></li>
-        {% endfor %}
-    </ol>
-</div>

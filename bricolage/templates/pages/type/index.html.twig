@@ -2,24 +2,35 @@
 
 {% set type = entity %}
 
-{% block title %}{{ type.name }}{% endblock %}
+{% block title %}
+	{{ type.name }}
+{% endblock %}
 
 {% block main %}
-    <section class="container">
-        <div class="row g-5">
-            <div class="col">
-                <a href="{{ path('blog_list') }}" class="btn btn-danger">Back to the blogs</a>
-                <h3 class="pb-4 mb-4 fst-italic border-bottom">{{ type.name }}</h3>
-                <div id="blogs-list">
-                    {% include 'pages/blog/list.html.twig' with { blogs: blogs, leftCol: 4, rightCol: 8 } %}
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-4">
-            <a href="{{ path('blog_new') }}" class="btn btn-primary">Create a blog</a>
-            <div class="position-sticky" style="top: 2rem;">
-                {% include 'widget/types.html.twig' %}
-            </div>
-        </div>
-    </section>
+	<div class="row g-5">
+		<div class="col-xl-8">
+			<h3 class="pb-4 mb-4 fst-italic border-bottom">{{ type.name }}</h3>
+			<div id="blogs-list">
+				{% include 'pages/blog/item.html.twig' with { blogs: blogs, leftCol: 5, rightCol: 7 } %}
+			</div>
+			<div class="blog-back">
+				<a href="{{ path('blog_list') }}" class="btn btn-danger">Back to the blogs</a>
+			</div>
+		</div>
+		<div class="col-xl-4">
+			<a href="{{ path('blog_new') }}" class="btn btn-primary">Create a blog</a>
+			<div class="position-sticky" style="top: 2rem;">
+				<div class="p-4">
+					<h4 class="fst-italic">Types</h4>
+					<ol class="list-unstyled mb-0">
+						{% for type in types %}
+							<li>
+								<a class="text-decoration-none" href="{{ path('type_show', { 'slug': type.slug }) }}">{{ type.name }}</a>
+							</li>
+						{% endfor %}
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

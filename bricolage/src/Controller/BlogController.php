@@ -28,7 +28,7 @@ class BlogController extends AbstractController
     public function listBlog(BlogService $blogService, TypeRepository $typeRepository): Response
     {
         $blogs = $blogService->getPaginatedBlogs();
-    
+
         return $this->render('pages/blog/show.html.twig', [
             'blogs' => $blogs,
             'types' => $typeRepository->findAllForWidget()
