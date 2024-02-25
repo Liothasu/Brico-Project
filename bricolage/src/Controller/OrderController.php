@@ -67,6 +67,24 @@ class OrderController extends AbstractController
 
         if ($existingOrder && !in_array('ORDER_PAID', $existingOrder->getStatutOrders(), true) && !in_array('ORDER_CANCELED', $existingOrder->getStatutOrders(), true)) {
             $order = $existingOrder;
+            $lineOrders = $order->getLineOrders();
+            foreach ($lineOrders as $lineOrder) {
+                $product = $lineOrder->getProduct();
+                $discountedPrice = $product->getPriceVAT();
+                $activePromos = $promoRepository->findActivePromos();
+                foreach ($activePromos as $promo) {
+                    if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
+                        $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
+                        break;
+                    }
+                }
+                $lineOrder->setSellingPrice($discountedPrice);
+                $em->persist($lineOrder);
+            }
+
+            $total = $order->calculateTotal();
+            $order->setTotal($total);
+            $em->flush();
         } else {
             $order = new Order();
             $order->setUser($user);
