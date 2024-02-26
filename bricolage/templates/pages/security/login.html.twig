@@ -4,36 +4,42 @@
 {% endblock %}
 
 {% block main %}
-	<div class="login-form">
-		<form method="post">
-			{% if error %}
-				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-			{% endif %}
+	<section class="container">
+		<div class="row">
+			<div class="col">
+				<div class="login-form">
+					<form method="post">
+						{% if error %}
+							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+						{% endif %}
 
-			{% if app.user %}
-				<div class="mb-3">
-					You are logged in as
-					{{ app.user.userIdentifier }},
-					<a href="{{ path('logout') }}">Logout</a>
+						{% if app.user %}
+							<div class="mb-3">
+								You are logged in as
+								{{ app.user.userIdentifier }},
+								<a href="{{ path('logout') }}">Logout</a>
+							</div>
+						{% endif %}
+
+						<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+						<label for="inputEmail">Email</label>
+						<input type="email" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+						<label for="inputPassword">Password</label>
+						<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+						<div class="button-link-container">
+							<button class="btn btn-lg btn-success" type="submit">
+								Log in
+							</button>
+							<a href="{{ path('app_forgot_password_request') }}">Forgot Password?</a>
+						</div>
+						<p>You don't have an account ?
+							<a href="{{ path('register') }}" class="btn btn-primary">Register</a>
+						</p>
+					</form>
 				</div>
-			{% endif %}
-
-			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-			<label for="inputEmail">Email</label>
-			<input type="email" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-			<label for="inputPassword">Password</label>
-			<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-
-			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-			<div class="button-link-container">
-				<button class="btn btn-lg btn-success" type="submit">
-					Log in
-				</button>
-				<a href="{{ path('app_forgot_password_request') }}">Forgot Password?</a>
 			</div>
-			<p>You don't have an account ?
-				<a href="{{ path('register') }}" class="btn btn-primary">Register</a>
-			</p>
-		</form>
-	</div>
+		</div>
+	</section>
 {% endblock %}

@@ -1,15 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-	<main class="container">
-		<section class="row">
+	<section class="container">
+		<div class="row">
 			<div class="col-10">
 				<h2>Order Payment</h2>
 
-				<p>Order ID:
-					{{ order.id }}</p>
-
-				<table class="table table-striped mt-3">
+				<table class="table table-striped">
 					<tr>
 						<th>Reference:</th>
 						<td>{{ order.getReference() }}</td>
@@ -21,7 +18,7 @@
 					<tr>
 						<th>Products:</th>
 						<td>
-							<ul>
+							<ul class="list-unstyled">
 								{% for lineOrder in order.getLineOrders() %}
 									<li>
 										{% if lineOrder.getProduct().getImages() is not empty %}
@@ -48,37 +45,33 @@
 							</ul>
 						</td>
 					</tr>
-				</td>
-			</tr>
-		</table>
+				</table>
 
-		<div class="d-flex justify-content-between mb-3">
-			<p>Total Amount:
-				{{ order.total | number_format(2, ',', '.') }}
-				€</p>
+				<div class="d-flex justify-content-between">
+					<p>Total Amount:
+						{{ order.total | number_format(2, ',', '.') }}
+						€</p>
 
-			<form method="get" action="{{ path('order_cancel_payment', {'id': order.id}) }}">
-				<div class="mb-3">
-					<button class="btn btn-danger" type="submit">Cancel</button>
+					<form method="get" action="{{ path('order_cancel_payment', {'id': order.id}) }}">
+						<button class="btn btn-danger" type="submit">Cancel</button>
+					</form>
 				</div>
-			</form>
+
+				<h2>Payment Information</h2>
+				{% if order.isValid == true %}
+					<form method="post" action="{{ path('order_pay', {'id': order.id}) }}">
+						{{ form_start(paymentForm) }}
+						<p class="mb-2">Payment method:</p>
+						<div class="d-flex justify-content-between">
+							{{ form_row(paymentForm.paymentMode) }}
+							<button type="submit" class="btn btn-primary">Pay now</button>
+						</div>
+						{{ form_end(paymentForm) }}
+					</form>
+				{% else %}
+					<p class="text-danger">Your order is being validated by admin.</p>
+				{% endif %}
+			</div>
 		</div>
-		{% if order.isValid == true %}
-			<form method="post" action="{{ path('order_pay', {'id': order.id}) }}" class="mb-4">
-				<h3>Payment Information</h3>
-
-				{{ form_start(paymentForm) }}
-				<div class="mb-3">
-					<p class="mb-2">Payment method</p>
-					<div class="d-flex justify-content-between">
-						{{ form_row(paymentForm.paymentMode) }}
-						<button type="submit" class="btn btn-primary">Pay Now</button>
-					</div>
-				</div>
-				{{ form_end(paymentForm) }}
-			</form>
-		{% else %}
-			<p class="text-danger">Your order is being validated by admin.</p>
-		{% endif %}
-	</div>
-</section></main>{% endblock %}
+	</section>
+{% endblock %}

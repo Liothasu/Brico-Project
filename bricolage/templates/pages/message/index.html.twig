@@ -6,7 +6,7 @@
 {% block main %}
 	<section class="container">
 		<div class="row">
-			<div class="col-12">
+			<div class="col">
 				<h2>Inbox</h2>
 			</div>
 			{% if not app.user.received is empty %}
@@ -29,7 +29,9 @@
 									<td>
 										<a href="{{ path("message_read", {id: message.id}) }}">{{ message.title }}</a>
 									</td>
-									<td>{{ message.timeMsg|date }}</td>
+									<td>{{ message.timeMsg|date('F d, Y') }}
+										at
+										{{ message.timeMsg|date('H:m') }}</td>
 									<td>
 										<a href="{{ path("message_delete", {id: message.id}) }}">
 											<button type="button" class="btn-close" aria-label="Close"></button>
@@ -48,23 +50,22 @@
 				<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
 					View my folders
 				</a>
+				{# <a href="{{ path('message_delete_all') }}" class="btn btn-danger" disabled>Delete All Messages</a> #}
 			</div>
 		</div>
 	</section>
 
 	<div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
 		<div class="offcanvas-header">
-			<h2 class="offcanvas-title" id="offcanvasExampleLabel">Message private</h2>
-			<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			<h2 class="offcanvas-title" id="offcanvasExampleLabel">Private message</h2>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 		</div>
 		<div class="offcanvas-body">
 			<div class="list-group">
 				<a href="{{ path("message_index") }}" class="list-group-item list-group-item-action active">Inbox</a>
+				<a href="{{ path("message_sent") }}" class="list-group-item list-group-item-action">Sent message</a>
 			</div>
-			<div class="list-group">
-				<a href="{{ path("message_sent") }}" class="list-group-item list-group-item-action">Sent Items</a>
-			</div>
-			<div class="list-group">
+			<div class="list-group send">
 				<a href="{{ path("message_send") }}" class="list-group-item list-group-item-action">Send a message</a>
 			</div>
 		</div>

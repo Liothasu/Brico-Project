@@ -40,6 +40,13 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $currentPassword = $form->get('currentPassword')->getData();
+
+            if (!$this->passwordHasher->isPasswordValid($user, $currentPassword)) {
+                $this->addFlash('danger', 'Current password is incorrect.');
+                return $this->redirectToRoute('profile_edit');
+            }
+
             $newPassword = $form->get('newPassword')->getData();
             if ($newPassword) {
                 $user->setPassword($this->passwordHasher->hashPassword($user, $newPassword));

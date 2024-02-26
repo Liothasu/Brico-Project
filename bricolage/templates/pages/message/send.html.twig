@@ -1,24 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Message{% endblock %}
+{% block title %}Message
+{% endblock %}
 
 {% block main %}
-    {% block section %}
-        <section class="container">
-            <div class="row">
-                <div class="col">
-                    <h2>Send a message</h2>
-                    {{ form_start(form) }}
-						{{ form_row(form.recipient, {'attr': {'class': 'form-control'}}) }}
-						{{ form_row(form.title, {'attr': {'class': 'form-control'}}) }}
-						{{ form_row(form.content, {'attr': {'class': 'form-control'}}) }}
-						<br>
-						{{ form_row(form.sent, {'attr': {'class': 'btn btn-primary'}}) }}
+	<section class="container">
+		<div class="row">
+			<div class="col">
+				<h2>Send a message</h2>
+				<div class="message-form">
+					{{ form_start(form) }}
+					{{ form_row(form.recipient) }}
+					{{ form_row(form.title) }}
+					{{ form_row(form.content) }}
+				</div>
+				<div class="mp-button">
+					<button type="submit" class="btn btn-success">Send</button>
 					{{ form_end(form) }}
-					<br>
-					<a href="{{ path("message_index") }}" class="btn btn-primary">Back to Inbox</a>
-                </div>
-            </div>
-        </section>
-    {% endblock %}
+					<a href="{{ path("message_index") }}" class="btn btn-danger">Back to Inbox</a>
+				</div>
+			</div>
+		</div>
+	</section>
 {% endblock %}

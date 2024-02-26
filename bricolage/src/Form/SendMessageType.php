@@ -33,13 +33,7 @@ class SendMessageType extends AbstractType
             "attr" => [
                 "class" => "form-control"
             ]
-        ])
-        ->add('sent', SubmitType::class, [
-            "attr" => [
-                "class" => "btn btn-primary"
-            ]
-        ])
-        ;
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

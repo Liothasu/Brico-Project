@@ -4,22 +4,26 @@
 {% endblock %}
 
 {% block main %}
-	<h2>Reply to "{{ originalMessage.title }}"</h2>
-
-	<p>Original Message:</p>
-	<blockquote>
-		<p>{{ originalMessage.content }}</p>
-		<small>Sent by
-			{{ originalMessage.sender.username }}
-			on
-			{{ originalMessage.timeMsg|date }}</small>
-	</blockquote>
-
-	{{ form_start(form) }}
-        {{ form_row(form.content) }}
-        <br>
-        <button type="submit" class="btn btn-primary">Send Reply</button>
-	    <a href="{{ path('message_index') }}" class="btn btn-danger">Cancel</a>
-	{{ form_end(form) }}
-
+	<section class="container">
+		<div class="row">
+			<div class="col">
+				<h2>Subject:
+					{{ originalMessage.title }}</h2>
+				<div class="reply-message-header">
+					<p>{{ originalMessage.content }}</p>
+					<small>Sent by
+						{{ originalMessage.sender.username }}
+						on
+						{{ originalMessage.timeMsg|date }}</small>
+				</div>
+				<div class="reply-form">
+					{{ form_start(form) }}
+					{{ form_row(form.content) }}
+					<button type="submit" class="btn btn-success">Reply</button>
+					<a href="{{ path('message_index') }}" class="btn btn-danger">Cancel</a>
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</section>
 {% endblock %}

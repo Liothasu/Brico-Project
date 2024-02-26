@@ -53,7 +53,7 @@ class OrderController extends AbstractController
         $cart = $session->get('cart', []);
 
         if ($cart === []) {
-            $this->addFlash('message', 'Your cart is empty');
+            $this->addFlash('danger', 'Your cart is empty');
             return $this->redirectToRoute('home');
         }
 
@@ -154,12 +154,12 @@ class OrderController extends AbstractController
     public function pay(Order $order = null, SessionInterface $session, EntityManagerInterface $em, Request $request): Response
     {
         if (!$order) {
-            $this->addFlash('error', 'Order not found.');
+            $this->addFlash('danger', 'Order not found.');
             return $this->redirectToRoute('cart_index');
         }
 
         if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
-            $this->addFlash('message', 'Order already paid.');
+            $this->addFlash('warning', 'Order already paid.');
             return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
         }
 
@@ -176,7 +176,7 @@ class OrderController extends AbstractController
                 $quantity = $lineOrder->getQuantity();
 
                 if ($product->getStock() < $quantity) {
-                    $this->addFlash('error', 'Insufficient stock for product: ' . $product->getNameProduct());
+                    $this->addFlash('danger', 'Insufficient stock for product: ' . $product->getNameProduct());
                     return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
                 }
 
@@ -192,7 +192,7 @@ class OrderController extends AbstractController
 
             $session->remove('cart');
 
-            $this->addFlash('message', 'Payment successful.');
+            $this->addFlash('success', 'Payment successful.');
 
             return $this->redirectToRoute('order_details', [
                 'id' => $order->getId()
@@ -221,9 +221,9 @@ class OrderController extends AbstractController
             $em->persist($order);
             $em->flush();
 
-            $this->addFlash('message', 'Order successfully cancelled.');
+            $this->addFlash('success', 'Order successfully cancelled.');
         } else {
-            $this->addFlash('message', 'This order cannot be cancelled.');
+            $this->addFlash('danger', 'This order cannot be cancelled.');
         }
 
         return $this->redirectToRoute('cart_index');
@@ -243,7 +243,7 @@ class OrderController extends AbstractController
         $em->persist($order);
         $em->flush();
 
-        $this->addFlash('message', 'Payment canceled successfully.');
+        $this->addFlash('success', 'Payment canceled successfully.');
 
         return $this->redirectToRoute('cart_index');
     }

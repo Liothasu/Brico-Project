@@ -61,7 +61,7 @@ class CartController extends AbstractController
             ];
         } else {
             if ($product->getStock() <= $cart[$id]['quantity']) {
-                $this->addFlash('message', 'Insufficient stock for product: ' . $product->getNameProduct());
+                $this->addFlash('danger', 'Insufficient stock for product: ' . $product->getNameProduct());
                 return $this->redirectToRoute('cart_index');
             }
 

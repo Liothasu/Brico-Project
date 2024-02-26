@@ -69,7 +69,7 @@ class DisputeController extends AbstractController
 
             $this->sendEmailNotification($dispute, $user, $mailer);
 
-            $this->addFlash("message", "Your dispute has been created and notify an adminstrator.");
+            $this->addFlash("info", "Your dispute has been created and notify an adminstrator.");
 
             return $this->redirectToRoute('contact_details', [
                 'id' => $dispute->getId()
@@ -150,7 +150,7 @@ class DisputeController extends AbstractController
 
             $this->sendEmailNotification($dispute, $user, $mailer);
 
-            $this->addFlash("message", "Your dispute has been updated and the administrator has been notified.");
+            $this->addFlash("info", "Your dispute has been updated and the administrator has been notified.");
 
             return $this->redirectToRoute('contact_details', [
                 'id' => $dispute->getId()

@@ -4,34 +4,40 @@
 {% endblock %}
 
 {% block main %}
-	<h2>Edit Profile</h2>
-	<div class="user-form">
-		{{ form_start(form) }}
-		<div class="form-column">
-			<div class="identity-details">
-				<fieldset class="mb-3">
-					<legend>My profile</legend>
-					{{ form_row(form.username) }}
-					{{ form_row(form.email) }}
-					{{ form_row(form.phoneNumber) }}
-					{{ form_row(form.numStreet) }}
-					{{ form_row(form.city) }}
-					{{ form_row(form.zipCode) }}
-				</fieldset>
-			</div>
-			<div class="password">
-				<fieldset class="mb-3">
-					<legend>Password</legend>
-					{{ form_row(form.newPassword.first) }}
-					{{ form_row(form.newPassword.second) }}
-					{{ form_row(form.currentPassword) }}
-				</fieldset>
+	<section class="container">
+		<div class="row">
+			<div class="col">
+				<h2>Edit Profile</h2>
+				<div class="user-form">
+					{{ form_start(form) }}
+					<div class="form-column">
+						<div class="identity-details">
+							<fieldset class="mb-3">
+								<legend>My profile</legend>
+								{{ form_row(form.username) }}
+								{{ form_row(form.email) }}
+								{{ form_row(form.phoneNumber) }}
+								{{ form_row(form.numStreet) }}
+								{{ form_row(form.city) }}
+								{{ form_row(form.zipCode) }}
+							</fieldset>
+						</div>
+						<div class="password">
+							<fieldset class="mb-3">
+								<legend>Password</legend>
+								{{ form_row(form.newPassword.first) }}
+								{{ form_row(form.newPassword.second) }}
+								{{ form_row(form.currentPassword) }}
+							</fieldset>
+						</div>
+					</div>
+					<div class="button-container">
+						<button type="submit" class="btn btn-success">Save</button>
+						<a href="{{ referer }}" class="btn btn-danger">Back</a>
+					</div>
+					{{ form_end(form) }}
+				</div>
 			</div>
 		</div>
-		<div class="button-container">
-			<button type="submit" class="btn btn-success">Save</button>
-			<a href="{{ referer }}" class="btn btn-danger">Back</a>
-		</div>
-		{{ form_end(form) }}
-	</div>
+	</section>
 {% endblock %}

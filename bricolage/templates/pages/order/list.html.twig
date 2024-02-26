@@ -17,9 +17,9 @@
                             {% endif %}
                             Reference: {{ order.reference }} -
                             Total: {{ order.total | number_format(2, ',', '.') }} € -
-                            Date: {{ order.dateOrder|date('d/m/Y') }} |
-                            Time: {{ order.dateOrder|date('H:i:s') }}
-                            <a href="{{ path('order_details', {'id': order.id}) }}" class="btn btn-success">View details</a>
+                            Date: {{ order.dateOrder|date('d M Y') }} |
+                            Time: {{ order.dateOrder|date('H:i') }}
+                            <a href="{{ path('order_details', {'id': order.id}) }}" class="btn btn-success">Details</a>
                         </li>
                     {% endif %}
                 {% endfor %}

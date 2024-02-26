@@ -4,46 +4,52 @@
 {% endblock %}
 
 {% block main %}
-	<div class="dispute-form">
-		<h2>Create Dispute</h2>
-		{% if not app.user %}
-			<div class="alert alert-warning" role="alert">
-				You must be logged in to create a dispute.
+	<section class="container">
+		<div class="row">
+			<div class="col">
+				<div class="dispute-form">
+					<h2>Create Dispute</h2>
+					{% if not app.user %}
+						<div class="alert alert-warning" role="alert">
+							You must be logged in to create a dispute.
+						</div>
+					{% endif %}
+					{{ form_start(form, {'attr': {'class': 'mb-3'}}) }}
+					{{ form_row(form.title) }}
+					{{ form_row(form.description) }}
+					{{ form_row(form.problemType) }}
+
+					<div id="blog-field" style="display: none;">
+						{{ form_row(form.blog) }}
+					</div>
+
+					<div id="project-field" style="display: none;">
+						{% if projects is not empty %}
+							{{ form_row(form.project) }}
+						{% else %}
+							<p>No project available</p>
+						{% endif %}
+					</div>
+
+					<div id="comment-field" style="display: none;">
+						{{ form_row(form.comment) }}
+					</div>
+
+					<div id="order-field" style="display: none;">
+						{% if orders is not empty %}
+							{{ form_row(form.order) }}
+						{% else %}
+							<p>No order available.</p>
+						{% endif %}
+					</div>
+				</div>
+				{% if app.user %}
+					<button type="submit" class="btn btn-success">Create</button>
+				{% else %}
+					<button type="button" class="btn btn-success" disabled>Create</button>
+				{% endif %}
+				{{ form_end(form) }}
 			</div>
-		{% endif %}
-		{{ form_start(form, {'attr': {'class': 'mb-3'}}) }}
-		{{ form_row(form.title) }}
-		{{ form_row(form.description) }}
-		{{ form_row(form.problemType) }}
-
-		<div id="blog-field" style="display: none;">
-			{{ form_row(form.blog) }}
 		</div>
-
-		<div id="project-field" style="display: none;">
-			{% if projects is not empty %}
-				{{ form_row(form.project) }}
-			{% else %}
-				<p>No project available</p>
-			{% endif %}
-		</div>
-
-		<div id="comment-field" style="display: none;">
-			{{ form_row(form.comment) }}
-		</div>
-
-		<div id="order-field" style="display: none;">
-			{% if orders is not empty %}
-				{{ form_row(form.order) }}
-			{% else %}
-				<p>No order available.</p>
-			{% endif %}
-		</div>
-	</div>
-	{% if app.user %}
-		<button type="submit" class="btn btn-success">Create</button>
-	{% else %}
-		<button type="button" class="btn btn-success" disabled>Create</button>
-	{% endif %}
-	{{ form_end(form) }}
+	</section>
 {% endblock %}

@@ -55,7 +55,7 @@ class ProjectController extends AbstractController
                 $this->projectMailer->sendProjectCreationNotification($handymanEmail, $userEmail, $project->getTitle(), $project->getDescription());
             }
 
-            $this->addFlash('message', 'Your project has been notified by one of our handymen, you will receive a message/email.');
+            $this->addFlash('info', 'Your project has been notified by one of our handymen, you will receive a message/email.');
             return $this->redirectToRoute('project_summary', ['id' => $project->getId()]);
         }
 
@@ -94,7 +94,7 @@ class ProjectController extends AbstractController
         $entityManager->remove($project);
         $entityManager->flush();
 
-        $this->addFlash('message', 'Your project has been cancelled ');
+        $this->addFlash('success', 'Your project has been cancelled ');
         return $this->redirectToRoute('project_index');
     }
 }

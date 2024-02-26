@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    public function __construct(private AdminUrlGenerator $adminUrlGenerator) 
+    public function __construct(private AdminUrlGenerator $adminUrlGenerator)
     {
 
     }
@@ -49,7 +49,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Hardware-Store | Admin')
+            ->setTitle('🛠️ Hardware-Store | Admin')
             ->renderContentMaximized();
     }
 

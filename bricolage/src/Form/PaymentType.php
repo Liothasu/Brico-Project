@@ -22,7 +22,7 @@ class PaymentType extends AbstractType
                     'Maestro' => 'maestro',
                 ],
                 'attr' => [
-                    'class' => 'mb-3', 
+                    'class' => 'form-select'
                 ],
             ]);
     }

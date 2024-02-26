@@ -4,13 +4,19 @@
 {% endblock %}
 
 {% block main %}
-	<h2>Request to create a project</h2>
-	<div class="project-form">
-		{{ form_start(form, {'attr': {'class': 'mb-3'}}) }}
-		{{ form_row(form.nameProject) }}
-		{{ form_row(form.title) }}
-		{{ form_row(form.description) }}
-	</div>
-	<button type="submit" class="btn btn-success">Create</button>
-	{{ form_end(form) }}
+	<section class="container">
+		<div class="row">
+			<div class="col">
+				<h2>Request to create a project</h2>
+				<div class="project-form">
+					{{ form_start(form, {'attr': {'class': 'mb-3'}}) }}
+					{{ form_row(form.nameProject) }}
+					{{ form_row(form.title) }}
+					{{ form_row(form.description) }}
+				</div>
+				<button type="submit" class="btn btn-success">Create</button>
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</section>
 {% endblock %}

@@ -1,29 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dispute details{% endblock %}
+{% block title %}Dispute details
+{% endblock %}
 
 {% block main %}
-    <h2>Dispute details</h2>
+	<section class="container">
+		<div class="row">
+			<div class="col">
+				<h2>Dispute details</h2>
+				<p>Title :
+					{{ dispute.title }}</p>
+				<p>Description :
+					{{ dispute.description }}</p>
+				<p>Problem type :
+					{{ dispute.problemType }}</p>
 
-    <p>Title : {{ dispute.title }}</p>
-    <p>Description : {{ dispute.description }}</p>
-    <p>Problem type : {{ dispute.problemType }}</p>
+				{% if dispute.blog %}
+					<p>Associated:
+						{{ dispute.blog.title }}</p>
+				{% endif %}
 
-    {% if dispute.blog %}
-        <p>Associated Blog: {{ dispute.blog.title }}</p>
-    {% endif %}
+				{% if dispute.project %}
+					<p>Associated:
+						<a href="{{ path('project_index', { 'id': dispute.project.id }) }}">{{ dispute.project.nameProject }}</a>
+					</p>
+				{% endif %}
 
-    {% if dispute.project %}
-        <p>Associated Project: <a href="{{ path('project_index', { 'id': dispute.project.id }) }}">{{ dispute.project.nameProject }}</a></p>
-    {% endif %}
+				{% if dispute.comment %}
+					<p>Associated:
+						{{ dispute.comment.content }}</p>
+				{% endif %}
 
-    {% if dispute.comment %}
-        <p>Associated Comment: {{ dispute.comment.content }}</p>
-    {% endif %}
-
-    {% if dispute.order %}
-        <p>Associated Order: <a href="{{ path('order_details', { 'id': dispute.order.id }) }}">Order #{{ dispute.order.reference }}</a></p>
-    {% endif %}
-        <a href="{{ path('contact_index') }}" type="submit" class="btn btn-success">Create another</a>
-        <a href="{{ path('contact_edit', {'id': dispute.id}) }}" type="submit" class="btn btn-info">Edit</a>
+				{% if dispute.order %}
+					<p>Associated:
+						<a href="{{ path('order_details', { 'id': dispute.order.id }) }}">Order #{{ dispute.order.reference }}</a>
+					</p>
+				{% endif %}
+				<a href="{{ path('contact_index') }}" type="submit" class="btn btn-success">Create another</a>
+				<a href="{{ path('contact_edit', {'id': dispute.id}) }}" type="submit" class="btn btn-primary">Edit</a>
+			</div>
+		</div>
+	</section>
 {% endblock %}

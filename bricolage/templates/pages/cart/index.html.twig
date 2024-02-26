@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Cart
+{% endblock %}
+
 {% block main %}
 	<main class="container">
 		<section class="row">
@@ -10,7 +13,7 @@
 						<thead>
 							<tr>
 								<th></th>
-								<th>Product</th>
+								<th>Name</th>
 								<th>Price</th>
 								<th>Price VAT</th>
 								<th>Quantity</th>
@@ -40,7 +43,7 @@
 										{% endif %}
 									</td>
 									<td>{{ element.product.nameProduct }}</td>
-									<td>{{ element.product.unitPrice }}
+									<td>{{ element.product.unitPrice | number_format(2, ',', '.') }}
 										€</td>
 									<td>
 										{% if discountedPrice != element.product.priceVAT %}
@@ -70,14 +73,14 @@
 						</tbody>
 					</table>
 
-					<a href="{{ path('product_all') }}" class="btn btn-primary">View all products</a>
+					<a href="{{ path('product_all') }}" class="btn btn-primary">All other products</a>
 					<div class="d-flex justify-content-end">
 						<p>Total:
 							{{ total | number_format(2, ',', '.') }}
 							€</p>
 					</div>
 					<div class="d-flex justify-content-end">
-						<a href="{{ path('order_add') }}" class="btn btn-primary mx-2">Proceed to Checkout</a>
+						<a href="{{ path('order_add') }}" class="btn btn-success mx-2">Proceed to Checkout</a>
 						<a href="{{ path('cart_empty') }}" class="btn btn-danger">Empty Cart</a>
 					</div>
 				{% else %}

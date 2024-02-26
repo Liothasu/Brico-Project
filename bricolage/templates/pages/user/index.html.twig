@@ -51,7 +51,7 @@
 					{% for blog in app.user.blogs %}
 						<p>Title:
 							{{ blog.title }}</p>
-						<a href="{{ path('blog_show', {'slug': blog.slug}) }}" class="btn btn-primary">Go to the blog</a>
+						<a href="{{ path('blog_show', {'slug': blog.slug}) }}" class="btn btn-primary">Details</a>
 					{% endfor %}
 				{% endif %}
 			</div>

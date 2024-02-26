@@ -3,15 +3,13 @@
 {% block title %}Log in{% endblock %}
 
 {% block main %}
-    {% block section %}
-        {% if is_granted("IS_AUTHENTICATED_FULLY") %}
-                <div class="alert alert-success" role="alert">
-                    Your registration has been successfully created !
-                </div>
-                    <h2>Please verify your email in your box mail.</h2>
-            {% else %}
-                <h2>Your email has been checked! You can return to the home page.</h2>
-                <a href="/" class="btn btn-primary">Back home</a>
-            {% endif %}
-    {% endblock %}
+    {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+            <div class="alert alert-success" role="alert">
+                Your registration has been successfully created !
+            </div>
+                <h2>Please verify your email in your box mail.</h2>
+        {% else %}
+            <h2>Your email has been checked! You can return to the home page.</h2>
+            <a href="/" class="btn btn-primary">Back home</a>
+        {% endif %}
 {% endblock %}
