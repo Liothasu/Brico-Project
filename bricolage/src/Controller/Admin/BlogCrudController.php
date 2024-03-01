@@ -5,11 +5,16 @@ namespace App\Controller\Admin;
 use App\Entity\Blog;
 use App\Form\CommentType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -21,6 +26,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BlogCrudController extends AbstractCrudController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Blog::class;
@@ -39,14 +51,10 @@ class BlogCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $viewBlog);
     }
 
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud->setEntityPermission('ROLE_HANDYMAN');
-    }
-
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('author');
+        yield AssociationField::new('author')
+            ->hideOnForm();
 
         yield TextField::new('title');
 
@@ -97,5 +105,29 @@ class BlogCrudController extends AbstractCrudController
         return $this->redirectToRoute('blog_show', [
             'slug' => $blog->getSlug()
         ]);
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $userRole = $this->getUser()->getRoles();
+
+        $blogRepository = $this->entityManager->getRepository(Blog::class);
+        $queryBuilder = $blogRepository->createQueryBuilder('b');
+
+        $queryBuilder->leftJoin('b.author', 'author');
+
+        switch ($userRole[0]) {
+            case 'ROLE_ADMIN':
+                break;
+            case 'ROLE_HANDYMAN':
+                $queryBuilder->andWhere('author = :user')
+                    ->setParameter('user', $this->getUser());
+                break;
+            default:
+                $queryBuilder->andWhere('1 = 0');
+                break;
+        }
+
+        return $queryBuilder;
     }
 }

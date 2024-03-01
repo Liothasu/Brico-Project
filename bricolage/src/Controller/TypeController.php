@@ -18,8 +18,6 @@ class TypeController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $types = $typeRepository->findAll();
-
         return $this->render('pages/type/index.html.twig', [
             'entity' => $type,
             'types' => $typeRepository->findAllForWidget(),

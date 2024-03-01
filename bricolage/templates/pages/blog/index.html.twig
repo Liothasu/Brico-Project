@@ -10,9 +10,9 @@
 	<section class="container">
 		<h2 class="blog-title">{{ blog.title }}</h2>
 		<img src="{{ asset('uploads/' ~ entity.featuredMedia.filename) }}" alt="{{ entity.featuredMedia.altText ?? 'Featured Image' }}" width="350" height="205">
-		{% if blog.author == app.user %}
-			<a href="{{ path('blog_edit', {'id': blog.id}) }}" style="margin-left: 1rem;" class="btn btn-primary">Edit Blog</a>
-		{% endif %}
+			{# {% if blog.author == app.user %}
+				<a href="{{ path('blog_edit', {'id': blog.id}) }}" style="margin-left: 1rem;" class="btn btn-primary">Edit Blog</a>
+			{% endif %} #}
 		<hr>
 		<div id="blog-content" class="blog-content">
 			<p>

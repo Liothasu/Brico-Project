@@ -65,88 +65,88 @@ class BlogController extends AbstractController
         return $this->json($comments);
     }
 
-    #[Route('/new', name: 'blog_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
-    {
-        $blog = new Blog();
-        $form = $this->createForm(BlogType::class, $blog);
-        $form->handleRequest($request);
+    // #[Route('/new', name: 'blog_new')]
+    // public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    // {
+    //     $blog = new Blog();
+    //     $form = $this->createForm(BlogType::class, $blog);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form->get('featuredMedia')->getData();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $imageFile = $form->get('featuredMedia')->getData();
 
-            if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+    //         if ($imageFile) {
+    //             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+    //             $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
 
-                $imageFile->move(
-                    $this->getParameter('kernel.project_dir') . '/public/uploads',
-                    $newFilename
-                );
+    //             $imageFile->move(
+    //                 $this->getParameter('kernel.project_dir') . '/public/uploads',
+    //                 $newFilename
+    //             );
 
-                $media = new Media();
-                $media->setName($originalFilename);
-                $media->setFilename($newFilename);
+    //             $media = new Media();
+    //             $media->setName($originalFilename);
+    //             $media->setFilename($newFilename);
 
-                $entityManager->persist($media);
-                $entityManager->flush();
+    //             $entityManager->persist($media);
+    //             $entityManager->flush();
 
-                $blog->setFeaturedMedia($media);
-            }
+    //             $blog->setFeaturedMedia($media);
+    //         }
 
-            $blog->setSlug($slugger->slug($blog->getTitle())->toString());
-            $blog->setAuthor($this->getUser());
+    //         $blog->setSlug($slugger->slug($blog->getTitle())->toString());
+    //         $blog->setAuthor($this->getUser());
 
-            $entityManager->persist($blog);
-            $entityManager->flush();
+    //         $entityManager->persist($blog);
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
-        }
+    //         return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
+    //     }
 
-        $referer = $request->headers->get('referer');
+    //     $referer = $request->headers->get('referer');
 
-        return $this->render('pages/blog/new.html.twig', [
-            'form' => $form->createView(),
-            'referer' => $referer,
-        ]);
-    }
+    //     return $this->render('pages/blog/new.html.twig', [
+    //         'form' => $form->createView(),
+    //         'referer' => $referer,
+    //     ]);
+    // }
 
-    #[Route('/blog/edit/{id}', name: 'blog_edit')]
-    public function edit(Request $request, EntityManagerInterface $entityManager, Blog $blog): Response
-    {
-        $form = $this->createForm(BlogEditType::class, $blog);
+    // #[Route('/blog/edit/{id}', name: 'blog_edit')]
+    // public function edit(Request $request, EntityManagerInterface $entityManager, Blog $blog): Response
+    // {
+    //     $form = $this->createForm(BlogEditType::class, $blog);
 
-        $form->handleRequest($request);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+    //     if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager->flush();
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
-        }
+    //         return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
+    //     }
 
-        $referer = $request->headers->get('referer');
+    //     $referer = $request->headers->get('referer');
 
-        return $this->render('pages/blog/edit.html.twig', [
-            'form' => $form->createView(),
-            'referer' => $referer,
-            'blog' => $blog,
-        ]);
-    }
+    //     return $this->render('pages/blog/edit.html.twig', [
+    //         'form' => $form->createView(),
+    //         'referer' => $referer,
+    //         'blog' => $blog,
+    //     ]);
+    // }
 
-    #[Route('blog/delete/{id}', name: 'blog_delete')]
-    public function deleteProject(Blog $blog, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
+    // #[Route('blog/delete/{id}', name: 'blog_delete')]
+    // public function deleteProject(Blog $blog, EntityManagerInterface $entityManager): Response
+    // {
+    //     $user = $this->getUser();
 
-        if ($user !== $blog->getAuthor()) {
-           return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
-        }
+    //     if ($user !== $blog->getAuthor()) {
+    //        return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
+    //     }
 
-        $entityManager->remove($blog);
-        $entityManager->flush();
+    //     $entityManager->remove($blog);
+    //     $entityManager->flush();
 
-        $this->addFlash('message', 'Your blog has been cancelled');
-       return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
-    }
+    //     $this->addFlash('message', 'Your blog has been cancelled');
+    //    return $this->redirectToRoute('blog_show', ['slug' => $blog->getSlug()]);
+    // }
 }
