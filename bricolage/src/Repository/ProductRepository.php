@@ -7,7 +7,7 @@ use App\Entity\Product;
 use App\Model\FilterData;
 use App\Model\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -44,56 +44,45 @@ class ProductRepository extends ServiceEntityRepository
 
     public function findBySearch(SearchData $searchData): PaginationInterface
     {
-        $data = $this->createQueryBuilder('p');
+        $queryBuilder = $this->createQueryBuilder('p');
 
         if (!empty($searchData->q)) {
-            $data = $data
+            $queryBuilder
                 ->join('p.category', 'c')
                 ->andWhere('(p.nameProduct LIKE :q OR c.name LIKE :q)')
                 ->setParameter('q', "%{$searchData->q}%");
         }
 
-        $data = $data
-            ->getQuery()
-            ->getResult();
-
-        $products = $this->paginatorInterface->paginate($data, $searchData->page, 9);
-
-        return $products;
+        return $this->paginatorInterface->paginate($queryBuilder->getQuery(), $searchData->page, 10);
     }
 
     public function findByFilter(FilterData $filterData): PaginationInterface
     {
-        $data = $this->createQueryBuilder('p');
+        $queryBuilder = $this->createQueryBuilder('p');
 
         if (!empty($filterData->categories)) {
-            $data = $data
+            $queryBuilder
                 ->join('p.category', 'cat')
                 ->andWhere('cat.id IN (:categories)')
                 ->orderBy('p.nameProduct', 'ASC')
                 ->setParameter('categories', $filterData->categories);
         }
 
-        $data = $data
-            ->getQuery()
-            ->getResult();
-
-        $products = $this->paginatorInterface->paginate($data, $filterData->page, 9);
-
-        return $products;
+        return $this->paginatorInterface->paginate($queryBuilder->getQuery(), $filterData->page, 3);
     }
 
-    // public function findForPagination(?Category $category = null): Query
-    // {
-    //     $qb = $this->createQueryBuilder('p')
-    //         ->orderBy('p.nameProduct', 'ASC');
+    public function findForPagination(?Category $category = null): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->orderBy('p.nameProduct', 'ASC');
 
-    //     if ($category) {
-    //         $qb->leftJoin('p.categories', 'c')
-    //             ->where($qb->expr()->eq('c.id', ':id'))
-    //             ->setParameter('id', $category->getId());
-    //     }
+        if ($category) {
+            $queryBuilder
+                ->leftJoin('p.categories', 'c')
+                ->where($queryBuilder->expr()->eq('c.id', ':id'))
+                ->setParameter('id', $category->getId());
+        }
 
-    //     return $qb->getQuery();
-    // }
+        return $queryBuilder;
+    }
 }

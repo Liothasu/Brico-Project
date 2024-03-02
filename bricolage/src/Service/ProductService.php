@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ProductService
 {
-    public function __construct(private RequestStack $requestStack, private ProductRepository $productRepository, private PaginatorInterface $paginator) 
+    public function __construct(private RequestStack $requestStack, private ProductRepository $productRepository, private PaginatorInterface $paginator)
     {
 
     }
@@ -21,7 +21,7 @@ class ProductService
         $request = $this->requestStack->getMainRequest();
         $productsQuery = $this->productRepository->findForPagination($category);
         $page = $request->query->getInt('page', 1);
-        $limit = 4;
+        $limit = 3;
 
         return $this->paginator->paginate($productsQuery, $page, $limit);
     }

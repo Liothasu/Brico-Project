@@ -93,7 +93,8 @@
 														{{ product.stock }}
 														left in stock.
 													{% else %}
-														<i class="fa-solid fa-circle-check"></i> Available
+														<i class="fa-solid fa-circle-check"></i>
+														Available
 													{% endif %}
 												</li>
 											{% endif %}
@@ -102,7 +103,9 @@
 											{% if product.stock > 0 %}
 												<a href="{{ path('cart_add', {id: product.id}) }}" class="btn btn-success">Add to cart</a>
 											{% else %}
-												<p class="text-danger"><i class="fa-solid fa-circle-xmark"></i> Temporary out of stock.</p>
+												<p class="text-danger">
+													<i class="fa-solid fa-circle-xmark"></i>
+													Temporary out of stock.</p>
 											{% endif %}
 											<a href="{{ path('product_detail', {'id': product.id}) }}" class="btn btn-primary">View product</a>
 										</div>
@@ -113,9 +116,11 @@
 					{% endfor %}
 				</div>
 			</div>
-			{# <div class="page_products">
-										{{ knp_pagination_render(productsPage) }}
-									</div> #}
+			{% if productsPage is not null %}
+				<div class="page-custom">
+					{{ knp_pagination_render(productsPage) }}
+				</div>
+			{% endif %}
 		{% else %}
 			<p>No products available in this category.</p>
 		{% endif %}
