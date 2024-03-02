@@ -12,12 +12,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class BlogService
 {
-    public function __construct(
-        private RequestStack $requestStack,
-        private BlogRepository $blogRepository,
-        private ConfigService $configService,
-        private PaginatorInterface $paginator
-    ) {
+    public function __construct(private RequestStack $requestStack, private BlogRepository $blogRepository, private ConfigService $configService, private PaginatorInterface $paginator) 
+    {
+
     }
 
     public function getPaginatedBlogs(?Type $type = null): PaginationInterface

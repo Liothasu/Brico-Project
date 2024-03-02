@@ -9,9 +9,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class DatabaseService
 {
-    public function __construct(
-        private KernelInterface $kernel
-    ) {}
+    public function __construct(private KernelInterface $kernel) 
+    {
+
+    }
 
     public function createDatabase(): bool
     {

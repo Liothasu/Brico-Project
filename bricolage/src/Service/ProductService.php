@@ -11,11 +11,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ProductService
 {
-    public function __construct(
-        private RequestStack $requestStack,
-        private ProductRepository $productRepository,
-        private PaginatorInterface $paginator
-    ) {
+    public function __construct(private RequestStack $requestStack, private ProductRepository $productRepository, private PaginatorInterface $paginator) 
+    {
+
     }
 
     public function getPaginatedProduts(?Category $category = null): PaginationInterface

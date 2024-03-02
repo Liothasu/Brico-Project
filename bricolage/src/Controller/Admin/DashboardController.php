@@ -82,7 +82,6 @@ class DashboardController extends AbstractDashboardController
 
             yield MenuItem::subMenu('Projects', 'fa-solid fa-pen-ruler')->setSubItems([
                 MenuItem::linkToCrud('All Projects', 'fa-solid fa-pen-ruler', Project::class),
-                MenuItem::linkToCrud('Add', 'fas fa-plus', Project::class)->setAction(Crud::PAGE_NEW),
             ]);
         }
 

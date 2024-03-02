@@ -19,13 +19,6 @@ class ReplyMessageType extends AbstractType
                     'class' => 'form-control'
                 ]
             ]);
-            // ->add('original_title', TextType::class, [
-            //     'data' => $options['original_title'],
-            //     'mapped' => false, 
-            //     'attr' => [
-            //         'style' => 'display:none;',
-            //     ],
-            // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

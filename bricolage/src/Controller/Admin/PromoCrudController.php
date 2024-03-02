@@ -18,11 +18,6 @@ class PromoCrudController extends AbstractCrudController
         return Promo::class;
     }
 
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions;
-    }
-
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('name');
@@ -42,7 +37,7 @@ class PromoCrudController extends AbstractCrudController
             ->setFormTypeOptions([
                 'by_reference' => false,
                 'multiple' => true,
-        ]);
+            ]);
     }
 
     public function configureCrud(Crud $crud): Crud

@@ -23,13 +23,6 @@ class ProjectCrudController extends AbstractCrudController
         return $actions
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(Crud::PAGE_INDEX, Action::NEW);
-
-        //Add perm HANDYMAN AND USER
-    }
-
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud->setEntityPermission('ROLE_HANDYMAN');
     }
 
     public function configureFields(string $pageName): iterable
@@ -43,5 +36,4 @@ class ProjectCrudController extends AbstractCrudController
 
         yield TextEditorField::new('description');
     }
-
 }

@@ -18,16 +18,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class CommentService
 {
-    public function __construct(
-        private BlogRepository $blogRepository,
-        private CommentRepository $commentRepository,
-        private EntityManagerInterface $em,
-        private NormalizerInterface $normalizer,
-        private PaginatorInterface $paginator,
-        private RequestStack $requestStack,
-        private TokenStorageInterface $tokenStorage,
-        private Security $security
-    ) {
+    public function __construct(private BlogRepository $blogRepository, private CommentRepository $commentRepository, private EntityManagerInterface $em,
+        private NormalizerInterface $normalizer, private PaginatorInterface $paginator, private RequestStack $requestStack, private TokenStorageInterface $tokenStorage, private Security $security) 
+    {
+
     }
 
     public function getPaginatedComments(?Blog $blog = null): PaginationInterface
@@ -40,7 +34,6 @@ class CommentService
 
         return $this->paginator->paginate($commentsQuery, $page, $limit);
     }
-
 
     public function add(array $data, Blog $blog, ?Comment $parent = null, bool $isAnswer = false): ?Comment
     {

@@ -38,13 +38,16 @@ class MessageCrudController extends AbstractCrudController
             );
         }
 
-        return [
-            TextField::new('title'),
-            TextEditorField::new('content'),
-            DateTimeField::new('timeMsg', 'Date - Time'),
-            $isReadField,
-            AssociationField::new('sender'),
-            AssociationField::new('recipient'),
-        ];
+        yield TextField::new('title');
+
+        yield TextEditorField::new('content');
+
+        yield DateTimeField::new('timeMsg', 'Date - Time');
+
+        $isReadField;
+
+        yield AssociationField::new('sender');
+
+        yield AssociationField::new('recipient');
     }
 }

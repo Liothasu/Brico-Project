@@ -14,7 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCrudController extends AbstractCrudController
 {
-    public function __construct(private UserPasswordHasherInterface $passwordHasher) 
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
 
     }
@@ -30,16 +30,10 @@ class UserCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::NEW);
     }
 
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud
-            ->setEntityLabelInSingular('User')
-            ->setEntityLabelInPlural('Users');
-    }
-
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('username');
+
         yield ChoiceField::new('roles')
             ->allowMultipleChoices()
             ->renderAsBadges([
@@ -52,12 +46,19 @@ class UserCrudController extends AbstractCrudController
                 'Handyman' => 'ROLE_HANDYMAN',
                 'Customer' => 'ROLE_USER',
             ]);
+
         yield TextField::new('lastName');
+
         yield TextField::new('firstName');
+
         yield TextField::new('email');
+
         yield TextField::new('phoneNumber');
+
         yield TextField::new('numStreet');
+
         yield TextField::new('city');
+
         yield IntegerField::new('zipCode');
     }
 }

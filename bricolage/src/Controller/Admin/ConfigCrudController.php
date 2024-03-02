@@ -24,9 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ConfigCrudController extends AbstractCrudController
 {
-    public function __construct(
-        private ConfigRepository $configRepository
-    )
+    public function __construct(private ConfigRepository $configRepository)
     {
     }
 
@@ -46,7 +44,6 @@ class ConfigCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityPermission('ROLE_ADMIN')
             ->setSearchFields(null)
             ->setEntityLabelInPlural('General settings')
             ->showEntityActionsInlined();

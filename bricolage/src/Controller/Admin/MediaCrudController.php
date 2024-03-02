@@ -46,5 +46,4 @@ class MediaCrudController extends AbstractCrudController
 
         parent::persistEntity($entityManager, $media);
     }
-
 }

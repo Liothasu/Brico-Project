@@ -16,11 +16,6 @@ class TypeCrudController extends AbstractCrudController
         return Type::class;
     }
 
-    public function configureCrud(Crud $crud): Crud
-    {
-        return $crud->setPageTitle(Crud::PAGE_INDEX, 'Types');
-    }
-
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('name');

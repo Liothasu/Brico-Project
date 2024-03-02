@@ -27,23 +27,32 @@ class DisputeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            AssociationField::new('user'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-            TextField::new('problemType'),
-            AssociationField::new('blog')->formatValue(function ($value) {
+        yield AssociationField::new('user');
+
+        yield TextField::new('title');
+
+        yield TextEditorField::new('description');
+
+        yield TextField::new('problemType');
+
+        yield AssociationField::new('blog')
+            ->formatValue(function ($value) {
                 return $value ?: '-';
-            }),
-            AssociationField::new('project')->formatValue(function ($value) {
+            });
+
+        yield AssociationField::new('project')
+            ->formatValue(function ($value) {
                 return $value ?: '-';
-            }),
-            AssociationField::new('comment')->formatValue(function ($value) {
+            });
+
+        yield AssociationField::new('comment')
+            ->formatValue(function ($value) {
                 return $value ?: '-';
-            }),
-            AssociationField::new('order')->formatValue(function ($value) {
+            });
+
+        yield AssociationField::new('order')
+            ->formatValue(function ($value) {
                 return $value ?: '-';
-            }),
-        ];
+            });
     }
 }
