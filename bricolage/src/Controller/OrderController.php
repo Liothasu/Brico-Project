@@ -216,6 +216,15 @@ class OrderController extends AbstractController
         }
 
         if (!in_array('ORDER_CANCELED', $order->getStatutOrders(), true)) {
+            // Restoring the stock for each product in the canceled order
+            foreach ($order->getLineOrders() as $lineOrder) {
+                $product = $lineOrder->getProduct();
+                $quantity = $lineOrder->getQuantity();
+                $currentStock = $product->getStock();
+                $product->setStock($currentStock + $quantity);
+                $em->persist($product);
+            }
+
             $order->setStatutOrders(['ORDER_CANCELED']);
 
             $em->persist($order);

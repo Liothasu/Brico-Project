@@ -36,7 +36,7 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $filterData->page = $request->query->getInt('page', 1);
             $products = $productRepository->findByFilter($filterData);
-            $productsPage = $productService->getPaginatedProduts();
+            // $productsPage = $productService->getPaginatedProduts();
         }
 
         foreach ($products as $product) {
@@ -54,7 +54,7 @@ class ProductController extends AbstractController
             'activePromos' => $activePromos,
             'discountedPrices' => $discountedPrices,
             'categories' => $categories,
-            'productsPage' => $productsPage,
+            // 'productsPage' => $productsPage,
         ]);
     }
 

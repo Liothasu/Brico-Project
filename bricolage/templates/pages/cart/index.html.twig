@@ -22,53 +22,54 @@
 						</thead>
 						<tbody>
 							{% for element in data %}
-								{% set discountedPrice = element.product.priceVAT %}
-								{% if element.product.promos is not empty %}
-									{% set promo = element.product.promos.first %}
-									{% if promo.isActivePromo() %}
-										{% set discountedPrice = element.product.priceVAT * (1 - promo.getPercent() / 100) %}
+								{% if element.product is not null %}
+									{% set discountedPrice = element.product.priceVAT %}
+									{% if element.product.promos is not empty %}
+										{% set promo = element.product.promos.first %}
+										{% if promo.isActivePromo() %}
+											{% set discountedPrice = element.product.priceVAT * (1 - promo.getPercent() / 100) %}
+										{% endif %}
 									{% endif %}
-								{% endif %}
-								<tr>
-									<td>
-										{% if element.product.images is not empty %}
-											{% set firstImage = element.product.images.first %}
-											{% if firstImage %}
-												<img src="/uploads/{{ firstImage.filename }}" class="img-fluid" style="max-width: 150px;" alt="{{ firstImage.altText }}">
+									<tr>
+										<td>
+											{% if element.product.images is not empty %}
+												{% set firstImage = element.product.images.first %}
+												{% if firstImage %}
+													<img src="/uploads/{{ firstImage.filename }}" class="img-fluid" style="max-width: 150px;" alt="{{ firstImage.altText }}">
+												{% else %}
+													No image
+												{% endif %}
 											{% else %}
 												No image
 											{% endif %}
-										{% else %}
-											No image
-										{% endif %}
-									</td>
-									<td>{{ element.product.nameProduct }}</td>
-									<td>{{ element.product.unitPrice | number_format(2, ',', '.') }}
-										€</td>
-									<td>
-										{% if discountedPrice != element.product.priceVAT %}
-											<del>{{ element.product.priceVAT | number_format(2, ',', '.') }}
-												€</del>
-											<br>
-										{% endif %}
-										{{ discountedPrice | number_format(2, ',', '.') }}
-										€
-									</td>
-									<td>
-										<a href="{{ path('cart_remove', {id: element.product.id}) }}" class="btn btn-sm btn-secondary">
-											<i class="fa-solid fa-minus"></i>
-										</a>
-										{{ element.quantity }}
-										<a href="{{ path('cart_add', {id: element.product.id}) }}" class="btn btn-sm btn-secondary">
-											<i class="fa-solid fa-plus"></i>
-										</a>
-									</td>
-									<td>
-										<a href="{{ path('cart_delete', {id: element.product.id}) }}" class="btn btn-danger">
-											<i class="fa-solid fa-trash-can"></i>
-										</a>
-									</td>
-								</tr>
+										</td>
+										<td>{{ element.product.nameProduct }}</td>
+										<td>{{ element.product.unitPrice | number_format(2, ',', '.') }}
+											€</td>
+										<td>
+											{% if discountedPrice != element.product.priceVAT %}
+												<del>{{ element.product.priceVAT | number_format(2, ',', '.') }}
+													€</del><br>
+											{% endif %}
+											{{ discountedPrice | number_format(2, ',', '.') }}
+											€
+										</td>
+										<td>
+											<a href="{{ path('cart_remove', {id: element.product.id}) }}" class="btn btn-sm btn-secondary">
+												<i class="fa-solid fa-minus"></i>
+											</a>
+											{{ element.quantity }}
+											<a href="{{ path('cart_add', {id: element.product.id}) }}" class="btn btn-sm btn-secondary">
+												<i class="fa-solid fa-plus"></i>
+											</a>
+										</td>
+										<td>
+											<a href="{{ path('cart_delete', {id: element.product.id}) }}" class="btn btn-danger">
+												<i class="fa-solid fa-trash-can"></i>
+											</a>
+										</td>
+									</tr>
+								{% endif %}
 							{% endfor %}
 						</tbody>
 					</table>

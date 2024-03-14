@@ -7,11 +7,11 @@
 {% block main %}
 	<h3>{{ product.nameProduct }}
 		{{ product.color }}</h3>
-	<div class="card mb-3" style="max-width: 900px; height: 350px;">
+	<div class="card mb-3" style="max-width: 900px; height: 365px;">
 		<div class="row g-0">
 			<div class="col-md-4">
-				{% if product.images|length > 0 %}
-					<div id="carouselExampleIndicators{{ product.id }}" class="carousel slide">
+				{% if product.images|length > 1 %}
+					<div id="carouselExampleIndicators{{ product.id }}" class="carousel carousel-dark slide">
 						<div class="carousel-indicators">
 							{% for loopIndex, image in product.images %}
 								<button type="button" data-bs-target="#carouselExampleIndicators{{ product.id }}" data-bs-slide-to="{{ loopIndex }}" {% if loopIndex == 0 %} class="active" {% endif %}></button>
@@ -20,7 +20,7 @@
 						<div class="carousel-inner">
 							{% for loopIndex, image in product.images %}
 								<div class="carousel-item{% if loopIndex == 0 %} active{% endif %}">
-									<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}" style="object-fit: cover; height: 350px; border-radius: 10px 0 0 10px;">
+									<img src="/uploads/{{ image.filename }}" class="d-block w-100" alt="{{ image.altText }}" style="object-fit: contain; height: 350px; border-radius: 10px 0 0 10px;">
 								</div>
 							{% endfor %}
 						</div>
@@ -31,6 +31,9 @@
 							<span class="carousel-control-next-icon" aria-hidden="true"></span>
 						</button>
 					</div>
+				{% elseif product.images|length == 1 %}
+					{% set firstImage = product.images.first %}
+					<img src="/uploads/{{ firstImage.filename }}" class="d-block w-100" alt="{{ firstImage.altText }}" style="object-fit: contain; height: 350px; border-radius: 10px;">
 				{% else %}
 					<p>No image</p>
 				{% endif %}
@@ -42,7 +45,8 @@
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item">
 						<strong>Color:</strong>
-						{{ product.color }}</li>
+						{{ product.color }}
+					</li>
 					<li class="list-group-item">
 						<strong>Price excluding tax:</strong>
 						{{ product.unitPrice | number_format(2, ',', '.') }}
@@ -50,14 +54,13 @@
 					</li>
 					{% if product.promos is not empty and discountedPrices[product.id] is defined %}
 						<li class="list-group-item">
-							<strong>Price VAT:
-							</strong>
+							<strong>Price VAT:</strong>
 							<span class="strike-through">{{ product.priceVAT | number_format(2, ',', '.') }}
 								€</span>
-							<span class="promo_red">
+							<strong class="promo_red">
 								{{ discountedPrices[product.id] | number_format(2, ',', '.') }}
 								€
-							</span>
+							</strong>
 						</li>
 					{% else %}
 						<li class="list-group-item">
@@ -67,8 +70,7 @@
 					{% endif %}
 					<li class="list-group-item">{{ product.supplier }}
 						-
-						{{ product.supplier.city }}
-					</li>
+						{{ product.supplier.city }}</li>
 					<li class="list-group-item">{{ product.reference }}</li>
 					{% if product.stock > 0 %}
 						<li class="list-group-item {% if product.stock <= 5 %}low-stock{% else %}high-stock{% endif %}">
@@ -76,27 +78,28 @@
 								<i class="fa-solid fa-hourglass-half"></i>
 								Almost sold out,
 								{{ product.stock }}
-								left in stock
+								left in stock.
 							{% else %}
 								<i class="fa-solid fa-circle-check"></i>
 								Available
 							{% endif %}
 						</li>
+					{% else %}
+						<li class="list-group-item text-danger">
+							<i class="fa-solid fa-circle-xmark"></i>
+							Temporary out of stock.
+						</li>
 					{% endif %}
 				</ul>
-				<div class="card-body">
-					{% if product.stock > 0 %}
+				{% if product.stock > 0 %}
+					<div class="card-footer d-flex justify-content-end">
 						<a href="{{ path('cart_add', {id: product.id}) }}" class="btn btn-success">Add to cart</a>
-					{% else %}
-						<p class="text-danger">
-							<i class="fa-solid fa-circle-xmark"></i>
-							Temporary out of stock.</p>
-					{% endif %}
-				</div>
+					</div>
+				{% endif %}
 			</div>
-			<div>
-				<a href="{{ path('product_all') }}" class="btn btn-success">View all products</a>
-			</div>
+		</div>
+		<div>
+			<a href="{{ path('product_all') }}" class="btn btn-success">View all products</a>
 		</div>
 	</div>
 {% endblock %}

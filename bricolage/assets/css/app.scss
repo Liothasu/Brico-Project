@@ -110,11 +110,6 @@ nav {
   }
 }
 
-// Dropdown content
-// .dropdown-content {
-//   margin-top: 0;
-// }
-
 .nav-right {
   .btn.btn-danger {
     margin-bottom: 5px;
@@ -229,17 +224,35 @@ footer {
 
 //All Form
 main {
+  .form-check {
+    margin-bottom: 25px;
+  }
+
   form {
-    max-width: 400px;
     input,
     textarea {
       margin-bottom: 10px;
     }
   }
+
+  form:not(.form-check form) {
+    max-width: 400px;
+  }
 }
 
-//category list
+//Card product
+.col-md-4.mb-4,
 .col-md-4 {
+  margin-bottom: 50px;
+}
+
+.card.h-100,
+.card.mb-3 {
+  max-width: 540px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.row.product {
   margin-bottom: 50px;
 }
 
@@ -279,17 +292,6 @@ main {
 
 .promo_red {
   color: red;
-}
-
-.card.mb-3 {
-  max-width: 540px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
-}
-
-// Filter Product
-.form-check {
-  padding-left: 0;
-  margin-bottom: 25px;
 }
 
 //Show Profile

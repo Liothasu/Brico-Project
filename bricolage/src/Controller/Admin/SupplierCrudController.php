@@ -18,9 +18,6 @@ class SupplierCrudController extends AbstractCrudController
     {
         yield TextField::new('nameFactory');
 
-        yield SlugField::new('slug')
-            ->setTargetFieldName('nameFactory');
-
         yield TextField::new('city');
     }
 }

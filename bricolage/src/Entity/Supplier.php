@@ -11,8 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
 class Supplier
 {
-    use SlugTrait;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
