@@ -27,22 +27,26 @@ class CartController extends AbstractController
         foreach ($cart as $id => $item) {
             $product = $productRepository->find($id);
 
-            $data[] = [
-                'product' => $product,
-                'quantity' => $item['quantity']
-            ];
+            if ($product) {
+                $data[] = [
+                    'product' => $product,
+                    'quantity' => $item['quantity']
+                ];
 
-            $discountedPrice = $item['discountedPrice'];
+                $discountedPrice = $product->getPriceVAT();
 
-            $activePromos = $promoRepository->findActivePromos();
-            foreach ($activePromos as $promo) {
-                if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
-                    $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
-                    break;
+                if ($product->getPromos() !== null) {
+                    $activePromos = $promoRepository->findActivePromos();
+                    foreach ($activePromos as $promo) {
+                        if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
+                            $discountedPrice = $product->getPriceVAT() * (1 - $promo->getPercent() / 100);
+                            break;
+                        }
+                    }
                 }
-            }
 
-            $total += ($discountedPrice * $item['quantity']);
+                $total += ($discountedPrice * $item['quantity']);
+            }
         }
 
         return $this->render('pages/cart/index.html.twig', compact('data', 'total'));

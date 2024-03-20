@@ -252,6 +252,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getFullAddress(): string
+    {
+        return $this->numStreet . ' ' . $this->city . ' - ' . $this->zipCode;
+    }
+
     /**
     * @see UserInterface
     */

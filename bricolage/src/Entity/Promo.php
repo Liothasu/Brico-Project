@@ -57,10 +57,9 @@ class Promo
         return $this->percent;
     }
 
-    public function setPercent(float $percent): static
+    public function setPercent(float $percent): self
     {
         $this->percent = $percent;
-
         return $this;
     }
 

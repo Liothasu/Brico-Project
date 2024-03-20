@@ -3,7 +3,16 @@
 {% block main %}
 	<section class="container">
 		<div class="row">
-			<div class="col-10">
+			<div class="col-md-6">
+				<h2>Delivery Information</h2>
+				<p>Your Address:
+					{{ app.user.getFullAddress() }}</p>
+
+				{% set deliveryDate = order.getDateOrder()|date_modify('+3 days') %}
+				<p>Estimated Delivery Date:
+					{{ deliveryDate|date('d-m-Y') }}</p>
+			</div>
+			<div class="col-md-6">
 				<h2>Order Payment</h2>
 
 				<table class="table table-striped">
@@ -64,7 +73,7 @@
 						<p class="mb-2">Payment method:</p>
 						<div class="d-flex justify-content-between">
 							{{ form_row(paymentForm.paymentMode) }}
-							<button type="submit" class="btn btn-primary">Pay now</button>
+							<button type="submit" class="btn btn-primary">Pay with Stripe</button>
 						</div>
 						{{ form_end(paymentForm) }}
 					</form>

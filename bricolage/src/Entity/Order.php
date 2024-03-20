@@ -35,6 +35,9 @@ class Order
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private $is_valid = false;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $stripeSessionId;
+
     #[ORM\OneToMany(mappedBy: 'order', targetEntity: LineOrder::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $lineOrders;
 
@@ -131,6 +134,17 @@ class Order
         return $this;
     }
 
+    public function getStripeSessionId()
+    {
+        return $this->stripeSessionId;
+    }
+
+    public function setStripeSessionId($stripeSessionId): self
+    {
+        $this->stripeSessionId = $stripeSessionId;
+
+        return $this;
+    }
 
     /**
      * @return Collection|LineOrder[]
@@ -177,9 +191,9 @@ class Order
 
     public function setUser(?User $user): self
     {
-    $this->user = $user;
+        $this->user = $user;
 
-    return $this;
+        return $this;
     }
 
     /**

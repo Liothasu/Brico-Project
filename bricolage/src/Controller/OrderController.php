@@ -8,11 +8,16 @@ use App\Form\PaymentType;
 use App\Repository\ProductRepository;
 use App\Repository\PromoRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/order', name: 'order_')]
@@ -48,7 +53,7 @@ class OrderController extends AbstractController
 
     #[Route('/add', name: 'add')]
     #[IsGranted("ROLE_USER")]
-    public function add(SessionInterface $session, ProductRepository $productRepository, PromoRepository $promoRepository, EntityManagerInterface $em, Request $request): Response
+    public function add(SessionInterface $session, ProductRepository $productRepository, PromoRepository $promoRepository, EntityManagerInterface $em): Response
     {
         $cart = $session->get('cart', []);
 
@@ -95,6 +100,10 @@ class OrderController extends AbstractController
             foreach ($cart as $item => $quantity) {
                 $product = $productRepository->find($item);
 
+                if (!$product) {
+                    continue;
+                }
+
                 $lineOrder = new LineOrder();
                 $lineOrder->setProduct($product);
 
@@ -107,6 +116,8 @@ class OrderController extends AbstractController
                         break;
                     }
                 }
+
+                $discountedPrice = round($discountedPrice, 2);
 
                 $lineOrder->setSellingPrice($discountedPrice);
                 $lineOrder->setQuantity($quantity['quantity']);
@@ -149,17 +160,17 @@ class OrderController extends AbstractController
         ]);
     }
 
-
     #[Route('/pay/{id}', name: 'pay')]
-    public function pay(Order $order = null, SessionInterface $session, EntityManagerInterface $em, Request $request): Response
+    public function pay(Order $order = null, EntityManagerInterface $em, Request $request, Security $security): RedirectResponse|Response
     {
+        $user = $security->getUser();
+
         if (!$order) {
             $this->addFlash('danger', 'Order not found.');
             return $this->redirectToRoute('cart_index');
         }
 
         if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
-            $this->addFlash('warning', 'Order already paid.');
             return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
         }
 
@@ -169,44 +180,116 @@ class OrderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $paymentData = $form->getData();
 
-            $lineOrders = $order->getLineOrders();
+            Stripe::setApiKey('sk_test_51OmSi4FS6JbfKYCePGdG2icQrbYCdyh9SS9G0yqbE2OIPp8hYZ9gfFKUHF4uHP2tnfUFjzPBJV3ipsYrXRnA5aS000EsUJvekZ');
 
-            foreach ($lineOrders as $lineOrder) {
+            $lineItems = [];
+            foreach ($order->getLineOrders() as $lineOrder) {
                 $product = $lineOrder->getProduct();
-                $quantity = $lineOrder->getQuantity();
+                $basePrice = $product->getPriceVAT();
+                $discountedPrice = $basePrice;
 
-                if ($product->getStock() < $quantity) {
-                    $this->addFlash('danger', 'Insufficient stock for product: ' . $product->getNameProduct());
-                    return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
+                $activePromos = $product->getPromos();
+                foreach ($activePromos as $promo) {
+                    if ($promo->isActivePromo()) {
+                        $discountedPrice = $basePrice * (1 - $promo->getPercent() / 100);
+                        break;
+                    }
                 }
 
-                $product->setStock($product->getStock() - $quantity);
-                $em->persist($product);
+                $description = sprintf('Original price: %.2f€', $basePrice);
+                if ($basePrice !== $discountedPrice) {
+                    $description .= sprintf(', Promotional price: %.2f€', $discountedPrice);
+                }
+
+                $discountedPrice = round($discountedPrice, 2);
+
+                $lineItems[] = [
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => $product->getNameProduct(),
+                            'description' => $description,
+                        ],
+                        'unit_amount' => $discountedPrice * 100,
+                    ],
+                    'quantity' => $lineOrder->getQuantity(),
+                ];
             }
 
+            $checkoutSession = Session::create([
+                'customer_email' => $user->getEmail(),
+                'payment_method_types' => ['card', 'bancontact', 'paypal'],
+                'line_items' => $lineItems,
+                'mode' => 'payment',
+                'success_url' => $this->generateUrl('order_success', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                'cancel_url' => $this->generateUrl('order_cancel_payment', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
+
+            $order->setStripeSessionId($checkoutSession->id);
             $order->setPaymentMode($paymentData->getPaymentMode());
-            $order->setStatutOrders(['ORDER_PAID']);
 
             $em->persist($order);
             $em->flush();
 
-            $session->remove('cart');
-
-            $this->addFlash('success', 'Payment successful.');
-
-            return $this->redirectToRoute('order_details', [
-                'id' => $order->getId()
-            ]);
+            return new RedirectResponse($checkoutSession->url);
         }
 
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
             'lineOrders' => $order->getLineOrders(),
             'paymentForm' => $form->createView(),
+            'user' => $user,
         ]);
     }
 
-    #[Route('/cancel/{id}', name: 'cancel', methods: ['POST'])]
+
+    #[Route('/success/{id}', name: 'success')]
+    public function success(Order $order, SessionInterface $session, EntityManagerInterface $em): Response
+    {
+        if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
+            $this->addFlash('warning', 'Order already paid.');
+        } else {
+            if ($order->getStripeSessionId()) {
+                foreach ($order->getLineOrders() as $lineOrder) {
+                    $product = $lineOrder->getProduct();
+                    $quantity = $lineOrder->getQuantity();
+
+                    if ($product->getStock() < $quantity) {
+                        $this->addFlash('danger', 'Insufficient stock for product: ' . $product->getNameProduct());
+                        return $this->redirectToRoute('order_error', ['id' => $order->getId()]);
+                    }
+
+                    $currentStock = $product->getStock();
+                    $product->setStock($currentStock - $quantity);
+                    $em->persist($product);
+                }
+
+                $order->setStatutOrders(['ORDER_PAID']);
+                $em->persist($order);
+                $em->flush();
+
+                $session->remove('cart');
+                $this->addFlash('success', 'Order successfully paid.');
+            } else {
+                $this->addFlash('danger', 'Payment not completed with Stripe.');
+            }
+        }
+
+        return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
+    }
+
+
+    #[Route('/error/{id}', name: 'error')]
+    public function error(Order $order): Response
+    {
+        $this->addFlash('danger', 'Payment not completed with Stripe.');
+
+        return $this->redirectToRoute('order_pay', [
+            'id' => $order->getId()
+        ]);
+    }
+
+    #[Route('/cancel/{id}', name: 'cancel', methods: ['GET', 'POST'])]
     public function cancel(Order $order, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -239,7 +322,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/cancel_payment/{id}', name: 'cancel_payment', methods: ['GET'])]
-    public function cancelPayment(Order $order, EntityManagerInterface $em, SessionInterface $session): Response
+    public function cancelPayment(Order $order, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -247,7 +330,13 @@ class OrderController extends AbstractController
             throw $this->createAccessDeniedException('You are not allowed to cancel payment for this order.');
         }
 
+        if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
+            $this->addFlash('warning', 'Payment already completed.');
+            return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
+        }
+
         $order->setStatutOrders(['ORDER_IN_PROCESS']);
+        $order->setPaymentMode('In process');
 
         $em->persist($order);
         $em->flush();

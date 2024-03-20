@@ -25,7 +25,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
         )
     ]
 )]
-class Blog 
+class Blog
 {
     use SlugTrait, TimestampableEntity;
 
