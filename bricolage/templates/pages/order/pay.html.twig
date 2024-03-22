@@ -3,16 +3,18 @@
 {% block main %}
 	<section class="container">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-5">
 				<h2>Delivery Information</h2>
 				<p>Your Address:
-					{{ app.user.getFullAddress() }}</p>
+					{{ app.user.getFullAddress() }}
+				</p>
 
 				{% set deliveryDate = order.getDateOrder()|date_modify('+3 days') %}
 				<p>Estimated Delivery Date:
-					{{ deliveryDate|date('d-m-Y') }}</p>
+					{{ deliveryDate|date('j F Y') }}
+				</p>
 			</div>
-			<div class="col-md-6">
+			<div class="col-6">
 				<h2>Order Payment</h2>
 
 				<table class="table table-striped">
@@ -22,7 +24,7 @@
 					</tr>
 					<tr>
 						<th>Date:</th>
-						<td>{{ order.getDateOrder() | date('d-m-Y') }}</td>
+						<td>{{ order.getDateOrder() | date('j F Y') }}</td>
 					</tr>
 					<tr>
 						<th>Products:</th>
@@ -55,28 +57,13 @@
 						</td>
 					</tr>
 				</table>
+				<p>Total Amount:
+					{{ order.total | number_format(2, ',', '.') }}
+					€</p>
 
-				<div class="d-flex justify-content-between">
-					<p>Total Amount:
-						{{ order.total | number_format(2, ',', '.') }}
-						€</p>
-
-					<form method="get" action="{{ path('order_cancel_payment', {'id': order.id}) }}">
-						<button class="btn btn-danger" type="submit">Cancel</button>
-					</form>
-				</div>
-
-				<h2>Payment Information</h2>
 				{% if order.isValid == true %}
-					<form method="post" action="{{ path('order_pay', {'id': order.id}) }}">
-						{{ form_start(paymentForm) }}
-						<p class="mb-2">Payment method:</p>
-						<div class="d-flex justify-content-between">
-							{{ form_row(paymentForm.paymentMode) }}
-							<button type="submit" class="btn btn-primary">Pay with Stripe</button>
-						</div>
-						{{ form_end(paymentForm) }}
-					</form>
+					<a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary">Pay with Stripe</a>
+					<a href="{{ path('order_cancel_payment', {'id': order.id}) }}" class="btn btn-danger" type="submit">Cancel</a>
 				{% else %}
 					<p class="text-danger">Your order is being validated by admin.</p>
 				{% endif %}

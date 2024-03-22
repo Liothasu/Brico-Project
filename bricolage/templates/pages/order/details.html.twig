@@ -6,7 +6,18 @@
 {% block main %}
 	<section class="container">
 		<div class="row">
-			<div class="col-10">
+			<div class="col-5">
+				<h2>Delivery Information</h2>
+				<p>Your Address:
+					{{ app.user.getFullAddress() }}
+				</p>
+
+				{% set deliveryDate = order.getDateOrder()|date_modify('+3 days') %}
+				<p>Estimated Delivery Date:
+					{{ deliveryDate|date('j F Y') }}
+				</p>
+			</div>
+			<div class="col-6">
 				<h2>Order Details</h2>
 				{% if 'ORDER_PAID' in order.getStatutOrders() or 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
 					<table class="table table-striped">
@@ -46,7 +57,7 @@
 					</table>
 					{% if 'ORDER_IN_PROCESS' in order.getStatutOrders() %}
 						<div class="d-flex justify-content-end">
-							<a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary mx-2">Pay</a>
+							<a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary mx-2">Pay with Stripe</a>
 							<a href="{{ path('order_list') }}" class="btn btn-danger">Back</a>
 						</div>
 					{% endif %}
