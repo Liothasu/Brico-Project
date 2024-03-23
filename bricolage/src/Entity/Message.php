@@ -18,7 +18,7 @@ class Message
     #[ORM\Column(length: 255)]
     private ?string $title;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private ?string $content;
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]

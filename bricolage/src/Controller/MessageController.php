@@ -123,16 +123,4 @@ class MessageController extends AbstractController
 
         return $this->redirectToRoute("message_index");
     }
-
-    // #[Route('/delete/all', name: 'delete_all')]
-    // public function deleteAll(EntityManagerInterface $entityManager): RedirectResponse
-    // {
-    //     $query = $entityManager->createQuery('DELETE FROM App\Entity\Message');
-
-    //     $query->execute();
-
-    //     $this->addFlash("success", "All messages deleted successfully.");
-
-    //     return $this->redirectToRoute("message_index");
-    // }
 }
