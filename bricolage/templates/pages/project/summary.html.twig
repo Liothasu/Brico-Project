@@ -1,17 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Project summary{% endblock %}
+{% block title %}Project summary
+{% endblock %}
 
 {% block main %}
-    <h2>Project summary</h2>
+	<h2>Project summary</h2>
 
-    <p>Project name: {{ project.nameProject }}</p>
-    <p>Title: {{ project.title }}</p>
-    <p>Description: {{ project.description }}</p>
+	<p>Project name:
+		{{ project.nameProject }}</p>
+	<p>Title:
+		{{ project.title }}</p>
+	<p>Description:
+		{{ project.description }}</p>
 
-    {% if is_granted('ROLE_USER') and project.user == app.user %}
-        <form method="post" action="{{ path('project_delete', {'id': project.id}) }}" onsubmit="return confirm('Are you sure you want to cancel this project?');">
-            <button type="submit" class="btn btn-danger">Delete project</button>
-        </form>
-    {% endif %}
+	<form method="post" action="{{ path('project_delete', {'id': project.id}) }}" onsubmit="return confirm('Are you sure you want to cancel this project?');">
+		<button type="submit" class="btn btn-danger">Delete project</button>
+	</form>
 {% endblock %}

@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/project', name: 'project_')]
@@ -25,14 +24,16 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/', name: 'index')]
-    public function index(Request $request, EntityManagerInterface $entityManager, SessionInterface $session, ProjectMailer $projectMailer): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
         $existingProject = $entityManager->getRepository(Project::class)->findOneBy(['user' => $user]);
 
         if ($existingProject) {
-            return $this->redirectToRoute('project_summary', ['id' => $existingProject->getId()]);
+            return $this->redirectToRoute('project_summary', [
+                'id' => $existingProject->getId()
+            ]);
         }
 
         $project = new Project();
@@ -46,8 +47,6 @@ class ProjectController extends AbstractController
             $entityManager->persist($project);
             $entityManager->flush();
 
-            $session->set('project_validated', true);
-
             $handymanEmail = 'handyman@hardware-store.com';
             $userEmail = $this->getUser()->getEmail();
 
@@ -56,7 +55,10 @@ class ProjectController extends AbstractController
             }
 
             $this->addFlash('info', 'Your project has been notified by one of our handymen, you will receive a message/email.');
-            return $this->redirectToRoute('project_summary', ['id' => $project->getId()]);
+
+            return $this->redirectToRoute('project_summary', [
+                'id' => $project->getId()
+            ]);
         }
 
         return $this->render('pages/project/index.html.twig', [
@@ -65,21 +67,16 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/summary/{id}', name: 'summary')]
-    public function projectSummary(Project $project, SessionInterface $session): Response
+    public function projectSummary(Project $project): Response
     {
-        $isProjectValidated = $session->get('project_validated', false);
-
-        if ($isProjectValidated) {
-            if ($this->getUser() !== $project->getUser()) {
-                return $this->redirectToRoute('project_index');
-            }
-
-            return $this->render('pages/project/summary.html.twig', [
-                'project' => $project,
-            ]);
+        if ($this->getUser() !== $project->getUser()) {
+            $this->addFlash('error', 'You are not allowed to view this project');
+            return $this->redirectToRoute('project_index');
         }
 
-        return $this->redirectToRoute('project_index');
+        return $this->render('pages/project/summary.html.twig', [
+            'project' => $project,
+        ]);
     }
 
     #[Route('/delete/{id}', name: 'delete')]
@@ -88,6 +85,7 @@ class ProjectController extends AbstractController
         $user = $this->getUser();
 
         if ($user !== $project->getUser()) {
+            $this->addFlash('error', 'You are not allowed to delete this project');
             return $this->redirectToRoute('project_index');
         }
 
@@ -95,6 +93,7 @@ class ProjectController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Your project has been cancelled ');
+
         return $this->redirectToRoute('project_index');
     }
 }
