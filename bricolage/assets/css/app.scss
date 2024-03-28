@@ -235,7 +235,7 @@ main {
     }
   }
 
-  form:not(.form-check form) {
+  form:not(.form-check form, .register-form form, .user-form form) {
     max-width: 400px;
   }
 }
