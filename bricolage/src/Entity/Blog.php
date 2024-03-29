@@ -32,20 +32,20 @@ class Blog
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $title;
+    private string $title;
 
     #[ORM\Column(type: 'text')]
-    private ?string $featuredText;
+    private string $featuredText;
 
     #[ORM\Column(type: 'json')]
     #[Groups(['blog:patch'])]
-    private ?string $content;
+    private string $content;
 
     #[ORM\ManyToOne(targetEntity: Media::class, cascade: ["remove"])]
-    private ?Media $featuredMedia;
+    private Media $featuredMedia;
 
     #[ORM\ManyToOne(inversedBy: 'blogs')]
     #[ORM\JoinColumn(nullable: false)]
@@ -71,12 +71,12 @@ class Blog
         $this->disputes = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -93,19 +93,19 @@ class Blog
         return $this->title;
     }
 
-    public function getFeaturedText(): ?string
+    public function getFeaturedText(): string
     {
         return $this->featuredText;
     }
 
-    public function setFeaturedText(?string $featuredText): self
+    public function setFeaturedText(string $featuredText): self
     {
         $this->featuredText = $featuredText;
 
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -119,12 +119,12 @@ class Blog
 
     //getters and setters updatedAt/createdAt
 
-    public function getFeaturedMedia(): ?Media
+    public function getFeaturedMedia(): Media
     {
         return $this->featuredMedia;
     }
 
-    public function setFeaturedMedia(?Media $featuredMedia): self
+    public function setFeaturedMedia(Media $featuredMedia): self
     {
         $this->featuredMedia = $featuredMedia;
 

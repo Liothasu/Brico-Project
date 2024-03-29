@@ -13,13 +13,13 @@ class Message
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $title;
+    private string $title;
 
     #[ORM\Column(length: 255)]
-    private ?string $content;
+    private string $content;
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTimeImmutable $timeMsg;
@@ -48,12 +48,12 @@ class Message
         $this->replies = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -65,24 +65,24 @@ class Message
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function setContent(?string $content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
         return $this;
     }
 
-    public function getTimeMsg(): ?\DateTimeImmutable
+    public function getTimeMsg(): \DateTimeImmutable
     {
         return $this->timeMsg;
     }
 
-    public function setTimeMsg(?\DateTimeImmutable $timeMsg): self
+    public function setTimeMsg(\DateTimeImmutable $timeMsg): self
     {
         $this->timeMsg = $timeMsg;
 

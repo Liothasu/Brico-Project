@@ -18,13 +18,13 @@ class Type
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups('blog')]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $color;
+    private string $color;
 
     #[ORM\ManyToMany(targetEntity: Blog::class, mappedBy: 'types')]
     private Collection $blogs;
@@ -34,12 +34,12 @@ class Type
         $this->blogs = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -51,12 +51,12 @@ class Type
         return $this;
     }
 
-    public function getColor(): ?string
+    public function getColor(): string
     {
         return $this->color;
     }
 
-    public function setColor(?string $color): self
+    public function setColor(string $color): self
     {
         $this->color = $color;
 

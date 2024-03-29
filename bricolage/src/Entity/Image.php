@@ -13,10 +13,10 @@ class Image
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups('product')]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $filename;
@@ -28,12 +28,12 @@ class Image
     #[ORM\JoinColumn(nullable: false)]
     private $product;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -45,7 +45,7 @@ class Image
         return $this;
     }
 
-    public function getFilename(): ?string
+    public function getFilename(): string
     {
         return $this->filename;
     }

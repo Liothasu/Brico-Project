@@ -11,13 +11,13 @@ class LineOrder
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column]
-    private ?float $sellingPrice;
+    private float $sellingPrice;
 
     #[ORM\Column]
-    private ?int $quantity;
+    private int $quantity;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'lineOrders')]
     #[ORM\JoinColumn(nullable: false)]
@@ -27,12 +27,12 @@ class LineOrder
     #[ORM\JoinColumn(nullable: false)]
     private $order;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getSellingPrice(): ?float
+    public function getSellingPrice(): float
     {
         return $this->sellingPrice;
     }
@@ -44,7 +44,7 @@ class LineOrder
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): int
     {
         return $this->quantity;
     }

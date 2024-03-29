@@ -14,13 +14,13 @@ class Supplier
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $nameFactory;
+    private string $nameFactory;
 
     #[ORM\Column(length: 50)]
-    private ?string $city;
+    private string $city;
 
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Product::class)]
     private Collection $products;
@@ -30,12 +30,12 @@ class Supplier
         $this->products = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getNameFactory(): ?string
+    public function getNameFactory(): string
     {
         return $this->nameFactory;
     }
@@ -47,7 +47,7 @@ class Supplier
         return $this;
     }
 
-    public function getCity(): ?string
+    public function getCity(): string
     {
         return $this->city;
     }

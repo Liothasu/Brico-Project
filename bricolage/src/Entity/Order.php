@@ -14,7 +14,7 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 20, unique: true)]
     private $reference;
@@ -24,10 +24,10 @@ class Order
     public const POSSIBLE_STATUSES = ['ORDER_IN_PROCESS', 'ORDER_PAID', 'ORDER_CANCELED'];
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeImmutable $dateOrder;
+    private \DateTimeImmutable $dateOrder;
 
     #[ORM\Column(length: 255)]
-    private ?string $paymentMode;
+    private string $paymentMode;
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     private $total;
@@ -56,12 +56,12 @@ class Order
         $this->total = 0;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getReference(): ?string
+    public function getReference(): string
     {
         return $this->reference;
     }
@@ -86,7 +86,7 @@ class Order
         return $this;
     }
 
-    public function getDateOrder(): ?\DateTimeImmutable
+    public function getDateOrder(): \DateTimeImmutable
     {
         return $this->dateOrder;
     }
@@ -98,7 +98,7 @@ class Order
         return $this;
     }
 
-    public function getPaymentMode(): ?string
+    public function getPaymentMode(): string
     {
         return $this->paymentMode;
     }
@@ -110,7 +110,7 @@ class Order
         return $this;
     }
 
-    public function getTotal(): ?float
+    public function getTotal(): float
     {
         return $this->total;
     }

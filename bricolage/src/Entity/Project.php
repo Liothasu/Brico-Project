@@ -13,16 +13,16 @@ class Project
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $nameProject;
+    private string $nameProject;
 
     #[ORM\Column(length: 50)]
-    private ?string $title;
+    private string $title;
 
     #[ORM\Column(length: 50)]
-    private ?string $description;
+    private string $description;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false)]
@@ -36,12 +36,12 @@ class Project
         $this->disputes = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getNameProject(): ?string
+    public function getNameProject(): string
     {
         return $this->nameProject;
     }
@@ -53,7 +53,7 @@ class Project
         return $this;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -65,7 +65,7 @@ class Project
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }

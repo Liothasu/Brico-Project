@@ -13,10 +13,10 @@ class Media
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups('blog')]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $filename;
@@ -24,12 +24,12 @@ class Media
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $altText;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -41,7 +41,7 @@ class Media
         return $this;
     }
 
-    public function getFilename(): ?string
+    public function getFilename(): string
     {
         return $this->filename;
     }

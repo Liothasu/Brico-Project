@@ -18,19 +18,19 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $reference;
+    private string $reference;
 
     #[ORM\Column(length: 50)]
-    private ?string $nameProduct;
+    private string $nameProduct;
 
     #[ORM\Column(length: 50)]
-    private ?string $color;
+    private string $color;
 
     #[ORM\Column(length: 50)]
-    private ?string $designation;
+    private string $designation;
 
     #[ORM\Column(type: 'integer')]
     #[Assert\PositiveOrZero(message: "Stock can't be negative")]
@@ -63,12 +63,12 @@ class Product
         $this->lineOrders = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getReference(): ?string
+    public function getReference(): string
     {
         return $this->reference;
     }
@@ -80,7 +80,7 @@ class Product
         return $this;
     }
 
-    public function getNameProduct(): ?string
+    public function getNameProduct(): string
     {
         return $this->nameProduct;
     }
@@ -92,7 +92,7 @@ class Product
         return $this;
     }
 
-    public function getColor(): ?string
+    public function getColor(): string
     {
         return $this->color;
     }
@@ -104,7 +104,7 @@ class Product
         return $this;
     }
 
-    public function getDesignation(): ?string
+    public function getDesignation(): string
     {
         return $this->designation;
     }
@@ -116,7 +116,7 @@ class Product
         return $this;
     }
 
-    public function getStock(): ?int
+    public function getStock(): int
     {
         return $this->stock;
     }
@@ -128,7 +128,7 @@ class Product
         return $this;
     }
 
-    public function getUnitPrice(): ?float
+    public function getUnitPrice(): float
     {
         return $this->unitPrice;
     }
@@ -140,7 +140,7 @@ class Product
         return $this;
     }
 
-    public function getPriceVAT(): ?float
+    public function getPriceVAT(): float
     {
         return $this->priceVAT;
     }
