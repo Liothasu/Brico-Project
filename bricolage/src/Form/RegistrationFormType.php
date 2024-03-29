@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
@@ -25,21 +26,37 @@ class RegistrationFormType extends AbstractType
             ->add('username', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'ToolCraftJax',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9_]+$/',
+                        'message' => 'Your username should contain only letters, numbers and underscores.',
+                    ]),
                 ],
             ])
             ->add('firstName', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'Jack',
                 ],
             ])
             ->add('lastName', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'Carpenter',
                 ],
             ])
             ->add('email', EmailType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'example@gmail.com',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                        'message' => 'Please enter a valid email address.',
+                    ])
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -74,22 +91,53 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Phone number',
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => '04 77 77 77 77',
                 ],
             ])
             ->add('numStreet', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'Avenue Huart Hamoir 106',
                 ],
                 'label' => 'Address (including street number)',
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z\s]+\s+\d+$/',
+                        'message' => 'Please enter a valid address format.',
+                    ]),
+                ],
             ])
             ->add('city', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => 'Schaerbeek',
+                ],
+                'constraints' => [
+                    new Length([
+                        'min' => 2,
+                        'max' => 100,
+                        'minMessage' => 'Your city should have at least {{ limit }} characters.',
+                        'maxMessage' => 'Your city should have at most {{ limit }} characters.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z\s]+$/',
+                        'message' => 'Your city should contain only letters and spaces.',
+                    ]),
                 ],
             ])
             ->add('zipCode', IntegerType::class, [
                 'attr' => [
                     'class' => 'form-control',
+                    'placeholder' => '1030',
+                ],
+                'label' => 'Zip Code',
+                'constraints' => [
+                    new Length([
+                        'min' => 4,
+                        'max' => 10,
+                        'minMessage' => 'Your zip code should have at least {{ limit }} characters.',
+                        'maxMessage' => 'Your zip code should have at most {{ limit }} characters.',
+                    ]),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [

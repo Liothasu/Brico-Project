@@ -19,7 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(type:"json")]
     private array $roles = [];
@@ -27,32 +27,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username;
 
-    #[ORM\Column(length: 50)]
-    private ?string $lastName;
+    #[ORM\Column(length: 100)]
+    private string $lastName;
 
-    #[ORM\Column(length: 50)]
-    private ?string $firstName;
+    #[ORM\Column(length: 100)]
+    private string $firstName;
 
-    #[ORM\Column(length: 50)]
-    private ?string $email;
+    #[ORM\Column(length: 100)]
+    private string $email;
 
     /**
     * @var string The hashed password
     */
     #[ORM\Column]
-    private ?string $password;
+    private string $password;
 
     #[ORM\Column]
-    private ?int $phoneNumber;
+    private string $phoneNumber;
 
-    #[ORM\Column(length: 50)]
-    private ?string $numStreet;
+    #[ORM\Column(length: 255)]
+    private string $numStreet;
 
-    #[ORM\Column(length: 50)]
-    private ?string $city;
+    #[ORM\Column(length: 100)]
+    private string $city;
 
     #[ORM\Column]
-    private ?int $zipCode;
+    private int $zipCode;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -94,7 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -114,7 +114,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles[] = $role;
     }
 
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -126,7 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -143,24 +143,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->username;
     }
 
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): static
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
 
@@ -177,12 +177,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstName . ' ' . $this->lastName;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -197,55 +197,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function getPhoneNumber(): ?string
+    public function getPhoneNumber(): string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): static
+    public function setPhoneNumber(string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
 
-    public function getNumStreet(): ?string
+    public function getNumStreet(): string
     {
         return $this->numStreet;
     }
 
-    public function setNumStreet(string $numStreet): static
+    public function setNumStreet(string $numStreet): self
     {
         $this->numStreet = $numStreet;
 
         return $this;
     }
 
-    public function getCity(): ?string
+    public function getCity(): string
     {
         return $this->city;
     }
 
-    public function setCity(string $city): static
+    public function setCity(string $city): self
     {
         $this->city = $city;
 
         return $this;
     }
 
-    public function getZipCode(): ?int
+    public function getZipCode(): int
     {
         return $this->zipCode;
     }
 
-    public function setZipCode(int $zipCode): static
+    public function setZipCode(int $zipCode): self
     {
         $this->zipCode = $zipCode;
 
