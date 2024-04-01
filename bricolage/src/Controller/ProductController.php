@@ -21,22 +21,20 @@ class ProductController extends AbstractController
     #[Route('/all', name: 'all')]
     public function all(ProductRepository $productRepository, PromoRepository $promoRepository, CategoryRepository $categoryRepository, Request $request, ProductService $productService): Response
     {
+        $products = $productService->getPaginatedProduts();
+
         $filterData = new FilterData();
         $form = $this->createForm(FilterType::class, $filterData);
         $form->handleRequest($request);
 
-        $products = $productRepository->findAllOrderedByName();
         $activePromos = $promoRepository->findActivePromos();
         $discountedPrices = [];
 
         $categories = $categoryRepository->findAll();
 
-        $productsPage = null;
-
         if ($form->isSubmitted() && $form->isValid()) {
             $filterData->page = $request->query->getInt('page', 1);
             $products = $productRepository->findByFilter($filterData);
-            // $productsPage = $productService->getPaginatedProduts();
         }
 
         foreach ($products as $product) {
@@ -54,7 +52,6 @@ class ProductController extends AbstractController
             'activePromos' => $activePromos,
             'discountedPrices' => $discountedPrices,
             'categories' => $categories,
-            // 'productsPage' => $productsPage,
         ]);
     }
 

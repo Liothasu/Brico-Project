@@ -13,15 +13,14 @@ class ProductService
 {
     public function __construct(private RequestStack $requestStack, private ProductRepository $productRepository, private PaginatorInterface $paginator)
     {
-
     }
 
     public function getPaginatedProduts(?Category $category = null): PaginationInterface
     {
         $request = $this->requestStack->getMainRequest();
-        $productsQuery = $this->productRepository->findForPagination($category);
+        $productsQuery = $this->productRepository->createQueryForPagination($category);
         $page = $request->query->getInt('page', 1);
-        $limit = 3;
+        $limit = 6;
 
         return $this->paginator->paginate($productsQuery, $page, $limit);
     }

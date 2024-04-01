@@ -110,11 +110,9 @@
 				</div>
 			{% endfor %}
 		</div>
-		{# {% if productsPage is not null %}
-			<div class="page-custom">
-				{{ knp_pagination_render(productsPage) }}
-			</div>
-		{% endif %} #}
+		<div class="page-custom">
+			{{ knp_pagination_render(products) }}
+		</div>
 	{% else %}
 		<p>No products available in this category.</p>
 	{% endif %}
