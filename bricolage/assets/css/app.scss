@@ -478,7 +478,15 @@ main {
       background-color: #a6bb8d;
     }
   }
+  .password-rules {
+    .valid-rule {
+      color: green;
+    }
 
+    ul {
+      list-style-type: none;
+    }
+  }
   .button-container {
     display: flex;
     justify-content: flex-end;

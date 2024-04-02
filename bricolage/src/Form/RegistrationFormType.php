@@ -65,6 +65,7 @@ class RegistrationFormType extends AbstractType
                     'label' => 'Password',
                     'attr' => [
                         'class' => 'form-control',
+                        'placeholder' => 'Enter your password',
                     ],
                 ],
                 'second_options' => [
@@ -80,10 +81,14 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Please enter a password',
                     ]),
                     new Length([
-                        'min' => 6,
+                        'min' => 8,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/',
+                        'message' => 'Your password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.',
                     ]),
                 ],
             ])
@@ -92,6 +97,12 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => '04 77 77 77 77',
+                ],
+                'constraints' => [
+                    new Length([
+                        'max' => 10,
+                        'maxMessage' => 'Your phone number should have at most {{ limit }} characters.',
+                    ]),
                 ],
             ])
             ->add('numStreet', TextType::class, [

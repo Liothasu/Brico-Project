@@ -63,10 +63,10 @@
 
 				{% if order.isValid == true %}
 					<a href="{{ path('order_pay', {'id': order.id}) }}" class="btn btn-primary">Pay with Stripe</a>
-					<a href="{{ path('order_cancel_payment', {'id': order.id}) }}" class="btn btn-danger" type="submit">Cancel</a>
 				{% else %}
 					<p class="text-danger">Your order is being validated by admin.</p>
 				{% endif %}
+					<a href="{{ path('order_cancel_payment', {'id': order.id}) }}" class="btn btn-danger" type="submit">Cancel</a>
 			</div>
 		</div>
 	</section>
