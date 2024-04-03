@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Admin;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -19,21 +20,15 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         //Admin
-        $admin = new User();
-        $admin->setUsername('admin');
+        $admin = new Admin();
+        $admin->setUsername('Admin');
         $admin->setEmail('admin@hardware-store.com');
         $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setIsVerified(true);
 
-        $hashedPassword = $this->passwordHasher->hashPassword($admin, 'admin');
+        $hashedPassword = '$2y$13$a7WxmqKDw4oj/XHZpIUsi.zWKZFXZYdG0EfG2n7lJDw44/UiZH5Tq';
         $admin->setPassword($hashedPassword);
 
-        $admin->setFirstName('Admin');
-        $admin->setLastName('User');
-        $admin->setPhoneNumber('123456789');
-        $admin->setNumStreet('123 Main St');
-        $admin->setCity('City');
-        $admin->setZipCode(12345);
-        $admin->setIsVerified(true);
         $manager->persist($admin);
 
         //Handyman

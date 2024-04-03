@@ -21,7 +21,7 @@ class ZBlogFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $adminUser = $manager->getRepository(User::class)->findOneBy(['username' => 'admin']);
+        $handymanUser = $manager->getRepository(User::class)->findOneBy(['username' => 'handyman']);
 
         $media1 = new Media();
         $media1->setName('Image 1');
@@ -100,7 +100,7 @@ class ZBlogFixtures extends Fixture
             $blog->setFeaturedText($blogData['featuredText']);
             $blog->setContent($blogData['content']);
             $blog->setFeaturedMedia($blogData['media']);
-            $blog->setAuthor($adminUser);
+            $blog->setAuthor($handymanUser);
             $blog->setSlug($this->slugger->slug($blogData['title'])->lower());
 
             foreach ($blogData['type'] as $typeName) {

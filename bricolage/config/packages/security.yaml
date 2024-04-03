@@ -9,13 +9,20 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+        app_admin_provider:
+            entity:
+                class: App\Entity\Admin
+                property: email
+        chain_provider:
+            chain:
+                providers: ['app_user_provider', 'app_admin_provider']
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: app_user_provider
+            provider: chain_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
                 path: logout
@@ -33,8 +40,6 @@ security:
     access_control:
         - { path: ^/profile, roles: [ROLE_USER] }
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_HANDYMAN] }
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/handyman, roles: ROLE_HANDYMAN }
 
     role_hierarchy:
         ROLE_USER: []
