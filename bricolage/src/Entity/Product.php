@@ -46,10 +46,10 @@ class Product
     private $images;
 
     #[ORM\ManyToOne(inversedBy: 'products', cascade: ['persist'])]
-    private ?Category $category = null;
+    private ?Category $category;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    private ?Supplier $supplier = null;
+    private ?Supplier $supplier;
 
     #[ORM\ManyToMany(targetEntity: Promo::class, mappedBy: 'products')]
     private Collection $promos;

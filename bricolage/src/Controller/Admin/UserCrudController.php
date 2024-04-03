@@ -53,7 +53,7 @@ class UserCrudController extends AbstractCrudController
 
         yield TextField::new('email');
 
-        yield TextField::new('phoneNumber');
+        yield IntegerField::new('phoneNumber');
 
         yield TextField::new('numStreet');
 

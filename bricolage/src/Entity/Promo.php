@@ -13,19 +13,19 @@ class Promo
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $name;
+    private string $name;
 
     #[ORM\Column]
-    private ?float $percent;
+    private float $percent;
 
     #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeImmutable $dateBegin;
+    private \DateTimeImmutable $dateBegin;
 
     #[ORM\Column(type:'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeImmutable $dateEnd;
+    private \DateTimeImmutable $dateEnd;
 
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'promos')]
     private Collection $products;
@@ -35,12 +35,12 @@ class Promo
         $this->products = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -52,7 +52,7 @@ class Promo
         return $this;
     }
 
-    public function getPercent(): ?float
+    public function getPercent(): float
     {
         return $this->percent;
     }
@@ -63,7 +63,7 @@ class Promo
         return $this;
     }
 
-    public function getDateBegin(): ?\DateTimeImmutable
+    public function getDateBegin(): \DateTimeImmutable
     {
         return $this->dateBegin;
     }
@@ -75,7 +75,7 @@ class Promo
         return $this;
     }
 
-    public function getDateEnd(): ?\DateTimeImmutable
+    public function getDateEnd(): \DateTimeImmutable
     {
         return $this->dateEnd;
     }

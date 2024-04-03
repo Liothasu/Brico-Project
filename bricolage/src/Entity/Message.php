@@ -29,11 +29,11 @@ class Message
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "sent")]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $sender;
+    private User $sender;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "received")]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $recipient;
+    private User $recipient;
 
     #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: "replies", cascade: ["persist"])]
     #[ORM\JoinColumn(name: "original_message_id", nullable: true)]
@@ -89,7 +89,7 @@ class Message
         return $this;
     }
 
-    public function getIsRead(): ?bool
+    public function getIsRead(): bool
     {
         return $this->is_read;
     }

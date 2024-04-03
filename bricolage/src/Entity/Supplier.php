@@ -77,7 +77,7 @@ class Supplier
         return $this;
     }
 
-    public function removeProduct(Product $product): static
+    public function removeProduct(?Product $product): static
     {
         if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)

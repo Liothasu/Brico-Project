@@ -23,7 +23,7 @@ class Type
     #[ORM\Column(length: 50)]
     private string $name;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 255)]
     private string $color;
 
     #[ORM\ManyToMany(targetEntity: Blog::class, mappedBy: 'types')]
@@ -44,7 +44,7 @@ class Type
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 

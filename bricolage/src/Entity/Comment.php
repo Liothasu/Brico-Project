@@ -17,11 +17,11 @@ class Comment implements EventSubscriber
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups('comment')]
-    private ?int $id;
+    private int $id;
 
     #[ORM\Column(type: 'text')]
     #[Groups('comment')]
-    private ?string $content;
+    private string $content;
 
     #[ORM\Column(type: 'datetime')]
     #[Groups('comment')]
@@ -93,7 +93,7 @@ class Comment implements EventSubscriber
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTime $updatedAt): self
+    public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 

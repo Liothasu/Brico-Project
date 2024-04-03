@@ -11,13 +11,13 @@ class Dispute
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $title = null;
+    private string $title;
 
     #[ORM\Column(type: "string", length: 50)]
-    private ?string $description = null;
+    private string $description;
 
     #[ORM\Column(type: "string", length: 50)]
     private $problemType;
@@ -42,12 +42,12 @@ class Dispute
 
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -59,7 +59,7 @@ class Dispute
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -71,7 +71,7 @@ class Dispute
         return $this;
     }
 
-    public function getProblemType(): ?string
+    public function getProblemType(): string
     {
         return $this->problemType;
     }
