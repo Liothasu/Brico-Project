@@ -84,15 +84,7 @@
 					<a href="{{ path('cart_index') }}">
 						<i class="fas fa-shopping-cart"></i>
 					</a>
-					{% if is_granted('ROLE_ADMIN') and is_granted("IS_AUTHENTICATED_FULLY") %}
-						<a href="{{ path('admin') }}">
-							<i class="fas fa-user"></i>
-							{{ app.user.username }}
-						</a>
-						<a href="{{ path('logout') }}" class="btn btn-danger">
-							<i class="fa-solid fa-right-from-bracket"></i>
-						</a>
-					{% elseif is_granted("IS_AUTHENTICATED_FULLY") %}
+					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 						<a href="{{ path('profile_index') }}">
 							<i class="fas fa-user"></i>
 							{% if app.user.username|length > 10 %}

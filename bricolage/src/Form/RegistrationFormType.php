@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Validator\Constraints\NotContainsAdmin;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,6 +34,7 @@ class RegistrationFormType extends AbstractType
                         'pattern' => '/^[a-zA-Z0-9_]+$/',
                         'message' => 'Your username should contain only letters, numbers and underscores.',
                     ]),
+                    new NotContainsAdmin(['message' => 'This username cannot be used.']),
                 ],
             ])
             ->add('firstName', TextType::class, [

@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Admin;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -20,14 +19,21 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         //Admin
-        $admin = new Admin();
+        $admin = new User();
         $admin->setUsername('Admin');
         $admin->setEmail('admin@hardware-store.com');
         $admin->setRoles(['ROLE_ADMIN']);
-        $admin->setIsVerified(true);
 
         $hashedPassword = '$2y$13$a7WxmqKDw4oj/XHZpIUsi.zWKZFXZYdG0EfG2n7lJDw44/UiZH5Tq';
         $admin->setPassword($hashedPassword);
+
+        $admin->setFirstName('Admin');
+        $admin->setLastName('User');
+        $admin->setPhoneNumber('123456789');
+        $admin->setNumStreet('123 Main St');
+        $admin->setCity('City');
+        $admin->setZipCode(12345);
+        $admin->setIsVerified(true);
 
         $manager->persist($admin);
 
@@ -37,7 +43,7 @@ class UserFixtures extends Fixture
         $handyman->setEmail('handyman@hardware-store.com');
         $handyman->setRoles(['ROLE_HANDYMAN']);
 
-        $hashedPassword = $this->passwordHasher->hashPassword($handyman, 'handyman');
+        $hashedPassword = '$2y$13$owPMsSo0XyLHC3UYqLxhR.8f0ZIiymzguREHIhdA.9/m1JM5LPOwy';
         $handyman->setPassword($hashedPassword);
 
         $handyman->setFirstName('Handyman');
@@ -55,7 +61,7 @@ class UserFixtures extends Fixture
         $user->setEmail('liothasu@hardware-store.com');
         $user->setRoles(['ROLE_USER']);
 
-        $hashedPassword = $this->passwordHasher->hashPassword($user, '1234567');
+        $hashedPassword = $this->passwordHasher->hashPassword($user, '12345678');
         $user->setPassword($hashedPassword);
 
         $user->setFirstName('Donia');
