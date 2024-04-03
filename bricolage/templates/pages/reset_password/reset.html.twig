@@ -10,7 +10,8 @@
 				<h2>Reset your password</h2>
 				<div class="reset-pw">
 					{{ form_start(resetForm) }}
-					{{ form_row(resetForm.plainPassword) }}
+					{{ form_row(resetForm.plainPassword.first) }}
+					{{ form_row(resetForm.plainPassword.second) }}
 				</div>
 				<div class="button-reset-pw">
 					<button class="btn btn-primary">Reset password</button>
