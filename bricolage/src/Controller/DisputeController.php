@@ -22,19 +22,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class DisputeController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function createDispute(Request $request, BlogRepository $blogRepository, ProjectRepository $projectRepository, CommentRepository $commentRepository,
-        OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response {
+    public function createDispute(Request $request, ProjectRepository $projectRepository, CommentRepository $commentRepository, OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response 
+    {
         $user = $this->getUser();
 
         $dispute = new Dispute();
 
-        $blogs = $blogRepository->find(1);
         $projects = $projectRepository->findBy(['user' => $user]);
         $comments = $commentRepository->find(1);
         $orders = $orderRepository->findBy(['user' => $user]);
 
         $form = $this->createForm(DisputeType::class, $dispute, [
-            'blogs' => $blogs,
             'projects' => $projects,
             'comments' => $comments,
             'orders' => $orders,
@@ -46,18 +44,38 @@ class DisputeController extends AbstractController
             $problemType = $dispute->getProblemType();
 
             if ($problemType === 'Blog') {
+                if (!$dispute->getBlog() || !$dispute->getBlog()->getTitle()) {
+                    $this->addFlash('warning', 'Please select a title for the blog.');
+                    return $this->redirectToRoute('contact_index');
+                }
+
                 $dispute->setProject(null);
                 $dispute->setComment(null);
                 $dispute->setOrder(null);
             } elseif ($problemType === 'Project') {
+                if (!$dispute->getProject() || !$dispute->getProject()->getNameProject()) {
+                    $this->addFlash('warning', 'Please select a name for the project.');
+                    return $this->redirectToRoute('contact_index');
+                }
+
                 $dispute->setBlog(null);
                 $dispute->setComment(null);
                 $dispute->setOrder(null);
             } elseif ($problemType === 'Comment') {
+                if (!$dispute->getComment() || !$dispute->getComment()->getContent()) {
+                    $this->addFlash('warning', 'Please select a matching comment.');
+                    return $this->redirectToRoute('contact_index');
+                }
+
                 $dispute->setBlog(null);
                 $dispute->setProject(null);
                 $dispute->setOrder(null);
             } elseif ($problemType === 'Order') {
+                if (!$dispute->getOrder() || !$dispute->getOrder()->getReference()) {
+                    $this->addFlash('warning', 'Please select a matching order.');
+                    return $this->redirectToRoute('contact_index');
+                }
+
                 $dispute->setBlog(null);
                 $dispute->setProject(null);
                 $dispute->setComment(null);
@@ -80,6 +98,7 @@ class DisputeController extends AbstractController
             'form' => $form->createView(),
             'orders' => $orders,
             'projects' => $projects,
+            'comments' => $comments,
         ]);
     }
 
@@ -98,8 +117,7 @@ class DisputeController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function editDispute($id, Security $security, Request $request, BlogRepository $blogRepository, ProjectRepository $projectRepository, CommentRepository $commentRepository, 
-        OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function editDispute($id, Security $security, Request $request, BlogRepository $blogRepository, ProjectRepository $projectRepository, CommentRepository $commentRepository, OrderRepository $orderRepository, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $user = $security->getUser();
 
@@ -127,18 +145,46 @@ class DisputeController extends AbstractController
             $problemType = $dispute->getProblemType();
 
             if ($problemType === 'Blog') {
+                if (!$dispute->getBlog() || !$dispute->getBlog()->getTitle()) {
+                    $this->addFlash('warning', 'Please select a title for the blog.');
+                    return $this->redirectToRoute('contact_edit', [
+                        'id' => $dispute->getId()
+                    ]);
+                }
+
                 $dispute->setProject(null);
                 $dispute->setComment(null);
                 $dispute->setOrder(null);
             } elseif ($problemType === 'Project') {
+                if (!$dispute->getProject() || !$dispute->getProject()->getNameProject()) {
+                    $this->addFlash('warning', 'Please select a name for the project.');
+                    return $this->redirectToRoute('contact_edit', [
+                        'id' => $dispute->getId()
+                    ]);
+                }
+
                 $dispute->setBlog(null);
                 $dispute->setComment(null);
                 $dispute->setOrder(null);
             } elseif ($problemType === 'Comment') {
+                if (!$dispute->getComment() || !$dispute->getComment()->getContent()) {
+                    $this->addFlash('warning', 'Please select a matching comment.');
+                    return $this->redirectToRoute('contact_edit', [
+                        'id' => $dispute->getId()
+                    ]);
+                }
+
                 $dispute->setBlog(null);
                 $dispute->setProject(null);
                 $dispute->setOrder(null);
             } elseif ($problemType === 'Order') {
+                if (!$dispute->getOrder() || !$dispute->getOrder()->getReference()) {
+                    $this->addFlash('warning', 'Please select a matching order.');
+                    return $this->redirectToRoute('contact_edit', [
+                        'id' => $dispute->getId()
+                    ]);
+                }
+
                 $dispute->setBlog(null);
                 $dispute->setProject(null);
                 $dispute->setComment(null);
@@ -162,6 +208,7 @@ class DisputeController extends AbstractController
             'dispute' => $dispute,
             'orders' => $orders,
             'projects' => $projects,
+            'comments' => $comments,
         ]);
     }
 

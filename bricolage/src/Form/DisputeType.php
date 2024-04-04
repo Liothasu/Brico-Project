@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Blog;
 use App\Entity\Comment;
 use App\Entity\Dispute;
+use App\Entity\Order;
+use App\Entity\Project;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,22 +45,25 @@ class DisputeType extends AbstractType
                 'choice_label' => 'title',
                 'data' => $options['blogs'] ?? null,
                 'attr' => [
-                    'class' => 'form-control mb-3'
-                ],
-            ])
-            ->add('comment', EntityType::class, [
-                'class' => Comment::class,
-                'choice_label' => 'content',
-                'data' => $options['comments'] ?? null,
-                'attr' => [
-                    'class' => 'form-control mb-3'
+                    'class' => 'form-control mb-3',
                 ],
             ]);
+        if (!empty($options['comments'])) {
+            $builder->add('comment', EntityType::class, [
+                'class' => Comment::class,
+                'choice_label' => 'content',
+                'data' => $options['comments'],
+                'attr' => [
+                    'class' => 'form-control mb-3',
+                ],
+            ]);
+        }
 
         if (!empty($options['projects'])) {
-            $builder->add('project', null, [
+            $builder->add('project', EntityType::class, [
+                'class' => Project::class,
+                'choice_label' => 'nameProject',
                 'choices' => $options['projects'],
-                'required' => false,
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
@@ -66,9 +71,10 @@ class DisputeType extends AbstractType
         }
 
         if (!empty($options['orders'])) {
-            $builder->add('order', null, [
+            $builder->add('order', EntityType::class, [
+                'class' => Order::class,
+                'choice_label' => 'reference',
                 'choices' => $options['orders'],
-                'required' => false,
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],

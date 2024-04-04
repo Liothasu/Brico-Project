@@ -32,14 +32,18 @@
 					</div>
 
 					<div id="comment-field" style="display: none;">
-						{{ form_row(form.comment) }}
+						{% if comments is not empty %}
+							{{ form_row(form.comment) }}
+						{% else %}
+							<p>No comment available</p>
+						{% endif %}
 					</div>
 
 					<div id="order-field" style="display: none;">
 						{% if orders is not empty %}
 							{{ form_row(form.order) }}
 						{% else %}
-							<p>No order available.</p>
+							<p>No order available</p>
 						{% endif %}
 					</div>
 				</div>
