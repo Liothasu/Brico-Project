@@ -14,6 +14,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -21,47 +23,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/order', name: 'order_')]
 class OrderController extends AbstractController
 {
-    // Sets the start time of the payment
-    private function setPaymentStartTime(SessionInterface $session): void
-    {
-        $timeLimit = 15 * 60; // 15 minutes en secondes
-        $paymentEndTime = time() + $timeLimit;
-        $session->set('payment_end_time', $paymentEndTime);
-    }
-
-    // Checks whether the 15-minute time limit has elapsed
-    private function isPaymentTimeExpired(Order $order, EntityManagerInterface $em, SessionInterface $session): bool
-    {
-        $paymentEndTime = $session->get('payment_end_time', 0);
-        $currentTime = time();
-        if ($currentTime >= $paymentEndTime) {
-            // Restore stock when payment time is expired
-            $this->restoreStock($order, $em, $session);
-            // Reset payment start time
-            $this->setPaymentStartTime($session);
-            return true;
-        }
-        return false;
-    }
-
-    // Restore stock if payment is not confirmed within a given timeframe
-    private function restoreStock(Order $order, EntityManagerInterface $em, SessionInterface $session): void
-    {
-        $reservedStock = $session->get('reserved_stock', []);
-        foreach ($order->getLineOrders() as $lineOrder) {
-            $product = $lineOrder->getProduct();
-            $productId = $product->getId();
-            if (array_key_exists($productId, $reservedStock)) {
-                $currentStock = $product->getStock();
-                $product->setStock($currentStock + $reservedStock[$productId]);
-                unset($reservedStock[$productId]);
-                $em->persist($product);
-            }
-        }
-        $session->set('reserved_stock', $reservedStock);
-        $em->flush();
-    }
-
     #[Route('/list', name: 'list')]
     public function listOrders(EntityManagerInterface $em): Response
     {
@@ -94,11 +55,8 @@ class OrderController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function add(SessionInterface $session, ProductRepository $productRepository, PromoRepository $promoRepository, EntityManagerInterface $em): Response
     {
-        $this->setPaymentStartTime($session);
-
         $cart = $session->get('cart', []);
-
-        if ($cart === []) {
+        if (empty($cart)) {
             $this->addFlash('danger', 'Your cart is empty');
             return $this->redirectToRoute('home');
         }
@@ -114,6 +72,7 @@ class OrderController extends AbstractController
         if ($existingOrder && !in_array('ORDER_PAID', $existingOrder->getStatutOrders(), true) && !in_array('ORDER_CANCELED', $existingOrder->getStatutOrders(), true)) {
             $order = $existingOrder;
             $lineOrders = $order->getLineOrders();
+
             foreach ($lineOrders as $lineOrder) {
                 $product = $lineOrder->getProduct();
                 $discountedPrice = $product->getPriceVAT();
@@ -124,7 +83,8 @@ class OrderController extends AbstractController
                         break;
                     }
                 }
-                $lineOrder->setSellingPrice($discountedPrice);
+
+                $lineOrder->setSellingPrice(round($discountedPrice, 2));
                 $em->persist($lineOrder);
             }
 
@@ -136,20 +96,28 @@ class OrderController extends AbstractController
             $order->setUser($user);
             $order->setReference(uniqid());
             $order->setStatutOrders(['ORDER_IN_PROCESS']);
-            $order->setPaymentMode('In process');
+            $order->setPaymentMode('Unknow');
+
+            $now = new \DateTime();
 
             foreach ($cart as $item => $quantity) {
                 $product = $productRepository->find($item);
 
-                if (!$product) {
-                    continue;
+                $currentStock = $product->getStock();
+                $availableStock = $currentStock - $quantity['quantity'];
+                if ($availableStock < 0) {
+                    $this->addFlash('danger', 'Insufficient stock for product: ' . $product->getNameProduct());
+                    return $this->redirectToRoute('cart_index');
                 }
+
+                $product->setStock($availableStock);
 
                 $lineOrder = new LineOrder();
                 $lineOrder->setProduct($product);
+                $lineOrder->setQuantity($quantity['quantity']);
+                $lineOrder->setReservationExpireAt((clone $now)->modify('+5 minutes'));
 
                 $discountedPrice = $product->getPriceVAT();
-
                 $activePromos = $promoRepository->findActivePromos();
                 foreach ($activePromos as $promo) {
                     if ($promo->isActivePromo() && $product->getPromos()->contains($promo)) {
@@ -158,11 +126,8 @@ class OrderController extends AbstractController
                     }
                 }
 
-                $discountedPrice = round($discountedPrice, 2);
-
-                $lineOrder->setSellingPrice($discountedPrice);
+                $lineOrder->setSellingPrice(round($discountedPrice, 2));
                 $lineOrder->setQuantity($quantity['quantity']);
-
                 $order->addLineOrder($lineOrder);
             }
 
@@ -175,25 +140,6 @@ class OrderController extends AbstractController
             $session->set('order_reference', $order->getReference());
         }
 
-        foreach ($cart as $productId => $cartItem) {
-            $lineOrder = $order->getLineOrderByProduct($productId);
-
-            if ($lineOrder) {
-                $lineOrderQuantity = $lineOrder->getQuantity();
-                $cartQuantity = $cartItem['quantity'];
-
-                if ($lineOrderQuantity !== $cartQuantity) {
-                    $lineOrder->setQuantity($cartQuantity);
-                    $total = $order->calculateTotal();
-                    $order->setTotal($total);
-
-                    $em->persist($lineOrder);
-                    $em->persist($order);
-                    $em->flush();
-                }
-            }
-        }
-
         return $this->render('pages/order/pay.html.twig', [
             'order' => $order,
             'lineOrders' => $order->getLineOrders(),
@@ -201,7 +147,8 @@ class OrderController extends AbstractController
     }
 
     #[Route('/pay/{id}', name: 'pay')]
-    public function pay(Order $order = null, EntityManagerInterface $em, Security $security): RedirectResponse|Response
+    #[IsGranted("ROLE_USER")]
+    public function pay(Order $order = null, EntityManagerInterface $em, Security $security, SessionInterface $session): RedirectResponse|Response
     {
         $user = $security->getUser();
 
@@ -211,14 +158,40 @@ class OrderController extends AbstractController
         }
 
         if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
-
             $this->addFlash('warning', 'Order already paid.');
             return $this->redirectToRoute('order_details', [
                 'id' => $order->getId()
             ]);
         }
 
-        Stripe::setApiKey('sk_test_51OmSi4FS6JbfKYCePGdG2icQrbYCdyh9SS9G0yqbE2OIPp8hYZ9gfFKUHF4uHP2tnfUFjzPBJV3ipsYrXRnA5aS000EsUJvekZ');
+        $now = new \DateTime();
+
+        foreach ($order->getLineOrders() as $lineOrder) {
+
+            if ($lineOrder->getReservationExpireAt() < $now) {
+                $this->addFlash('danger', 'Your order session has expired. Please place your order again.');
+
+                // Delete temporary stock
+                foreach ($order->getLineOrders() as $lineOrder) {
+                    $product = $lineOrder->getProduct();
+                    $product->setStock($product->getStock() + $lineOrder->getQuantity());
+                    $em->persist($product);
+
+                    $order->removeLineOrder($lineOrder);
+                    $em->remove($lineOrder);
+                }
+
+                $em->remove($order);
+                $em->flush();
+
+                $session->remove('order_reference');
+
+                return $this->redirectToRoute('cart_index');
+            }
+        }
+
+        $stripeSecretKey = $_SERVER['STRIPE_SECRET_KEY'];
+        Stripe::setApiKey($stripeSecretKey);
 
         $lineItems = [];
         foreach ($order->getLineOrders() as $lineOrder) {
@@ -278,56 +251,52 @@ class OrderController extends AbstractController
     }
 
     #[Route('/success/{id}', name: 'success')]
+    #[IsGranted("ROLE_USER")]
     public function success(Order $order, SessionInterface $session, EntityManagerInterface $em): Response
     {
         if (in_array('ORDER_PAID', $order->getStatutOrders(), true)) {
             $this->addFlash('warning', 'Order already paid.');
         } else {
             if ($order->getStripeSessionId()) {
-                Stripe::setApiKey('sk_test_51OmSi4FS6JbfKYCePGdG2icQrbYCdyh9SS9G0yqbE2OIPp8hYZ9gfFKUHF4uHP2tnfUFjzPBJV3ipsYrXRnA5aS000EsUJvekZ');
+                $stripeSecretKey = $_SERVER['STRIPE_SECRET_KEY'];
+                Stripe::setApiKey($stripeSecretKey);
                 $stripeSession = Session::retrieve($order->getStripeSessionId());
-
                 $paymentMode = $stripeSession->payment_method_types[0] ?? 'Unknown';
 
+                $now = new \DateTime();
+
                 foreach ($order->getLineOrders() as $lineOrder) {
                     $product = $lineOrder->getProduct();
-                    $quantity = $lineOrder->getQuantity();
 
-                    if ($product->getStock() < $quantity) {
-                        $this->addFlash('danger', 'Insufficient stock for product: ' . $product->getNameProduct());
+                    if ($lineOrder->getReservationExpireAt() < $now) {
+                        $this->addFlash('danger', 'Your order session has expired. Please place your order again.');
 
-                        return $this->redirectToRoute('order_error', [
-                            'id' => $order->getId()
-                        ]);
-                    }
+                        // Delete temporary stock
+                        foreach ($order->getLineOrders() as $lineOrder) {
+                            $product = $lineOrder->getProduct();
+                            $product->setStock($product->getStock() + $lineOrder->getQuantity());
+                            $em->persist($product);
 
-                    if ($this->isPaymentTimeExpired($order, $em, $session)) {
-                        // Restores stock if the 15-minute time limit has elapsed
-                        $this->restoreStock($order, $em, $session);
-                        $this->addFlash('warning', 'Payment time expired. Stock has been restored.');
+                            $order->removeLineOrder($lineOrder);
+                            $em->remove($lineOrder);
+                        }
 
-                        return $this->redirectToRoute('order_details', [
-                            'id' => $order->getId()
-                        ]);
+                        $em->remove($order);
+                        $em->flush();
+
+                        $session->remove('order_reference');
+
+                        return $this->redirectToRoute('cart_index');
                     }
                 }
 
-                // Deduct stock only if payment is successful and time is not expired
-                foreach ($order->getLineOrders() as $lineOrder) {
-                    $product = $lineOrder->getProduct();
-                    $quantity = $lineOrder->getQuantity();
-                    $currentStock = $product->getStock();
-                    $product->setStock($currentStock - $quantity);
-                    $em->persist($product);
-                }
-
-                // Enregistre le mode de paiement dans l'objet Order
                 $order->setPaymentMode($paymentMode);
                 $order->setStatutOrders(['ORDER_PAID']);
                 $em->persist($order);
                 $em->flush();
 
                 $session->remove('cart');
+                $session->remove('order_reference');
 
                 $this->addFlash('success', 'Order successfully paid.');
             } else {
@@ -335,12 +304,28 @@ class OrderController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('order_details', ['id' => $order->getId()]);
+        return $this->redirectToRoute('order_details', [
+            'id' => $order->getId()
+        ]);
     }
 
     #[Route('/error/{id}', name: 'error')]
-    public function error(Order $order): Response
+    public function error(Order $order, EntityManagerInterface $em, SessionInterface $session): Response
     {
+        foreach ($order->getLineOrders() as $lineOrder) {
+            $product = $lineOrder->getProduct();
+            $product->setStock($product->getStock() + $lineOrder->getQuantity());
+            $em->persist($product);
+
+            $order->removeLineOrder($lineOrder);
+            $em->remove($lineOrder);
+        }
+
+        $em->remove($order);
+        $em->flush();
+
+        $session->remove('order_reference');
+
         $this->addFlash('danger', 'Payment not completed with Stripe.');
 
         return $this->redirectToRoute('order_pay', [
@@ -349,7 +334,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/cancel/{id}', name: 'cancel', methods: ['GET', 'POST'])]
-    public function cancel(Order $order, EntityManagerInterface $em): Response
+    public function cancel(Order $order, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -369,9 +354,30 @@ class OrderController extends AbstractController
             }
 
             $order->setStatutOrders(['ORDER_CANCELED']);
-
             $em->persist($order);
             $em->flush();
+
+            $userEmail = $order->getUser()->getEmail();
+
+            $stripeSecretKey = $_SERVER['STRIPE_SECRET_KEY'];
+            Stripe::setApiKey($stripeSecretKey);
+            $stripeSession = Session::retrieve($order->getStripeSessionId());
+            $stripePaymentUrl = 'https://dashboard.stripe.com/test/payments/' . $stripeSession->payment_intent;
+
+            $emailBody = sprintf(
+                'Order number %d with reference %s has been cancelled. <br>Click <a href="%s">here</a> to process the refund with Stripe.',
+                $order->getId(),
+                $order->getReference(),
+                $stripePaymentUrl
+            );
+
+            $email = (new Email())
+                ->from($userEmail)
+                ->to('admin@hardware-store.com')
+                ->subject('Order cancelled')
+                ->html($emailBody);
+
+            $mailer->send($email);
 
             $this->addFlash('success', 'Order successfully cancelled.');
         } else {
@@ -382,7 +388,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/cancel_payment/{id}', name: 'cancel_payment', methods: ['GET'])]
-    public function cancelPayment(Order $order, EntityManagerInterface $em): Response
+    public function cancelPayment(Order $order, EntityManagerInterface $em, SessionInterface $session): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -398,11 +404,19 @@ class OrderController extends AbstractController
             ]);
         }
 
-        $order->setStatutOrders(['ORDER_IN_PROCESS']);
-        $order->setPaymentMode('Unkown');
+        foreach ($order->getLineOrders() as $lineOrder) {
+            $product = $lineOrder->getProduct();
+            $product->setStock($product->getStock() + $lineOrder->getQuantity());
+            $em->persist($product);
 
-        $em->persist($order);
+            $order->removeLineOrder($lineOrder);
+            $em->remove($lineOrder);
+        }
+
+        $em->remove($order);
         $em->flush();
+
+        $session->remove('order_reference');
 
         $this->addFlash('info', 'Payment canceled successfully.');
 

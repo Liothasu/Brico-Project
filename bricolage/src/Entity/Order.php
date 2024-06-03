@@ -32,9 +32,6 @@ class Order
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     private $total;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => false])]
-    private $is_valid = false;
-
     #[ORM\Column(type: 'string', nullable: true)]
     private $stripeSessionId;
 
@@ -118,18 +115,6 @@ class Order
     public function setTotal(float $total): static
     {
         $this->total = $total;
-
-        return $this;
-    }
-
-    public function getIsValid(): bool
-    {
-        return $this->is_valid;
-    }
-
-    public function setIsValid(bool $is_valid): self
-    {
-        $this->is_valid = $is_valid;
 
         return $this;
     }

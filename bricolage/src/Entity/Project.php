@@ -21,7 +21,7 @@ class Project
     #[ORM\Column(length: 50)]
     private string $title;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]

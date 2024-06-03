@@ -43,8 +43,5 @@ class OrderCrudController extends AbstractCrudController
 
         yield NumberField::new('total')
             ->setNumDecimals(2);
-
-        yield BooleanField::new('is_valid')
-            ->setLabel('Is Valid');
     }
 }

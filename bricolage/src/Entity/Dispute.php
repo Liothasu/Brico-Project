@@ -16,7 +16,7 @@ class Dispute
     #[ORM\Column(length: 50)]
     private string $title;
 
-    #[ORM\Column(type: "string", length: 50)]
+    #[ORM\Column(type: "string", length: 255)]
     private string $description;
 
     #[ORM\Column(type: "string", length: 50)]
