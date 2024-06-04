@@ -35,10 +35,6 @@ class DashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN') && !$this->isGranted('ROLE_HANDYMAN')) {
-            return new Response($this->renderView('pages/security/access_denied.html.twig'), Response::HTTP_FORBIDDEN);
-        }
-
         $url = $this->adminUrlGenerator
             ->setController(BlogCrudController::class)
             ->generateUrl();
@@ -49,7 +45,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('🛠️ Hardware-Store | Admin')
+            ->setTitle('🛠️ Brico-Project | Admin')
             ->renderContentMaximized();
     }
 

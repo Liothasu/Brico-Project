@@ -1,4 +1,4 @@
-# :hammer_and_wrench: Final year project - Management of a hardware store
+# :hammer_and_wrench: Final year project - Management of a Brico-Project
 
  This repository contains a Symfony project integrated with Webpack for managing front-end resources.
 

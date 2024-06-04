@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Image;
 use App\Entity\Product;
 use App\Entity\Supplier;
+use App\Entity\Promo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -276,6 +277,7 @@ class ProductFixtures extends Fixture
         ];
 
         // Create and persist products
+        $products = [];
         foreach ($productsData as $productData) {
             $product = new Product();
             $product->setNameProduct($productData['name']);
@@ -302,7 +304,7 @@ class ProductFixtures extends Fixture
             // Assign the corresponding category to the product
             $categoryRepository = $manager->getRepository(Category::class);
             $category = $categoryRepository->findOneBy(['name' => $categoriesData[$productData['category_index']]]);
-            $product->setCategory($category); // Here, use the category index in $categoriesData
+            $product->setCategory($category);
 
             foreach ($productData['images'] as $imageName) {
                 $image = new Image();
@@ -314,6 +316,35 @@ class ProductFixtures extends Fixture
             }
 
             $manager->persist($product);
+            $products[] = $product;
+        }
+
+        // Define promo data
+        $promosData = [
+            [
+                'name' => 'Summer Sale',
+                'percent' => 25.0,
+                'date_begin' => new \DateTimeImmutable('2024-06-01'),
+                'date_end' => new \DateTimeImmutable('2024-08-31'),
+                'product_indices' => [0, 2, 4, 6],
+            ],
+        ];
+
+        // Create and persist promos
+        foreach ($promosData as $promoDatum) {
+            $promo = new Promo();
+            $promo->setName($promoDatum['name']);
+            $promo->setPercent($promoDatum['percent']);
+            $promo->setDateBegin($promoDatum['date_begin']);
+            $promo->setDateEnd($promoDatum['date_end']);
+
+            foreach ($promoDatum['product_indices'] as $productIndex) {
+                $product = $products[$productIndex];
+                $promo->addProduct($product);
+                $product->addPromo($promo);
+            }
+
+            $manager->persist($promo);
         }
 
         $manager->flush();

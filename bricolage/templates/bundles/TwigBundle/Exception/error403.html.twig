@@ -1,1 +1,5 @@
-{% include "layouts/_error.html.twig" %}
+{% extends 'bundles/TwigBundle/Exception/index.html.twig' %}
+
+{% block title %}Access Denied{% endblock %}
+{% block message %}Access Denied{% endblock %}
+{% block description %}You are not authorized to view this resource.{% endblock %}

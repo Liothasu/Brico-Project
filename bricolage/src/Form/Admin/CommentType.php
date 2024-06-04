@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Type\Admin;
+namespace App\Form\Admin;
 
 use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;

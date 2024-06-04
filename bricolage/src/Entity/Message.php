@@ -35,8 +35,8 @@ class Message
     #[ORM\JoinColumn(nullable: false)]
     private User $recipient;
 
-    #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: "replies", cascade: ["persist"])]
-    #[ORM\JoinColumn(name: "original_message_id", nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Message::class, inversedBy: "replies", cascade: ["remove", "persist"])]
+    #[ORM\JoinColumn(name: "original_message_id", nullable: true, onDelete: "CASCADE")]
     private $originalMessage;
 
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'originalMessage')]

@@ -47,7 +47,7 @@ class ProjectController extends AbstractController
             $entityManager->persist($project);
             $entityManager->flush();
 
-            $handymanEmail = 'handyman@hardware-store.com';
+            $handymanEmail = 'handyman@brico-project.com';
             $userEmail = $this->getUser()->getEmail();
 
             if ($handymanEmail) {

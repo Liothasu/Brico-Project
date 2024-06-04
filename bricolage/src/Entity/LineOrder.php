@@ -19,8 +19,8 @@ class LineOrder
     #[ORM\Column]
     private int $quantity;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $reservationExpireAt;
+    #[ORM\Column(type: 'datetime')]
+    private \DateTimeInterface $reservationExpireAt;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'lineOrders')]
     #[ORM\JoinColumn(nullable: false)]
@@ -59,12 +59,12 @@ class LineOrder
         return $this;
     }
 
-    public function getReservationExpireAt(): ?\DateTimeInterface
+    public function getReservationExpireAt(): \DateTimeInterface
     {
         return $this->reservationExpireAt;
     }
 
-    public function setReservationExpireAt(?\DateTimeInterface $reservationExpireAt): self
+    public function setReservationExpireAt(\DateTimeInterface $reservationExpireAt): self
     {
         $this->reservationExpireAt = $reservationExpireAt;
 

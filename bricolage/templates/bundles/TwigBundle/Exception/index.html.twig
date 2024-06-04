@@ -1,12 +1,28 @@
-{% extends 'base.html.twig' %}
-
-{% block main %}
-	<div class="d-flex align-items-center justify-content-center vh-100">
-		<div class="text-center">
-			<h2 class="display-1 fw-bold">HTTP Error
-				{{ exception.statusCode }}</h2>
-			<p class="fs-3">{{ exception.statusText }}</p>
-			<a href="{{ path('home') }}" class="btn btn-primary">Go Home</a>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>Brico-Projet - Error
+			{{ exception.statusCode }}</title>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+			<style>
+				body {
+					font-family: Arial, sans-serif;
+					background-color: #1f1f1f;
+					color: white;
+				}
+			</style>
+		{% endblock %}
+	</head>
+	<body>
+		<div class="d-flex align-items-center justify-content-center vh-100">
+			<div class="text-center">
+				<h2 class="display-1 fw-bold">{% block message %}{% endblock %}</h2>
+				<p class="fs-3">{% block description %}{% endblock %}</p>
+				<a href="{{ path('home') }}" class="btn btn-primary">Go Home</a>
+			</div>
 		</div>
-	</div>
-{% endblock %}
+	</body>
+</html>

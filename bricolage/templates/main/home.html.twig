@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home
+{% block title %}{{ configs['blog_title'] }}
 {% endblock %}
 
 {% block main %}
@@ -18,11 +18,11 @@
 								{% if product.images|length > 0 %}
 									<div class="products-container">
 										{% set firstImage = product.images.first %}
-										<img src="/uploads/{{ firstImage.filename }}" style="max-width: 150px;" alt="{{ firstImage.altText }}">
+										<img src="/uploads/{{ firstImage.filename }}" style="max-width: 150px; margin-bottom: 10px;" alt="{{ firstImage.altText }}">
 									</div>
 								{% endif %}
 								<h5>{{ product.nameProduct }}</h5>
-								<p>Special price:
+								<p><strong>Special price:</strong>
 									{{ (product.priceVAT * (1 - promo.percent / 100)) | number_format(2, ',', '.') }}
 									€ instead of
 									{{ product.priceVAT | number_format(2, ',', '.') }}

@@ -61,6 +61,7 @@ class Product
     {
         $this->images = new ArrayCollection();
         $this->lineOrders = new ArrayCollection();
+        $this->promos = new ArrayCollection();
     }
 
     public function getId(): int

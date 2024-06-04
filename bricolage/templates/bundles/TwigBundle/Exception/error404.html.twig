@@ -1,1 +1,5 @@
-{% include "layouts/_error.html.twig" %}
+{% extends 'bundles/TwigBundle/Exception/index.html.twig' %}
+
+{% block title %}Page not found{% endblock %}
+{% block message %}Page not found{% endblock %}
+{% block description %}This page does not exist.{% endblock %}

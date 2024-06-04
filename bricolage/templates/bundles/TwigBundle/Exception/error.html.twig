@@ -1,1 +1,5 @@
-{% include "layouts/_error.html.twig" %}
+{% extends 'bundles/TwigBundle/Exception/index.html.twig' %}
+
+{% block title %}Server Error{% endblock %}
+{% block message %}Server Error{% endblock %}
+{% block description %}The server encountered an internal error.{% endblock %}

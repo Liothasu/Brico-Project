@@ -21,7 +21,7 @@ class UserFixtures extends Fixture
         //Admin
         $admin = new User();
         $admin->setUsername('Admin');
-        $admin->setEmail('admin@hardware-store.com');
+        $admin->setEmail('admin@brico-project.com');
         $admin->setRoles(['ROLE_ADMIN']);
 
         $hashedPassword = '$2y$13$a7WxmqKDw4oj/XHZpIUsi.zWKZFXZYdG0EfG2n7lJDw44/UiZH5Tq';
@@ -40,7 +40,7 @@ class UserFixtures extends Fixture
         //Handyman
         $handyman = new User();
         $handyman->setUsername('handyman');
-        $handyman->setEmail('handyman@hardware-store.com');
+        $handyman->setEmail('handyman@brico-project.com');
         $handyman->setRoles(['ROLE_HANDYMAN']);
 
         $hashedPassword = '$2y$13$owPMsSo0XyLHC3UYqLxhR.8f0ZIiymzguREHIhdA.9/m1JM5LPOwy';
@@ -58,7 +58,7 @@ class UserFixtures extends Fixture
         //User
         $user = new User();
         $user->setUsername('Liothasu');
-        $user->setEmail('liothasu@hardware-store.com');
+        $user->setEmail('liothasu@brico-project.com');
         $user->setRoles(['ROLE_USER']);
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, '12345678');

@@ -373,7 +373,7 @@ class OrderController extends AbstractController
 
             $email = (new Email())
                 ->from($userEmail)
-                ->to('admin@hardware-store.com')
+                ->to('admin@brico-project.com')
                 ->subject('Order cancelled')
                 ->html($emailBody);
 

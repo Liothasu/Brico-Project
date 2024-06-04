@@ -220,7 +220,7 @@ class DisputeController extends AbstractController
 
         $email = (new Email())
             ->from($userEmail)
-            ->to('admin@hardware-store.com')
+            ->to('admin@brico-project.com')
             ->subject($subject)
             ->html($description);
 
