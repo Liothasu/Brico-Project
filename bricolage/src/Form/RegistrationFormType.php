@@ -30,6 +30,12 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'ToolCraftJax',
                 ],
                 'constraints' => [
+                    new Length([
+                        'min' => 3,
+                        'minMessage' => 'Username must be at least {{ limit }} characters.',
+                        'max' => 30,
+                        'maxMessage' => 'Username must not exceed {{ limit }} characters.',
+                    ]),
                     new Regex([
                         'pattern' => '/^[a-zA-Z0-9_]+$/',
                         'message' => 'Your username should contain only letters, numbers and underscores.',

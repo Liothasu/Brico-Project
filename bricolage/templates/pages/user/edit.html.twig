@@ -28,6 +28,16 @@
 								{{ form_row(form.newPassword.first) }}
 								{{ form_row(form.newPassword.second) }}
 								{{ form_row(form.currentPassword) }}
+								<details class="password-rules">
+									<summary>Password rules</summary>
+									<ul>
+										<li class="rule-length">Be at least 8 characters long</li>
+										<li class="rule-uppercase">Contain at least one uppercase letter</li>
+										<li class="rule-lowercase">Contain at least one lowercase letter</li>
+										<li class="rule-digit">Contain at least one digit</li>
+										<li class="rule-special-char">Contain at least one special character</li>
+									</ul>
+								</details>
 							</fieldset>
 						</div>
 					</div>
@@ -40,4 +50,8 @@
 			</div>
 		</div>
 	</section>
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('edit_profile') }}
 {% endblock %}
