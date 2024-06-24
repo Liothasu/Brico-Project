@@ -37,8 +37,6 @@ class ProductCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('images');
-
         yield TextField::new('nameProduct');
 
         yield SlugField::new('slug')

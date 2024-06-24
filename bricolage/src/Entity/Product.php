@@ -29,7 +29,7 @@ class Product
     #[ORM\Column(length: 50)]
     private string $color;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private string $designation;
 
     #[ORM\Column(type: 'integer')]

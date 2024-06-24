@@ -24,27 +24,27 @@ class ZBlogFixtures extends Fixture
         $handymanUser = $manager->getRepository(User::class)->findOneBy(['username' => 'handyman']);
 
         $media1 = new Media();
-        $media1->setName('Image 1');
-        $media1->setFilename('aaimage1.jpg');
-        $media1->setAltText('Image 1 Alt Text');
+        $media1->setName('Driftwood Shelf');
+        $media1->setFilename('driftwood_shelf.jpg');
+        $media1->setAltText('driftwood_shelf');
         $manager->persist($media1);
 
         $media2 = new Media();
-        $media2->setName('Image 2');
-        $media2->setFilename('aaimage2.jpg');
-        $media2->setAltText('Image 2 Alt Text');
+        $media2->setName('Leaky Faucet');
+        $media2->setFilename('leaky_faucet.jpg');
+        $media2->setAltText('leaky_faucet');
         $manager->persist($media2);
 
         $media3 = new Media();
-        $media3->setName('Image 3');
-        $media3->setFilename('aaimage3.jpg');
-        $media3->setAltText('Image 3 Alt Text');
+        $media3->setName('Pallet Coffee Table');
+        $media3->setFilename('pallet_coffee_table.jpg');
+        $media3->setAltText('pallet_coffee_table');
         $manager->persist($media3);
 
         $media4 = new Media();
-        $media4->setName('Image 4');
-        $media4->setFilename('aaimage4.jpg');
-        $media4->setAltText('Image 4 Alt Text');
+        $media4->setName('Cozy Reading Nook');
+        $media4->setFilename('cozy_reading_nook.jpg');
+        $media4->setAltText('cozy_reading_nook');
         $manager->persist($media4);
 
         $typesData = [

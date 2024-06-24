@@ -7,14 +7,14 @@
 	<main class="container">
 		<section class="row">
 			<div class="col-12">
-				<h2>My cart</h2>
+				<h2>My cart <i class="fa-solid fa-cart-shopping"></i></h2>
 				{% if data is not empty %}
 					<table class="table">
 						<thead>
 							<tr>
 								<th></th>
 								<th>Name</th>
-								<th>Price</th>
+								<th>Price ex. VAT</th>
 								<th>Price VAT</th>
 								<th>Quantity</th>
 								<th></th>
@@ -85,7 +85,7 @@
 						<a href="{{ path('cart_empty') }}" class="btn btn-danger">Empty Cart</a>
 					</div>
 				{% else %}
-					<h3 colspan="5">Your cart is empty</h3>
+					<h3 colspan="5">Your cart is empty...</h3>
 					<a href="{{ path('product_all') }}" class="btn btn-primary">View all products</a>
 				{% endif %}
 			</div>
